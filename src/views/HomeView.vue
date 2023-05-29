@@ -1,16 +1,16 @@
 <template> 
 <div class="theWrapper">
     <div class="menu">All Chats:
-        <div class="search">Search will be here</div>
+        <input class="search" placeholder="Search bar">
         <div class="chatHistory">Chat list will be here</div>
     </div>    
-    <div class="wrapperChat">Chat 
+    <div class="wrapperChat"> 
         <div class="header">Other User info will be here</div>
         <div class="chat">
             <div v-for="message in gotMessages" :key="message.id" class="gotMessages">You got messages:{{ message.message }}</div>
             <div v-for="message in sentMessages" :key="message.id" class="sentMessages">You sent messages:{{ message.message }}</div>
         </div>
-        <div class="input">Message input will be here</div>
+        <input class="messageInput" placeholder="Message input will be here">
     </div>
 </div>
 </template>
@@ -36,6 +36,10 @@ div {
     padding: 10px;
     background-color: #ffe;
 }
+input {
+    background: none;
+    border: 0;
+}
 .theWrapper {
     display: flex;
     height: 96vh;
@@ -60,10 +64,6 @@ div {
     flex-grow: 1;
     overflow-y: scroll;
 }
-.input {
-    flex-grow: 0;
-    height: 50px;
-}
 .gotMessages {
     width: 45%;
     display: flex;
@@ -73,5 +73,20 @@ div {
     display: flex;
     justify-content: flex-end;
     margin-left: auto;
+}
+.search {
+    margin: 10px;
+    padding: 10px;
+    border-bottom: 1px solid black;
+}
+.header {
+    height: 10%;
+}
+.messageInput {
+    margin: 10px;
+    padding: 10px;
+    flex-grow: 0;
+    height: 75px;
+    border: 1px solid black;
 }
 </style>
