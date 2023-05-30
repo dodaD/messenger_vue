@@ -1,6 +1,6 @@
 <template> 
 <div class="theWrapper">
-    <div class="menu">All Chats:
+    <div class="menu">
         <input class="search" placeholder="Search bar">
         <div class="chatHistory">Chat list will be here</div>
     </div>    
@@ -10,13 +10,37 @@
             <div v-for="message in gotMessages" :key="message.id" class="gotMessages">You got messages:{{ message.message }}</div>
             <div v-for="message in sentMessages" :key="message.id" class="sentMessages">You sent messages:{{ message.message }}</div>
         </div>
-        <input class="messageInput" placeholder="Message input will be here">
+        <textarea class="messageInput" 
+            placeholder="Message input will be here"  
+            v-model="newMessage"
+            @blur="store"
+            autofocus
+        ></textarea>
     </div>
 </div>
 </template>
 
 <script setup>
 import { ref } from 'vue';
+
+const newMessage = ref('');
+function store () {
+    fetch('http://localhost/api/messages', {
+        method: 'POST',
+        headers: {
+            "Content-type": "application/json",
+        },
+        body: JSON.stringify({
+            message: newMessage.value,
+            user_id: 1,
+            receiver_id: 2,
+        })
+    })
+    .then(response => response.json())
+    .then(data => gotMessages.value.push(data));
+    newMessage.value = '';
+}
+
 const gotMessages = ref(null);
 fetch('http://localhost/api/user/2')
     .then(response => response.json())
@@ -36,7 +60,7 @@ div {
     padding: 10px;
     background-color: #ffe;
 }
-input {
+input, textarea {
     background: none;
     border: 0;
 }
