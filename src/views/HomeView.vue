@@ -8,7 +8,6 @@
         <div class="header">Other User info will be here</div>
         <div class="chat">
             <div v-for="message in gotMessages" :key="message.id" class="gotMessages">You got messages:{{ message.message }}</div>
-            <div v-for="message in sentMessages" :key="message.id" class="sentMessages">You sent messages:{{ message.message }}</div>
         </div>
         <textarea class="messageInput" 
             placeholder="Message input will be here"  
@@ -42,15 +41,20 @@ function store () {
 }
 
 const gotMessages = ref(null);
-fetch('http://localhost/api/user/2')
+fetch('http://localhost/api/message/1/2')
     .then(response => response.json())
     .then(data => gotMessages.value = data);
 
-const sentMessages = ref(null);
-fetch('http://localhost/api/user/sent/2')
-    .then(response => response.json())
-    .then(data => sentMessages.value = data);
+// const START_DATE = new Date('2021-09-01T00:00:00');
+function filteredMessage() {
+    //   return gotMessages.value
+    //     .filter(s => new Date(s.created) >= START_DATE)
+    //     .sort((a, b) => new Date(a.created) - new Date(b.created)
+    //   );
+    console.log(gotMessages.value);
 
+}
+filteredMessage();
 </script>
 
 <style scoped>  
