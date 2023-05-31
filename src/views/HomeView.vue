@@ -43,18 +43,19 @@ function store () {
 const gotMessages = ref(null);
 fetch('http://localhost/api/message/1/2')
     .then(response => response.json())
-    .then(data => gotMessages.value = data);
+    .then(data => {
+    gotMessages.value = data;
+    filteredMessage();
+  });
 
-// const START_DATE = new Date('2021-09-01T00:00:00');
 function filteredMessage() {
-    //   return gotMessages.value
-    //     .filter(s => new Date(s.created) >= START_DATE)
-    //     .sort((a, b) => new Date(a.created) - new Date(b.created)
-    //   );
-    console.log(gotMessages.value);
-
+    if (gotMessages.value === null) return;
+    gotMessages.value.sort((a, b) => {
+    const dateA = new Date(a.created_at);
+    const dateB = new Date(b.created_at);
+    return dateA - dateB;
+});
 }
-filteredMessage();
 </script>
 
 <style scoped>  
