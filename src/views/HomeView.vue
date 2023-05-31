@@ -24,7 +24,7 @@ import { ref } from 'vue';
 
 const newMessage = ref('');
 function store () {
-    fetch('http://localhost/api/messages', {
+    fetch('http://localhost/api/message', {
         method: 'POST',
         headers: {
             "Content-type": "application/json",
