@@ -8,7 +8,7 @@
         <div class="header">Other User info will be here</div>
         <div class="chat">
             <div v-for="message in gotMessages.slice().reverse()" :key="message.id" class="message"> 
-                <MessageComponent :message="message" />
+                <MessageComponent :message="message" @deleteMessage="delete_task"/>
             </div>
         </div>
         <textarea class="messageInput" 
@@ -61,6 +61,10 @@ async function store () {
     }
     newMessage.value = '';
     gotMessages.value.push(responseJSON);
+}
+
+function delete_task (id) {
+    gotMessages.value = gotMessages.value.filter(message => message.id != id);
 }
 </script>
 

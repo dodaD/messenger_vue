@@ -1,14 +1,15 @@
 <template>
     <div v-if="!show" :class="{ messageToRight: thisUser }"> {{ props.message.message }}</div>
-    <button @click="changeMessage">Change</button>
+    <button @click="changeMessage">C</button>
     <input type="text" v-model="updateMessage" v-if="show" :class="{ messageToRight: thisUser }">
-    <button @click="deleteMessage">Delete</button>
+    <button @click=deleteMessage>D</button>
 </template>
 
 <script setup>
 import { defineProps } from 'vue'
 import { ref } from 'vue';
 import { useCookies } from "vue3-cookies";
+import { defineEmits } from 'vue'
 
 const { cookies } = useCookies();
 const thisUser = cookies.get("userId") == props.message.user_id;
@@ -38,18 +39,19 @@ function changeMessage () {
     show.value = false;
 }
 
+const emit = defineEmits(['deleteMessage'])
 function deleteMessage () {
     fetch('http://localhost/api/message/'+ props.message.id, {
         method: 'DELETE',
     })
-    
+    emit('deleteMessage', props.message.id);
 }
 </script>
 
 <style scoped>
 button {
-    height: 50px;
-    width: 50px;
+    height: 20px;
+    width: 20px;
 }
 .messageToRight {
     justify-content: flex-end;
