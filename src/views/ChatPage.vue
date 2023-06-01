@@ -7,7 +7,9 @@
     <div class="wrapperChat"> 
         <div class="header">Other User info will be here</div>
         <div class="chat">
-            <div v-for="message in gotMessages" :key="message.id" class="gotMessages">You got messages:{{ message.message }}</div>
+            <div v-for="message in gotMessages.slice().reverse()" :key="message.id" class="message"> 
+                <MessageComponent :message="message" />
+            </div>
         </div>
         <textarea class="messageInput" 
             placeholder="Message input will be here"  
@@ -21,10 +23,27 @@
 
 <script setup>
 import { ref } from 'vue';
+import { onBeforeMount } from 'vue';
+import { useCookies } from "vue3-cookies";
+// import MessageComponent from "src/components/MessageComponent.vue";
+import MessageComponent from "@/components/MessageComponent.vue";
+
+const gotMessages = ref([]);
+const { cookies } = useCookies();
+onBeforeMount(async()  => {
+    const response = await fetch('http://localhost/api/message/1/2');
+    const responseJSON = await response.json();
+    if (!response.ok) {
+        console.log(responseJSON);
+        return
+    }
+    gotMessages.value = responseJSON;
+    cookies.set("userId",2);
+});
 
 const newMessage = ref('');
-function store () {
-    fetch('http://localhost/api/message', {
+async function store () {
+    const response = await fetch('http://localhost/api/message', {
         method: 'POST',
         headers: {
             "Content-type": "application/json",
@@ -34,31 +53,18 @@ function store () {
             user_id: 1,
             receiver_id: 2,
         })
-    })
-    .then(response => response.json())
-    .then(data => gotMessages.value.push(data));
+    });
+    const responseJSON = await response.json();
+    if (!response.ok) {
+        console.log(responseJSON);
+        return
+    }
     newMessage.value = '';
-}
-
-const gotMessages = ref(null);
-fetch('http://localhost/api/message/1/2')
-    .then(response => response.json())
-    .then(data => {
-    gotMessages.value = data;
-    filteredMessage();
-  });
-
-function filteredMessage() {
-    if (gotMessages.value === null) return;
-    gotMessages.value.sort((a, b) => {
-    const dateA = new Date(a.created_at);
-    const dateB = new Date(b.created_at);
-    return dateA - dateB;
-});
+    gotMessages.value.push(responseJSON);
 }
 </script>
 
-<style scoped>  
+<style scoped > 
 div {
     border: 1px solid black;
     margin: 10px;
@@ -93,16 +99,16 @@ input, textarea {
     flex-grow: 1;
     overflow-y: scroll;
 }
-.gotMessages {
+.message {
     width: 45%;
     display: flex;
 }
-.sentMessages {
-    width: 45%;
-    display: flex;
+.message:has(div.messageToRight), .message:has(input.messageToRight) {
     justify-content: flex-end;
     margin-left: auto;
+    background-color: aquamarine;
 }
+
 .search {
     margin: 10px;
     padding: 10px;
