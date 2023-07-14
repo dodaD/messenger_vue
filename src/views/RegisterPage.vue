@@ -17,10 +17,10 @@ import { useRouter } from 'vue-router'
 const { cookies } = useCookies();
 const router = useRouter();
 
-const email = ref(null);
+const email = ref('');
 const name = ref(null);
 const nickname = ref(null);
-const password = ref(null);
+const password = ref('');
 const passwordRepeat = ref(null);
 
 async function register() {
@@ -28,8 +28,17 @@ async function register() {
     //show error component
     console.log("Error!");
     return;
-  } else if (!email.value || !name.value || !nickname.value || !password.value) {
+  }
+  if (!email.value || !name.value || !nickname.value || !password.value) {
     console.log("All fields must be filled!");
+    return;
+  }
+  if (password.value.length < 8) {
+    console.log("Password must be at least 8 characthers");
+    return;
+  }
+  if (nickname.value.length >= 255 || name.value.length >= 255 || email.value.length >= 255) {
+    console.log("Any fields shouldn't extends 255 characthers!");
     return;
   }
   const response = await fetch('http://localhost/api/user/register', {
@@ -63,17 +72,31 @@ async function register() {
 
  .theWrapper {
    display: flex;
-   height: 96vh;
-   margin-bottom: 0;
+   height: 70vh;
    flex-direction: column;
    align-items: center;
    justify-content: center;
+   width: 50%;
+   margin-left: auto;
+   margin-right: auto;
+   margin-top: 13vh;
+   padding: 0 15%;
  }
 
  input {
-   width: 60%;
+   width: 100%;
    height: 23px;
    margin: 11px 0;
+ }
+
+ a {
+   margin-bottom: 10px;
+   margin-right: auto;
+ }
+
+ h1 {
+   position: absolute;
+   top: 25%;
  }
 </style>
 
