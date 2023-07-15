@@ -5,14 +5,24 @@
       <div class="chatHistory">
         <p v-if="!history.length">Chat list will be here as soon as you start one. Just write someone!</p>
         <div v-for="message in history" class="messageWrapper" v-on:click="openChat(message)">
-          <div class="messagePicture"> Avatar </div>
+          <div class="userPicture"> Avatar </div>
           <div class="historyMessage">
             <h4 class="messageName"> {{ message.name }} </h4>
             <p class="message">{{ message.message }}</p>
           </div>
         </div>
       </div>
+
+      <div class="userWrapper">
+        <div class="userPicture activeUser"> Avatar </div>
+        <div class="userInfo">
+          <h4> {{ currentUserInfo.name }} </h4>
+          <div> {{ currentUserInfo.email }} </div>
+          <div> {{ currentUserInfo.nickname }} </div>
+        </div>
+      </div>
     </div>
+
     <div class="wrapperChat">
       <div class="header">Other User info will be here</div>
       <div class="activeChat">
@@ -29,13 +39,12 @@
 
 <script setup>
 import { ref } from 'vue';
-import { onBeforeMount } from 'vue';
 import { useCookies } from "vue3-cookies";
 // import MessageComponent from "src/components/MessageComponent.vue";
 
 const history = ref([]);
 const { cookies } = useCookies();
-onBeforeMount(async () => {
+(async () => {
   const response = await fetch('http://localhost/api/message/history', {
     headers: {
       "Accept": "application/json",
@@ -50,11 +59,9 @@ onBeforeMount(async () => {
     return
   }
   history.value = responseJSON;
-})
+})();
 
-//import jwtDecode from 'jwt-decode';
-//const decodedToken = jwtDecode(cookies.get("authToken"));
-//console.log(decodedToken.sub);
+
 const currentChat = ref([]);
 
 async function openChat(message) {
@@ -89,6 +96,26 @@ async function openChat(message) {
   }
   currentChat.value = responseJSON.data;
 }
+
+const currentUserInfo = ref([]);
+
+(async () => {
+  const response = await fetch('http://localhost/api/user/my-user-info', {
+    headers: {
+      "Accept": "application/json",
+      "Content-type": "application/json",
+      "Authorization": "Bearer " + cookies.get("authToken"),
+    }
+  });
+  const responseJSON = await response.json();
+  if (!response.ok) {
+    console.log(responseJSON);
+    //TODO push to login page
+    return
+  }
+  currentUserInfo.value = responseJSON;
+  console.log(currentUserInfo.value);
+})();
 </script>
 
 <style scoped>
@@ -114,7 +141,7 @@ textarea {
   margin-left: 10px;
 }
 
-.messagePicture {
+.userPicture {
   border: 1px solid black;
   border-radius: 100px;
   width: 50px;
@@ -124,6 +151,15 @@ textarea {
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-shrink: 0;
+}
+
+.activeUser {
+  margin: 0;
+  height: 70px;
+  width: 70px;
+  margin-top: auto;
+  margin-bottom: auto;
 }
 
 .historyMessage {
@@ -132,8 +168,24 @@ textarea {
   padding: 0;
 }
 
-.messageWrapper {
+.messageWrapper,
+.userWrapper {
   display: flex;
+}
+
+.userInfo {
+  margin: 0;
+  border: 0;
+  padding-right: 0;
+}
+
+.userInfo div {
+  margin: 0;
+  margin-bottom: 3px;
+}
+
+.userInfo h4 {
+  margin: 0;
 }
 
 .theWrapper {
