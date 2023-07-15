@@ -52,7 +52,11 @@ onBeforeMount(async () => {
   history.value = responseJSON;
 })
 
+//import jwtDecode from 'jwt-decode';
+//const decodedToken = jwtDecode(cookies.get("authToken"));
+//console.log(decodedToken.sub);
 const currentChat = ref([]);
+
 async function openChat(message) {
   let link = '';
   switch (message.receiver_type) {
