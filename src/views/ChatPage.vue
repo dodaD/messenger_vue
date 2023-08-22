@@ -4,6 +4,7 @@
       <input class="search" placeholder="Search bar">
       <div class="chatHistory">
         <p v-if="!history.length">Chat list will be here as soon as you start one. Just write someone!</p>
+
         <div v-for="message in history" class="messageWrapper" v-on:click="openChat(message)">
           <div class="userPicture"> Avatar </div>
           <div class="historyMessage">
@@ -17,8 +18,8 @@
         <div class="userPicture activeUser"> Avatar </div>
         <div class="userInfo">
           <h4> {{ currentUserInfo.name }} </h4>
-          <div> {{ currentUserInfo.email }} </div>
           <div> {{ currentUserInfo.nickname }} </div>
+          <div> {{ currentUserInfo.email }} </div>
         </div>
       </div>
     </div>
@@ -31,7 +32,10 @@
           would be hidden. When
           you
           click on message on history one of them will be renderered with corresponding props to pass"</p>
-        <div v-for="message in currentChat">{{ message.message }} </div>
+        <div v-for="message in currentChat" :key="message.id"
+          :class="message.user_id === currentUserStore.userId ? 'sent-message' : 'received-message'">
+          {{ message.message }}
+        </div>
       </div>
     </div>
   </div>
@@ -40,7 +44,11 @@
 <script setup>
 import { ref } from 'vue';
 import { useCookies } from "vue3-cookies";
+import { useUserStore } from "../stores/user.js";
 // import MessageComponent from "src/components/MessageComponent.vue";
+
+const currentUserStore = useUserStore();
+console.log(currentUserStore);
 
 const history = ref([]);
 const { cookies } = useCookies();
@@ -54,7 +62,6 @@ const { cookies } = useCookies();
   });
   const responseJSON = await response.json();
   if (!response.ok) {
-    console.log(responseJSON);
     //TODO push to login page
     return
   }
@@ -111,10 +118,10 @@ const currentUserInfo = ref([]);
   if (!response.ok) {
     console.log(responseJSON);
     //TODO push to login page
-    return
+    return;
   }
   currentUserInfo.value = responseJSON;
-  console.log(currentUserInfo.value);
+  currentUserStore.userId = currentUserInfo.value.id;
 })();
 </script>
 
@@ -139,6 +146,16 @@ textarea {
 
 .message {
   margin-left: 10px;
+}
+
+.sent-message {
+  margin-left: auto;
+  width: fit-content;
+}
+
+.received-message {
+  margin-right: auto;
+  width: fit-content;
 }
 
 .userPicture {
@@ -182,10 +199,35 @@ textarea {
 .userInfo div {
   margin: 0;
   margin-bottom: 3px;
+  padding-left: 15px;
+  margin-right: 5px;
+  width: fit-content;
 }
 
 .userInfo h4 {
   margin: 0;
+}
+
+.userInfo div:last-of-type {
+  padding-right: 20px;
+  margin-left: 20px;
+}
+
+.userInfo div:first-of-type {
+  position: relative;
+  border-left: 0;
+  margin-left: 3px;
+}
+
+.userInfo div:first-of-type::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background-image: linear-gradient(to right, transparent, black);
+  z-index: -1;
 }
 
 .theWrapper {
