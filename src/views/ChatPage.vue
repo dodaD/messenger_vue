@@ -25,7 +25,11 @@
     </div>
 
     <div class="wrapperChat">
-      <div class="header">Other User info will be here</div>
+      <div class="header">
+        <h4> {{ otherUserInfo.name }} </h4>
+        <div> {{ otherUserInfo.nickname }}
+        </div>
+      </div>
       <div class="activeChat">
         <p v-if="!currentChat.length"> "There would be active chats. While nothing is opened channelchat, userchat &
           groupchat
@@ -48,7 +52,6 @@ import { useUserStore } from "../stores/user.js";
 // import MessageComponent from "src/components/MessageComponent.vue";
 
 const currentUserStore = useUserStore();
-console.log(currentUserStore);
 
 const history = ref([]);
 const { cookies } = useCookies();
@@ -67,7 +70,6 @@ const { cookies } = useCookies();
   }
   history.value = responseJSON;
 })();
-
 
 const currentChat = ref([]);
 
@@ -102,6 +104,28 @@ async function openChat(message) {
     return
   }
   currentChat.value = responseJSON.data;
+  getOtherUserInfo(currentChat.value[0].user_id, currentChat.value[0].receiver_id, currentChat.value[0].receiver_type);
+}
+
+const otherUserInfo = ref({});
+
+async function getOtherUserInfo($user_id, $receiver_id, $receiver_type) {
+  const id = currentUserStore === $user_id ? $user_id : $receiver_id;
+  $receiver_type = $receiver_type.replace('App\\Models\\', '');
+
+  const response = await fetch('http://localhost/api/user-info/' + id + '/' + $receiver_type, {
+    headers: {
+      "Accept": "application/json",
+      "Content-type": "application/json",
+      "Authorization": "Bearer " + cookies.get("authToken"),
+    }
+  });
+  const responseJSON = await response.json();
+  if (!response.ok) {
+    //TODO push to login page
+    return;
+  }
+  otherUserInfo.value = responseJSON;
 }
 
 const currentUserInfo = ref([]);
@@ -116,7 +140,6 @@ const currentUserInfo = ref([]);
   });
   const responseJSON = await response.json();
   if (!response.ok) {
-    console.log(responseJSON);
     //TODO push to login page
     return;
   }
@@ -266,6 +289,10 @@ textarea {
 
 .header {
   height: 10%;
+}
+
+.header h4 {
+  margin: 0;
 }
 
 .messageInput {
