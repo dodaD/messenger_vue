@@ -38,7 +38,7 @@
           click on message on history one of them will be renderered with corresponding props to pass"</p>
         <div v-for="message in currentChat" :key="message.id"
           :class="message.user_id === currentUserStore.userId ? 'sent-message' : 'received-message'">
-          {{ message.message }}
+          <MessageComponent :message="message"> </MessageComponent>
         </div>
       </div>
     </div>
@@ -49,7 +49,7 @@
 import { ref } from 'vue';
 import { useCookies } from "vue3-cookies";
 import { useUserStore } from "../stores/user.js";
-// import MessageComponent from "src/components/MessageComponent.vue";
+import MessageComponent from "../components/MessageComponent.vue";
 
 const currentUserStore = useUserStore();
 
@@ -101,7 +101,7 @@ async function openChat(message) {
   if (!response.ok) {
     console.log(responseJSON);
     //TODO push to login page
-    return
+    return;
   }
   currentChat.value = responseJSON.data;
   getOtherUserInfo(currentChat.value[0].user_id, currentChat.value[0].receiver_id, currentChat.value[0].receiver_type);
