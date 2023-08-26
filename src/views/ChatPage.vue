@@ -38,7 +38,8 @@
           click on message on history one of them will be renderered with corresponding props to pass"</p>
         <div v-for="message in currentChat" :key="message.id"
           :class="message.user_id === currentUserStore.userId ? 'sent-message' : 'received-message'">
-          <MessageComponent :message="message"> </MessageComponent>
+          <MessageComponent :message="message"
+            @deleted-message="(id) => currentChat = currentChat.filter(item => item.id !== id)"> </MessageComponent>
         </div>
       </div>
     </div>

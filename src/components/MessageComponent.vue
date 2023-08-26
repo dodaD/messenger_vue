@@ -1,6 +1,6 @@
 <template>
   <div v-if="show"> {{ messageToShow }}</div>
-  <button v-if="show" @click="show = !show">C</button>
+  <button v-if="show" @click="show = !show; updatedMessage = messageToShow">C</button>
   <button v-if="show" @click=deleteMessage>D</button>
   <button v-if="!show" @click=editMessage>Save changes</button>
   <input v-if="!show" v-model="updatedMessage" />
@@ -41,6 +41,24 @@ async function editMessage() {
   show.value = true;
 }
 
+const emit = defineEmits(['deletedMessage']);
+
+async function deleteMessage() {
+  const response = await fetch('http://localhost/api/message/' + props.message.id, {
+    method: "DELETE",
+    headers: {
+      "Accept": "application/json",
+      "Content-type": "application/json",
+      "Authorization": "Bearer " + cookies.get("authToken"),
+    },
+  });
+  const responseJSON = await response.json();
+  if (!response.ok) {
+    console.log(responseJSON);
+    return;
+  }
+  emit('deletedMessage', props.message.id);
+}
 </script>
 
 <style scoped>
