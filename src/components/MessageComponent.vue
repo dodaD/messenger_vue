@@ -1,5 +1,9 @@
 <template>
-  <div v-if="show"> {{ messageToShow }}</div>
+  <div v-if="show">
+    <div> {{ props.message.reference_message }} </div>
+    {{ messageToShow }}
+    <div v-if="props.message.updated_at !== props.message.created_at">Updated: {{ updatedAt }}</div>
+  </div>
   <button v-if="show" @click="show = !show; updatedMessage = messageToShow">C</button>
   <button v-if="show" @click=deleteMessage>D</button>
   <button v-if="!show" @click=editMessage>Save changes</button>
@@ -16,6 +20,10 @@ const props = defineProps({
   message: Object,
 });
 const messageToShow = ref(props.message.message);
+const updatedAt = ref('');
+const date = new Date(props.message.updated_at);
+const options = { day: 'numeric', month: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' };
+updatedAt.value = date.toLocaleString('en-US', options);
 
 const updatedMessage = ref('');
 const show = ref(true);
