@@ -41,6 +41,10 @@
           <MessageComponent :message="message"
             @deleted-message="(id) => currentChat = currentChat.filter(item => item.id !== id)"> </MessageComponent>
         </div>
+        <SendMessageComponent v-if="currentChat[0] !== undefined"
+          :receiver-id="currentChat[0].user_id === currentUserStore.userId ? currentChat[0].receiver_id : currentChat[0].user_id"
+          :receiver-type="currentChat[0].receiver_type" @added-message="(message) => currentChat.push(message)">
+        </SendMessageComponent>
       </div>
     </div>
   </div>
@@ -51,6 +55,7 @@ import { ref } from 'vue';
 import { useCookies } from "vue3-cookies";
 import { useUserStore } from "../stores/user.js";
 import MessageComponent from "../components/MessageComponent.vue";
+import SendMessageComponent from "../components/SendMessageComponent.vue";
 
 const currentUserStore = useUserStore();
 
