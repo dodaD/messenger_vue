@@ -1,15 +1,3 @@
-<template>
-  <div v-if="show">
-    <div> {{ props.message.reference_message }} </div>
-    {{ messageToShow }}
-    <div v-if="props.message.updated_at !== props.message.created_at">Updated: {{ updatedAt }}</div>
-  </div>
-  <button v-if="show" @click="show = !show; updatedMessage = messageToShow">C</button>
-  <button v-if="show" @click=deleteMessage>D</button>
-  <button v-if="!show" @click=editMessage>Save changes</button>
-  <input v-if="!show" v-model="updatedMessage" />
-</template> 
-
 <script setup>
 import { defineProps } from 'vue'
 import { ref } from 'vue';
@@ -68,6 +56,18 @@ async function deleteMessage() {
   emit('deletedMessage', props.message.id);
 }
 </script>
+
+<template>
+  <div v-if="show">
+    <div> {{ props.message.reference_message }} </div>
+    {{ messageToShow }}
+    <div v-if="props.message.updated_at !== props.message.created_at">Updated: {{ updatedAt }}</div>
+  </div>
+  <button v-if="show" @click="show = !show; updatedMessage = messageToShow">C</button>
+  <button v-if="show" @click=deleteMessage>D</button>
+  <button v-if="!show" @click=editMessage>Save changes</button>
+  <input v-if="!show" v-model="updatedMessage" />
+</template> 
 
 <style scoped>
 button {

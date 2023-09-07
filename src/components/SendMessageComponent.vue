@@ -1,21 +1,13 @@
-<template>
-  <textarea v-model="newMessage"> {{ newMessage }} </textarea>
-  <button v-on:click="sendMessage"> Send </button>
-</template> 
-
 <script setup>
 import { ref } from 'vue';
 import { useCookies } from "vue3-cookies";
-import { defineProps } from 'vue'
-
 const { cookies } = useCookies();
-const props = defineProps({
-  receiverId: Number,
-  receiverType: String,
-});
+import { useUserStore } from "../stores/user.js";
+import { useOtherUserStore } from "../stores/otherUser.js";
+const currentUserStore = useUserStore();
+const currentOtherUserStore = useOtherUserStore();
 
 const newMessage = ref('');
-const emit = defineEmits(['addedMessage']);
 
 async function sendMessage() {
   if (newMessage.value === '') {
@@ -31,8 +23,8 @@ async function sendMessage() {
     },
     body: JSON.stringify({
       message: newMessage.value,
-      receiver_id: props.receiverId,
-      receiver: props.receiverType,
+      receiver_id: currentOtherUserStore.userId,
+      receiver: currentOtherUserStore.entity,
     })
   });
   const responseJSON = await response.json();
@@ -40,6 +32,14 @@ async function sendMessage() {
     console.log(responseJSON);
     return;
   }
-  emit('addedMessage', responseJSON);
+  currentUserStore.currentChat.push(responseJSON);
+  newMessage.value = '';
 }
 </script>
+
+<template>
+  <textarea v-model="newMessage"> {{ newMessage }} </textarea>
+  <button v-on:click="sendMessage"> Send </button>
+</template> 
+
+

@@ -1,68 +1,19 @@
-<template>
-  <div class="theWrapper">
-    <div class="menu">
-      <input class="search" placeholder="Search bar">
-      <div class="chatHistory">
-        <p v-if="!history.length">Chat list will be here as soon as you start one. Just write someone!</p>
-
-        <div v-for="message in history" class="messageWrapper" v-on:click="openChat(message)">
-          <div class="userPicture"> Avatar </div>
-          <div class="historyMessage">
-            <h4 class="messageName"> {{ message.name }} </h4>
-            <p class="message">{{ message.message }}</p>
-          </div>
-        </div>
-      </div>
-
-      <div class="userWrapper">
-        <div class="userPicture activeUser"> Avatar </div>
-        <div class="userInfo">
-          <h4> {{ currentUserInfo.name }} </h4>
-          <div> {{ currentUserInfo.nickname }} </div>
-          <div> {{ currentUserInfo.email }} </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="wrapperChat">
-      <div class="header">
-        <h4> {{ otherUserInfo.name }} </h4>
-        <div> {{ otherUserInfo.nickname }}
-        </div>
-      </div>
-      <div class="activeChat">
-        <p v-if="!currentChat.length"> "There would be active chats. While nothing is opened channelchat, userchat &
-          groupchat
-          would be hidden. When
-          you
-          click on message on history one of them will be renderered with corresponding props to pass"</p>
-        <div v-for="message in currentChat" :key="message.id"
-          :class="message.user_id === currentUserStore.userId ? 'sent-message' : 'received-message'">
-          <MessageComponent :message="message"
-            @deleted-message="(id) => currentChat = currentChat.filter(item => item.id !== id)"> </MessageComponent>
-        </div>
-        <SendMessageComponent v-if="currentChat[0] !== undefined"
-          :receiver-id="currentChat[0].user_id === currentUserStore.userId ? currentChat[0].receiver_id : currentChat[0].user_id"
-          :receiver-type="currentChat[0].receiver_type" @added-message="(message) => currentChat.push(message)">
-        </SendMessageComponent>
-      </div>
-    </div>
-  </div>
-</template>
-
 <script setup>
 import { ref } from 'vue';
 import { useCookies } from "vue3-cookies";
 import { useUserStore } from "../stores/user.js";
+import { useOtherUserStore } from "../stores/otherUser.js";
 import MessageComponent from "../components/MessageComponent.vue";
 import SendMessageComponent from "../components/SendMessageComponent.vue";
+import SearchComponent from "../components/SearchComponent.vue";
 
 const currentUserStore = useUserStore();
+const currentOtherUserStore = useOtherUserStore();
 
 const history = ref([]);
 const { cookies } = useCookies();
 (async () => {
-  const response = await fetch('http://localhost/api/message/history', {
+  const response = await fetch('http://localhost/api/message/history', { //TODO change to env variable 
     headers: {
       "Accept": "application/json",
       "Content-type": "application/json",
@@ -72,12 +23,11 @@ const { cookies } = useCookies();
   const responseJSON = await response.json();
   if (!response.ok) {
     //TODO push to login page
-    return
+    return;
   }
   history.value = responseJSON;
 })();
-
-const currentChat = ref([]);
+//TODO talk with doteopna dytyna how can I update history to reflect on current state
 
 async function openChat(message) {
   let link = '';
@@ -109,15 +59,15 @@ async function openChat(message) {
     //TODO push to login page
     return;
   }
-  currentChat.value = responseJSON.data;
-  getOtherUserInfo(currentChat.value[0].user_id, currentChat.value[0].receiver_id, currentChat.value[0].receiver_type);
+  currentUserStore.currentChat = responseJSON.data;
+  getOtherUserInfo(currentUserStore.currentChat[0].user_id, currentUserStore.currentChat[0].receiver_id, currentUserStore.currentChat[0].receiver_type);
 }
 
-const otherUserInfo = ref({});
-
 async function getOtherUserInfo($user_id, $receiver_id, $receiver_type) {
-  const id = currentUserStore === $user_id ? $user_id : $receiver_id;
+  const id = currentUserStore.userId === $user_id ? $receiver_id : $user_id;
+  currentOtherUserStore.userId = id;
   $receiver_type = $receiver_type.replace('App\\Models\\', '');
+  currentOtherUserStore.entity = $receiver_type;
 
   const response = await fetch('http://localhost/api/user-info/' + id + '/' + $receiver_type, {
     headers: {
@@ -131,7 +81,8 @@ async function getOtherUserInfo($user_id, $receiver_id, $receiver_type) {
     //TODO push to login page
     return;
   }
-  otherUserInfo.value = responseJSON;
+  currentOtherUserStore.userName = responseJSON.name;
+  currentOtherUserStore.userNickname = responseJSON.nickname;
 }
 
 const currentUserInfo = ref([]);
@@ -153,6 +104,55 @@ const currentUserInfo = ref([]);
   currentUserStore.userId = currentUserInfo.value.id;
 })();
 </script>
+
+<template>
+  <div class="theWrapper">
+    <div class="menu">
+      <SearchComponent> </SearchComponent>
+      <div class="chatHistory">
+        <p v-if="!history.length">Chat list will be here as soon as you start one. Just write someone!</p>
+
+        <div v-for="message in history" class="messageWrapper" v-on:click="openChat(message)">
+          <div class="userPicture"> Avatar </div>
+          <div class="historyMessage">
+            <h4 class="messageName"> {{ message.name }} </h4>
+            <p class="message">{{ message.message }}</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="userWrapper">
+        <div class="userPicture activeUser"> Avatar </div>
+        <div class="userInfo">
+          <h4> {{ currentUserInfo.name }} </h4>
+          <div> {{ currentUserInfo.nickname }} </div>
+          <div> {{ currentUserInfo.email }} </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="wrapperChat">
+      <div class="header">
+        <h4> {{ currentOtherUserStore.userName }} </h4>
+        <div> {{ currentOtherUserStore.userNickname }} </div>
+      </div>
+      <div class="activeChat">
+        <p v-if="!currentUserStore.currentChat.length"> "There would be active chats. While nothing is opened channelchat,
+          userchat &
+          groupchat would be hidden. When you
+          click on message on history one of them will be renderered with corresponding props to pass"</p>
+        <div v-for="message in currentUserStore.currentChat" :key="message.id"
+          :class="message.user_id === currentUserStore.userId ? 'sent-message' : 'received-message'">
+          <MessageComponent :message="message"
+            @deleted-message="(id) => currentUserStore.currentChat = currentUserStore.currentChat.filter(item => item.id !== id)">
+          </MessageComponent>
+        </div>
+        <SendMessageComponent> </SendMessageComponent>
+      </div>
+    </div>
+  </div>
+</template>
+
 
 <style scoped>
 div {
