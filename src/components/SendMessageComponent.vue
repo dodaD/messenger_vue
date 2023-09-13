@@ -23,7 +23,7 @@ async function sendMessage() {
     },
     body: JSON.stringify({
       message: newMessage.value,
-      receiver_id: currentOtherUserStore.userId,
+      receiver_id: currentOtherUserStore.otherUserId,
       receiver: currentOtherUserStore.entity,
     })
   });

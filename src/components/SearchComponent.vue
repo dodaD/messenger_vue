@@ -32,6 +32,7 @@ async function search() {
 }
 
 async function openChat($receiver_id, $entity, $name, $nickname) {
+  console.log("Place #2");
   let link = '';
   switch ($entity) {
     case 'group':
@@ -62,7 +63,7 @@ async function openChat($receiver_id, $entity, $name, $nickname) {
     return;
   }
   currentUserStore.currentChat = responseJSON.data;
-  currentOtherUserStore.userId = $receiver_id;
+  currentOtherUserStore.otherUserId = $receiver_id;
   currentOtherUserStore.entity = $entity;
   currentOtherUserStore.userName = $name;
   currentOtherUserStore.userNickname = $nickname;

@@ -1,7 +1,7 @@
 <script setup>
 import { ref } from 'vue';
 import { useCookies } from "vue3-cookies";
-import { useUserStore } from "../stores/user.js";
+import { useUserStore } from "../stores/User.js";
 import { useOtherUserStore } from "../stores/otherUser.js";
 import MessageComponent from "../components/MessageComponent.vue";
 import SendMessageComponent from "../components/SendMessageComponent.vue";
@@ -65,17 +65,23 @@ async function openChat(message) {
 
 async function getOtherUserInfo($user_id, $receiver_id, $receiver_type) {
   const id = currentUserStore.userId === $user_id ? $receiver_id : $user_id;
-  currentOtherUserStore.userId = id;
+  console.log("Message userId: " + $user_id);
+  console.log("This User Id: " + currentUserStore.userId);
+  console.log(currentUserStore.userId === $user_id);
+  console.log('t1')
+  currentOtherUserStore.otherUserId = id;
   $receiver_type = $receiver_type.replace('App\\Models\\', '');
   currentOtherUserStore.entity = $receiver_type;
 
-  const response = await fetch('http://localhost/api/user-info/' + id + '/' + $receiver_type, {
+  console.log('t2')
+  const response = await fetch(`http://localhost/api/user-info/${id}/${$receiver_type}`, {
     headers: {
       "Accept": "application/json",
       "Content-type": "application/json",
       "Authorization": "Bearer " + cookies.get("authToken"),
     }
   });
+  console.log('t3')
   const responseJSON = await response.json();
   if (!response.ok) {
     //TODO push to login page

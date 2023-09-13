@@ -1,8 +1,8 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 
-export const useOtherUserStore = defineStore('counter', () => {
-  const userId = ref(0);
+export const useOtherUserStore = defineStore('element', () => {
+  const otherUserId = ref(0);
   const userName = ref('');
   const userNickname = ref('');
   const entity = ref('');
@@ -17,5 +17,5 @@ export const useOtherUserStore = defineStore('counter', () => {
     entity.value = '';
   }
 
-  return { userId, userName, userNickname, entity };
+  return { otherUserId, userName, userNickname, entity };
 })
