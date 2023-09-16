@@ -1,14 +1,12 @@
-<script>
-import { useHistoryStore } from "../stores/History.js";
-const historyStore = useHistoryStore();
+<script setup>
+import { useMessagesStore } from "../stores/Messages.js";
+const messagesStore = useMessagesStore();
 
 import { useCookies } from "vue3-cookies";
 const { cookies } = useCookies();
 
-import { useUserStore } from "../stores/User.js";
-const userStore = useUserStore();
-
 (async () => {
+  console.log(cookies.get("authToken"));
   const response = await fetch('http://localhost/api/message/history', { //TODO change to env variable 
     headers: {
       "Accept": "application/json",
@@ -21,10 +19,16 @@ const userStore = useUserStore();
     //TODO push to login page
     return;
   }
-  historyStore.value = responseJSON;
+  messagesStore.history = responseJSON;
 })();
 
 async function openChat(message) {
+  const chatId = message.entity + message.interlocutorId;
+  console.log(chatId);
+  messagesStore.openedChatId = chatId;
+  if (messagesStore.allMessages.chatId !== undefined) {
+    return;
+  };
   let link = '';
   switch (message.receiver_type) {
     case 'App\\Models\\Group':
@@ -53,12 +57,12 @@ async function openChat(message) {
     console.log(responseJSON);
     return;
   }
-  userStore.currentChat = responseJSON.data;
+  messagesStore.chatId = responseJSON.data;
 }
 </script>
 
 <template>
-  <div v-for="chat in useHistoryStore" @click="openChat(chat)">
+  <div v-for="chat in messagesStore.history" @click="openChat(chat)">
     <div class="profile-picture"> Avatar </div>
     <div class="history-message">
       <h4 class="receiver-name"> {{ chat.name }} </h4>

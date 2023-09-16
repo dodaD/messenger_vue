@@ -1,4 +1,4 @@
-<script>
+<script setup>
 (async () => {
   const id = currentUserStore.userId === $user_id ? $receiver_id : $user_id;
   currentOtherUserStore.otherUserId = id;
@@ -19,5 +19,5 @@
   }
   currentOtherUserStore.userName = responseJSON.name;
   currentOtherUserStore.userNickname = responseJSON.nickname;
-})();
+})(); 
 </script>
