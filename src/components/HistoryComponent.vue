@@ -2,11 +2,13 @@
 import { useMessagesStore } from "../stores/Messages.js";
 const messagesStore = useMessagesStore();
 
+import { useReceiverStore } from "../stores/CurrentReceiver.js";
+const currentReceiver = useReceiverStore();
+
 import { useCookies } from "vue3-cookies";
 const { cookies } = useCookies();
 
 (async () => {
-  console.log(cookies.get("authToken"));
   const response = await fetch('http://localhost/api/message/history', { //TODO change to env variable 
     headers: {
       "Accept": "application/json",
@@ -23,23 +25,27 @@ const { cookies } = useCookies();
 })();
 
 async function openChat(message) {
-  const chatId = message.entity + message.interlocutorId;
-  console.log(chatId);
-  messagesStore.openedChatId = chatId;
-  if (messagesStore.allMessages.chatId !== undefined) {
-    return;
-  };
   let link = '';
   switch (message.receiver_type) {
     case 'App\\Models\\Group':
+      currentReceiver.entity = 'group';
       link = 'http://localhost/api/message/group-chat?page=1';
       break;
     case 'App\\Models\\Channel':
+      currentReceiver.entity = 'channel';
       link = 'http://localhost/api/message/channel-chat?page=1';
       break;
     default:
+      currentReceiver.entity = 'channel';
       link = 'http://localhost/api/message/chat-beetween-users?page=1';
   }
+  const chatId = currentReceiver.entity + message.interlocutorId;
+  messagesStore.openedChatId = chatId;
+
+  if (messagesStore.allMessages.chatId !== undefined) {
+    return;
+  };
+
   const response = await fetch(link, {
     method: "POST",
     headers: {
@@ -57,7 +63,7 @@ async function openChat(message) {
     console.log(responseJSON);
     return;
   }
-  messagesStore.chatId = responseJSON.data;
+  messagesStore.allMessages[chatId] = responseJSON.data;
 }
 </script>
 
