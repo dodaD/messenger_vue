@@ -62,7 +62,7 @@ async function openChat(message) {
 </script>
 
 <template>
-  <div v-for="chat in messagesStore.history" @click="openChat(chat)">
+  <div v-for="chat in messagesStore.history" @click="openChat(chat)" class="chat border">
     <div class="profile-picture"> Avatar </div>
     <div class="history-message">
       <h4 class="receiver-name"> {{ chat.name }} </h4>
@@ -70,3 +70,40 @@ async function openChat(message) {
     </div>
   </div>
 </template>
+
+<style>
+.border {
+  border: 1px solid black;
+  margin: 10px;
+  padding: 10px;
+  background-color: #ffe;
+}
+
+.chat {
+  display: flex;
+}
+
+.history-message {
+  border: 0;
+  margin: 0;
+  padding: 0;
+}
+
+.profile-picture {
+  border: 1px solid black;
+  border-radius: 100px;
+  width: 50px;
+  height: 50px;
+  margin: 10px;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0;
+
+}
+
+.message {
+  margin-left: 10px;
+}
+</style>
