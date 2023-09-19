@@ -8,6 +8,7 @@ const loggedInUser = useUserStore();
 import MessageComponent from "../components/MessageComponent.vue";
 //import SendMessageComponent from "../components/SendMessageComponent.vue";
 //import ReceiverInfoComponent from "../components/ReceiverInfoComponent.vue";
+//
 </script>
 
 <template>
