@@ -36,7 +36,7 @@ async function openChat(message) {
       link = 'http://localhost/api/message/channel-chat?page=1';
       break;
     default:
-      currentReceiver.entity = 'channel';
+      currentReceiver.entity = 'user';
       link = 'http://localhost/api/message/chat-beetween-users?page=1';
   }
   const chatId = currentReceiver.entity + message.interlocutorId;
@@ -54,8 +54,7 @@ async function openChat(message) {
       "Authorization": "Bearer " + cookies.get("authToken"),
     },
     body: JSON.stringify({
-      receiver_id: message.receiver_id,
-      sender_id: message.user_id,
+      receiver_id: message.interlocutorId,
     })
   });
   const responseJSON = await response.json();

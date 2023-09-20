@@ -41,7 +41,7 @@ async function editMessage() {
   show.value = true;
   const arr = messagesStore.allMessages[messagesStore.openedChatId];
   let messageToChangeId = arr.findIndex((message) => message.id === props.message.id);
-  arr[messageToChangeId].message = updatedMessage.value;
+  arr[messageToChangeId].message = updatedMessage.value; //TODO change
 }
 
 async function deleteMessage() {
@@ -57,25 +57,37 @@ async function deleteMessage() {
   if (!response.ok) {
     console.log(responseJSON);
     return;
-  }
+  } //TODO short it
+  messagesStore.allMessages[messagesStore.openedChatId] = messagesStore.allMessages[messagesStore.openedChatId].filter(message => message.id !== props.message.id);
 }
 </script>
 
 <template>
-  <div v-if="show">
+  <div v-if="show" class="border message">
     <div> {{ props.message.reference_message }} </div>
     {{ props.message.message }}
     <div v-if="props.message.updated_at !== props.message.created_at">Updated: {{ updatedAt }}</div>
   </div>
-  <button v-if="show" @click="show = !show; updatedMessage = messageToShow">C</button>
+  <button v-if="show" @click="show = !show">C</button>
   <button v-if="show" @click=deleteMessage>D</button>
-  <button v-if="!show" @click=editMessage>Save changes</button>
-  <input v-if="!show" v-model="updatedMessage" /> -->
+  <button v-if="!show" @click=editMessage>Save</button>
+  <input v-if="!show" v-model="updatedMessage" />
 </template> 
 
 <style scoped>
 button {
   height: 20px;
-  width: 20px;
+  min-width: 20px;
+  width: fit-content;
+}
+
+.border {
+  border: 1px solid black;
+  margin: 10px;
+  padding: 10px;
+}
+
+.message {
+  width: fit-content;
 }
 </style>
