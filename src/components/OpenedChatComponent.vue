@@ -6,14 +6,14 @@ import { useUserStore } from "../stores/User.js";
 const loggedInUser = useUserStore();
 
 import MessageComponent from "../components/MessageComponent.vue";
-//import SendMessageComponent from "../components/SendMessageComponent.vue";
-//import ReceiverInfoComponent from "../components/ReceiverInfoComponent.vue";
-//
+import SendMessageComponent from "../components/SendMessageComponent.vue";
+import ReceiverInfoComponent from "../components/ReceiverInfoComponent.vue";
+
 </script>
 
 <template>
   <div class="active-chat">
-    <!-- <ReceiverInfoComponent> </ReceiverInfoComponent> -->
+    <ReceiverInfoComponent> </ReceiverInfoComponent>
     <p v-if="messagesStore.openedChatId !== 0"> TODO: text from file using library, that in future I could translate
       easily
     </p>
@@ -22,6 +22,7 @@ import MessageComponent from "../components/MessageComponent.vue";
       @click="console.log(loggedInUser.userId)">
       <MessageComponent :message="message"> </MessageComponent>
     </div>
+    <SendMessageComponent> </SendMessageComponent>
   </div>
 </template>
 

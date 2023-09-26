@@ -1,11 +1,14 @@
 <script setup>
-(async () => {
-  const id = currentUserStore.userId === $user_id ? $receiver_id : $user_id;
-  currentOtherUserStore.otherUserId = id;
-  $receiver_type = $receiver_type.replace('App\\Models\\', '');
-  currentOtherUserStore.entity = $receiver_type;
+import { useCurrentReceiverStore } from "../stores/CurrentReceiver.js";
+const receiverStore = useCurrentReceiverStore();
 
-  const response = await fetch(`http://localhost/api/user-info/${id}/${$receiver_type}`, {
+import { useCookies } from "vue3-cookies";
+const { cookies } = useCookies();
+
+async function getInfo() {
+  const id = receiverStore.receiverId;
+  const receiverType = receiverStore.entity;
+  const response = await fetch(`http://localhost/api/user-info/${id}/${receiverType}`, {
     headers: {
       "Accept": "application/json",
       "Content-type": "application/json",
@@ -17,7 +20,16 @@
     //TODO push to login page
     return;
   }
-  currentOtherUserStore.userName = responseJSON.name;
-  currentOtherUserStore.userNickname = responseJSON.nickname;
-})(); 
+  console.log(responseJSON.name);
+  receiverStore.receiverName = responseJSON.name;
+  receiverStore.receiverNickname = responseJSON.nickname;
+}; 
 </script>
+
+<template>
+  <div>
+    <div class="name"> {{ receiverStore.receiverName }} </div>
+    <div class="nickname"> {{ receiverStore.receiverNickname }} </div>
+    <div class="profile-picture"> </div>
+  </div>
+</template>

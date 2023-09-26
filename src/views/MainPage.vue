@@ -36,7 +36,6 @@ const loggedInUser = useUserStore();
     <div class="border chat">
       <OpenedChatComponent> </OpenedChatComponent>
     </div>
-
   </div>
 </template>
 

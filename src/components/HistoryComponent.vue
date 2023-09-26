@@ -2,8 +2,8 @@
 import { useMessagesStore } from "../stores/Messages.js";
 const messagesStore = useMessagesStore();
 
-import { useReceiverStore } from "../stores/CurrentReceiver.js";
-const currentReceiver = useReceiverStore();
+import { useCurrentReceiverStore } from "../stores/CurrentReceiver.js";
+const receiverStore = useCurrentReceiverStore();
 
 import { useCookies } from "vue3-cookies";
 const { cookies } = useCookies();
@@ -28,18 +28,25 @@ async function openChat(message) {
   let link = '';
   switch (message.receiver_type) {
     case 'App\\Models\\Group':
-      currentReceiver.entity = 'group';
+      receiverStore.entity = 'group';
       link = 'http://localhost/api/message/group-chat?page=1';
       break;
     case 'App\\Models\\Channel':
-      currentReceiver.entity = 'channel';
+      receiverStore.entity = 'channel';
       link = 'http://localhost/api/message/channel-chat?page=1';
       break;
     default:
-      currentReceiver.entity = 'user';
+      receiverStore.entity = 'user';
       link = 'http://localhost/api/message/chat-beetween-users?page=1';
   }
-  const chatId = currentReceiver.entity + message.interlocutorId;
+  const chatId = receiverStore.entity + message.interlocutorId;
+  const historyChatWithReceiver = messagesStore.history.filter(obj => {
+    const entity = obj.receiver_type.replace('App\\Models\\', '');
+    return obj.interlocutorId === message.interlocutorId && entity.toUpperCase() == receiverStore.entity.toUpperCase();
+  });
+  receiverStore.receiverId = message.interlocutorId;
+  receiverStore.receiverName = historyChatWithReceiver[0].name;
+  receiverStore.receiverNickname = historyChatWithReceiver[0].nickname;
   messagesStore.openedChatId = chatId;
 
   if (messagesStore.allMessages.chatId !== undefined) {

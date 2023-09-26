@@ -1,7 +1,7 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 
-export const useReceiverStore = defineStore('receiverStore', () => {
+export const useCurrentReceiverStore = defineStore('receiverStore', () => {
   const receiverId = ref(0);
   const receiverName = ref('');
   const receiverNickname = ref('');
