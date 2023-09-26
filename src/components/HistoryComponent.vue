@@ -40,13 +40,9 @@ async function openChat(message) {
       link = 'http://localhost/api/message/chat-beetween-users?page=1';
   }
   const chatId = receiverStore.entity + message.interlocutorId;
-  const historyChatWithReceiver = messagesStore.history.filter(obj => {
-    const entity = obj.receiver_type.replace('App\\Models\\', '');
-    return obj.interlocutorId === message.interlocutorId && entity.toUpperCase() == receiverStore.entity.toUpperCase();
-  });
   receiverStore.receiverId = message.interlocutorId;
-  receiverStore.receiverName = historyChatWithReceiver[0].name;
-  receiverStore.receiverNickname = historyChatWithReceiver[0].nickname;
+  receiverStore.receiverName = message.name;
+  receiverStore.receiverNickname = message.nickname;
   messagesStore.openedChatId = chatId;
 
   if (messagesStore.allMessages.chatId !== undefined) {

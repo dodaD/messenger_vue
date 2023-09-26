@@ -5,6 +5,7 @@ import { RouterView } from 'vue-router'
 <template>
   <RouterView />
 </template>
+
 <style>
 body {
   margin: 0;
@@ -13,5 +14,18 @@ body {
 
 html {
   height: 100%;
+}
+
+.profile-picture {
+  border: 1px solid black;
+  border-radius: 100px;
+  width: 50px;
+  height: 50px;
+  margin: 10px;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0;
 }
 </style>

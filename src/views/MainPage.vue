@@ -1,35 +1,17 @@
 <script setup>
 import OpenedChatComponent from "../components/OpenedChatComponent.vue";
 import HistoryComponent from "../components/HistoryComponent.vue";
-
-import { useCookies } from "vue3-cookies";
-const { cookies } = useCookies();
-
-import { useUserStore } from "../stores/User.js";
-const loggedInUser = useUserStore();
-
-(async () => {
-  const response = await fetch('http://localhost/api/user/my-user-info', {
-    headers: {
-      "Accept": "application/json",
-      "Content-type": "application/json",
-      "Authorization": "Bearer " + cookies.get("authToken"),
-    }
-  });
-  const responseJSON = await response.json();
-  if (!response.ok) {
-    return;
-  }
-  loggedInUser.userId = responseJSON.id; //TODO put it in more suitable place; my profile for example
-})();
-
+import ProfileComponent from "../components/ProfileComponent.vue";
+import SearchComponent from "../components/SearchComponent.vue";
 </script>
 
 <template>
-  <div class="wrapper border">
+  <div class="theWrapper border">
     <div class="menu">
       <div class="chat-history border">
+        <SearchComponent> </SearchComponent>
         <HistoryComponent> </HistoryComponent>
+        <ProfileComponent> </ProfileComponent>
       </div>
     </div>
 
@@ -41,7 +23,7 @@ const loggedInUser = useUserStore();
 
 
 <style scoped>
-.wrapper {
+.theWrapper {
   display: flex;
   height: 95vh;
 }
@@ -65,6 +47,7 @@ const loggedInUser = useUserStore();
 .chat-history {
   flex-grow: 1;
   overflow-y: scroll;
+  position: relative;
 }
 
 .chat {
