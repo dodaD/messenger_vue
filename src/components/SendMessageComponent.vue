@@ -34,7 +34,6 @@ async function sendMessage() {
     console.log(responseJSON);
     return;
   }
-  console.log(messagesStore.allMessages);
   messagesStore.allMessages[messagesStore.openedChatId].push(responseJSON);
   const historyChatWithReceiverId = messagesStore.history.findIndex(obj => {
     return obj.interlocutorId === receiverStore.receiverId && obj.receiver_type == responseJSON.receiver_type;
