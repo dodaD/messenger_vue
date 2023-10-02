@@ -36,15 +36,15 @@ setInterval(async () => {
     return;
   }
   const OldMessages = messagesStore.allMessages[messagesStore.openedChatId];
-  const newMessages = responseJSON.data;
+  const newMessages = responseJSON.data.reverse();
   if (OldMessages[OldMessages.length - 1].id === newMessages[newMessages.length - 1].id) {
     return;
   }
   messagesStore.allMessages[messagesStore.openedChatId] = newMessages;
-  /*//const historyChatWithReceiverId = messagesStore.history.findIndex(obj => {
-     return obj.interlocutorId === receiverStore.receiverId && obj.receiver_type == newMessages.receiver_type;
-   });
-   messagesStore.history[historyChatWithReceiverId].message = newMessages[newMessages.length - 1].message;*/
+  const historyChatWithReceiverId = messagesStore.history.findIndex(obj => {
+    return obj.interlocutorId === receiverStore.receiverId && obj.receiver_type == newMessages[0].receiver_type;
+  });
+  messagesStore.history[historyChatWithReceiverId].message = newMessages[newMessages.length - 1].message;
 }, 5000);
 </script>
 

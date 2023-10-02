@@ -36,7 +36,7 @@ async function sendMessage() {
   }
   messagesStore.allMessages[messagesStore.openedChatId].push(responseJSON);
   const historyChatWithReceiverId = messagesStore.history.findIndex(obj => {
-    return obj.interlocutorId === receiverStore.receiverId && obj.receiver_type == responseJSON.receiver_type;
+    return obj.interlocutorId === receiverStore.receiverId && obj.receiver_type == responseJSON.receiver_type || obj.id === receiverStore.receiverId && obj.receiver_type === undefined;
   });
   messagesStore.history[historyChatWithReceiverId].message = responseJSON.message;
   newMessage.value = '';
