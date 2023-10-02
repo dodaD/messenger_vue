@@ -93,10 +93,5 @@ async function register() {
    margin-bottom: 10px;
    margin-right: auto;
  }
-
- h1 {
-   position: absolute;
-   top: 25%;
- }
 </style>
 

@@ -19,7 +19,18 @@ setInterval(async () => {
   if (messagesStore.openedChatId === 0) {
     return;
   };
-  const response = await fetch('http://localhost/api/message/chat-beetween-users?page=1', {
+  let link = '';
+  switch (receiverStore.entity) {
+    case 'group':
+      link = 'http://localhost/api/message/group-chat?page=1';
+      break;
+    case 'channel':
+      link = 'http://localhost/api/message/channel-chat?page=1';
+      break;
+    default:
+      link = 'http://localhost/api/message/chat-beetween-users?page=1';
+  }
+  const response = await fetch(link, {
     method: "POST",
     headers: {
       "Accept": "application/json",
@@ -36,7 +47,7 @@ setInterval(async () => {
     return;
   }
   const OldMessages = messagesStore.allMessages[messagesStore.openedChatId];
-  const newMessages = responseJSON.data.reverse();
+  const newMessages = responseJSON.data;
   if (OldMessages[OldMessages.length - 1].id === newMessages[newMessages.length - 1].id) {
     return;
   }
@@ -49,25 +60,34 @@ setInterval(async () => {
 </script>
 
 <template>
-  <div class="active-chat">
+  <div class="wrapper">
     <ReceiverInfoComponent> </ReceiverInfoComponent>
-    <p v-if="messagesStore.openedChatId !== 0"> TODO: text from file using library, that in future I could translate
-      easily
-    </p>
-    <div v-for="message in   messagesStore.allMessages[messagesStore.openedChatId]  " :key="message.id"
-      :class="message.user_id === loggedInUser.userId ? 'sent-message' : 'received-message'"
-      @click="console.log(loggedInUser.userId)">
-      <MessageComponent :message="message"> </MessageComponent>
+    <div class="opened-chat">
+      <p v-if="messagesStore.openedChatId === 0"> TODO: text from file using library, that in future I could translate
+        easily
+      </p>
+      <div v-for="message in messagesStore.allMessages[messagesStore.openedChatId]  " :key="message.id"
+        :class="message.user_id === loggedInUser.userId ? 'sent-message' : 'received-message'"
+        @click="console.log(loggedInUser.userId)">
+        <MessageComponent :message="message"> </MessageComponent>
+      </div>
     </div>
     <SendMessageComponent> </SendMessageComponent>
   </div>
 </template>
 
 <style scoped>
-.active-chat {
+.wrapper {
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+}
+
+.opened-chat {
   display: flex;
   overflow-y: scroll;
-  flex-direction: column;
+  flex-direction: column-reverse;
+  flex: 1 1 auto;
 }
 
 .sent-message {

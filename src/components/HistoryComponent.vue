@@ -65,7 +65,7 @@ async function openChat(message) {
     console.log(responseJSON);
     return;
   }
-  messagesStore.allMessages[chatId] = responseJSON.data.reverse();
+  messagesStore.allMessages[chatId] = responseJSON.data;
 }
 </script>
 

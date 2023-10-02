@@ -44,22 +44,19 @@ async function sendMessage() {
 </script>
 
 <template>
-  <div class="wrapper">
+  <div class="wrapper-1">
     <textarea v-model="newMessage"> {{ newMessage }} </textarea>
     <button v-on:click="sendMessage" class="send-button"> Send </button>
   </div>
 </template> 
 
 <style scoped>
-.wrapper {
-  bottom: 0;
-  position: -webkit-sticky;
-  /* Safari */
-  position: sticky;
-}
-
-textarea {
-  min-height: 40px;
+.wrapper-1 {
+  margin-top: 5px;
+  height: 80px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
 }
 </style>
 
