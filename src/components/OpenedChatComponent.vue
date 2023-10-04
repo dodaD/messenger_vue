@@ -19,18 +19,7 @@ setInterval(async () => {
   if (messagesStore.openedChatId === 0) {
     return;
   };
-  let link = '';
-  switch (receiverStore.entity) {
-    case 'group':
-      link = 'http://localhost/api/message/group-chat?page=1';
-      break;
-    case 'channel':
-      link = 'http://localhost/api/message/channel-chat?page=1';
-      break;
-    default:
-      link = 'http://localhost/api/message/chat-beetween-users?page=1';
-  }
-  const response = await fetch(link, {
+  const response = await fetch(receiverStore.link, {
     method: "POST",
     headers: {
       "Accept": "application/json",
@@ -47,22 +36,67 @@ setInterval(async () => {
     return;
   }
   const OldMessages = messagesStore.allMessages[messagesStore.openedChatId];
-  const newMessages = responseJSON.data;
-  if (OldMessages[OldMessages.length - 1].id === newMessages[newMessages.length - 1].id) {
+  if (OldMessages.length === 0) {
     return;
   }
-  messagesStore.allMessages[messagesStore.openedChatId] = newMessages;
+  const newMessages = responseJSON.data;
+  if (OldMessages[newMessages.length - 1].id === newMessages[newMessages.length - 1].id) {
+    return;
+  }
+
+  for (let i = 0; i < 20; i++) {
+    if (OldMessages[i].id === newMessages[i].id) {
+      continue;
+    }
+    messagesStore.allMessages[messagesStore.openedChatId].unshift(newMessages[i]);
+  }
+
   const historyChatWithReceiverId = messagesStore.history.findIndex(obj => {
     return obj.interlocutorId === receiverStore.receiverId && obj.receiver_type == newMessages[0].receiver_type;
   });
   messagesStore.history[historyChatWithReceiverId].message = newMessages[newMessages.length - 1].message;
 }, 5000);
+
+let scrollFinished = true;
+
+async function getMoreMessages(event) {
+  const scrollHeight = (event.target.scrollHeight - event.target.clientHeight) * 0.95;
+  if (-1 * event.target.scrollTop > scrollHeight && scrollFinished) {
+    scrollFinished = false;
+    receiverStore.page++;
+    const response = await fetch('http://localhost/api/message/chat-beetween-users?page=' + receiverStore.page, {
+      method: "POST",
+      headers: {
+        "Accept": "application/json",
+        "Content-type": "application/json",
+        "Authorization": "Bearer " + cookies.get("authToken"),
+      },
+      body: JSON.stringify({
+        receiver_id: receiverStore.receiverId,
+      })
+    });
+    const responseJSON = await response.json();
+    if (!response.ok) {
+      console.log(responseJSON);
+      return;
+    }
+
+    if (responseJSON.data[0] === undefined) {
+      receiverStore.page--;
+      return;
+    }
+    for (let i = 0; i < responseJSON.data.length - 1; i++) {
+      messagesStore.allMessages[messagesStore.openedChatId].push(responseJSON.data[i]);
+    }
+    scrollFinished = true;
+  }
+}
 </script>
 
 <template>
   <div class="wrapper">
     <ReceiverInfoComponent> </ReceiverInfoComponent>
-    <div class="opened-chat">
+    <div class="opened-chat" id="opened-chat" @scroll="getMoreMessages">
       <p v-if="messagesStore.openedChatId === 0"> TODO: text from file using library, that in future I could translate
         easily
       </p>

@@ -24,20 +24,35 @@ const { cookies } = useCookies();
   messagesStore.history = responseJSON;
 })();
 
+setInterval(async () => {
+  const response = await fetch('http://localhost/api/message/history', { //TODO change to env variable 
+    headers: {
+      "Accept": "application/json",
+      "Content-type": "application/json",
+      "Authorization": "Bearer " + cookies.get("authToken"),
+    }
+  });
+  const responseJSON = await response.json();
+  if (!response.ok) {
+    //TODO push to login page
+    return;
+  }
+  messagesStore.history = responseJSON;
+}, 5000);
+
 async function openChat(message) {
-  let link = '';
   switch (message.receiver_type) {
     case 'App\\Models\\Group':
       receiverStore.entity = 'group';
-      link = 'http://localhost/api/message/group-chat?page=1';
+      receiverStore.link = 'http://localhost/api/message/group-chat?page=1';
       break;
     case 'App\\Models\\Channel':
       receiverStore.entity = 'channel';
-      link = 'http://localhost/api/message/channel-chat?page=1';
+      receiverStore.link = 'http://localhost/api/message/channel-chat?page=1';
       break;
     default:
       receiverStore.entity = 'user';
-      link = 'http://localhost/api/message/chat-beetween-users?page=1';
+      receiverStore.link = 'http://localhost/api/message/chat-beetween-users?page=1';
   }
   const chatId = receiverStore.entity + message.interlocutorId;
   receiverStore.receiverId = message.interlocutorId;
@@ -49,7 +64,7 @@ async function openChat(message) {
     return;
   };
 
-  const response = await fetch(link, {
+  const response = await fetch(receiverStore.link, {
     method: "POST",
     headers: {
       "Accept": "application/json",

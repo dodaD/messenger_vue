@@ -34,7 +34,7 @@ async function sendMessage() {
     console.log(responseJSON);
     return;
   }
-  messagesStore.allMessages[messagesStore.openedChatId].push(responseJSON);
+  messagesStore.allMessages[messagesStore.openedChatId].unshift(responseJSON);
   const historyChatWithReceiverId = messagesStore.history.findIndex(obj => {
     return obj.interlocutorId === receiverStore.receiverId && obj.receiver_type == responseJSON.receiver_type || obj.id === receiverStore.receiverId && obj.receiver_type === undefined;
   });
