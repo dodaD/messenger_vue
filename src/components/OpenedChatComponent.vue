@@ -63,7 +63,11 @@ async function getMoreMessages(event) {
   const scrollHeight = (event.target.scrollHeight - event.target.clientHeight) * 0.95;
   if (-1 * event.target.scrollTop > scrollHeight && scrollFinished) {
     scrollFinished = false;
+    if (receiverStore.page >= receiverStore.maxPage && receiverStore.maxPage !== 0) {
+      return;
+    }
     receiverStore.page++;
+
     const response = await fetch('http://localhost/api/message/chat-beetween-users?page=' + receiverStore.page, {
       method: "POST",
       headers: {
@@ -81,10 +85,7 @@ async function getMoreMessages(event) {
       return;
     }
 
-    if (responseJSON.data[0] === undefined) {
-      receiverStore.page--;
-      return;
-    }
+    receiverStore.maxPage = responseJSON.last_page;
     for (let i = 0; i < responseJSON.data.length - 1; i++) {
       messagesStore.allMessages[messagesStore.openedChatId].push(responseJSON.data[i]);
     }
