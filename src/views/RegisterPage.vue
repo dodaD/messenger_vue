@@ -1,15 +1,3 @@
-<template>
-  <div class="theWrapper">
-    <h1> REGISTER </h1>
-    <input v-model="email" placeholder="Email">
-    <input v-model="name" placeholder="Name - how other people will know you">
-    <input v-model="nickname" placeholder="Nickname - how people will find you">
-    <input v-model="password" type="password" placeholder="Password">
-    <input v-model="passwordRepeat" type="password" placeholder="Repeat Password">
-    <a href="linkToLoginView">Already have an account?</a>
-    <button @click=register>Register</button>
-  </div>
-</template>
 <script setup>
 import { ref } from 'vue';
 import { useCookies } from "vue3-cookies";
@@ -62,6 +50,19 @@ async function register() {
   router.push('/');
 }
 </script>
+
+<template>
+  <div class="theWrapper">
+    <h1> REGISTER </h1>
+    <input v-model="email" placeholder="Email">
+    <input v-model="name" placeholder="Name - how other people will know you">
+    <input v-model="nickname" placeholder="Nickname - how people will find you">
+    <input v-model="password" type="password" placeholder="Password">
+    <input v-model="passwordRepeat" type="password" placeholder="Repeat Password">
+    <a href="linkToLoginView">Already have an account?</a>
+    <button @click=register>Register</button>
+  </div>
+</template>
 
 <style scoped> div {
    border: 1px solid black;
