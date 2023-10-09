@@ -14,12 +14,12 @@ const props = defineProps({
 });
 
 const updatedAt = ref('');
-const date = new Date(props.message.updated_at);
+let date = new Date(props.message.updated_at);
 const options = { day: 'numeric', month: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' };
 updatedAt.value = date.toLocaleString('en-US', options);
 
 const show = ref(true);
-const updatedMessage = ref('');
+const updatedMessage = ref(props.message.message);
 
 async function editMessage() {
   const response = await fetch('http://localhost/api/message/edit/' + props.message.id, {
@@ -42,6 +42,8 @@ async function editMessage() {
   const arr = messagesStore.allMessages[messagesStore.openedChatId];
   let messageToChangeId = arr.findIndex((message) => message.id === props.message.id);
   arr[messageToChangeId].message = updatedMessage.value; //TODO change
+  date = new Date(arr[messageToChangeId].updated_at);
+  updatedAt.value = date.toLocaleString('en-US', options);
 }
 
 async function deleteMessage() {
@@ -70,8 +72,10 @@ async function deleteMessage() {
   </div>
   <button v-if="show" @click="show = !show">C</button>
   <button v-if="show" @click=deleteMessage>D</button>
-  <button v-if="!show" @click=editMessage>Save</button>
-  <input v-if="!show" v-model="updatedMessage" />
+  <div class="border" v-if="!show">
+    <textarea v-model="updatedMessage" class="changing" />
+    <button v-if="!show" @click=editMessage class="save-changes-button">Save</button>
+  </div>
 </template> 
 
 <style scoped>
@@ -85,6 +89,21 @@ button {
   border: 1px solid black;
   margin: 10px;
   padding: 10px;
+}
+
+.changing {
+  border: none;
+  background-color: transparent;
+  border-bottom: 1px solid purple;
+  margin: 0;
+  width: fit-content;
+  height: 20px;
+  resize: none;
+}
+
+.save-changes-button {
+  width: fit-content;
+  margin: 0 5px;
 }
 
 .message {

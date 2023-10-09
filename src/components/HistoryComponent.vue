@@ -112,6 +112,11 @@ async function openChat(message) {
   padding: 0;
 }
 
+h4 {
+  margin: 0;
+  margin-top: 5px;
+}
+
 .profile-picture {
   border: 1px solid black;
   border-radius: 100px;
@@ -123,10 +128,10 @@ async function openChat(message) {
   justify-content: center;
   align-items: center;
   flex-shrink: 0;
-
 }
 
 .message {
   margin-left: 10px;
+  margin-top: 5px;
 }
 </style>

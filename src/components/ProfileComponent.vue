@@ -39,7 +39,9 @@ const loggedInUser = useUserStore();
 .wrapper {
   display: flex;
   height: fit-content;
-  position: absolute;
-  bottom: 0;
+}
+
+.info-wrapper {
+  margin-right: auto;
 }
 </style>

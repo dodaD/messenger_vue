@@ -37,7 +37,7 @@ async function register() {
     body: JSON.stringify({
       email: email.value,
       name: name.value,
-      nickname: nickname.value,
+      nickname: '@' + nickname.value,
       password: password.value
     })
   })

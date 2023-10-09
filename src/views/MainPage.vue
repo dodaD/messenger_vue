@@ -8,11 +8,11 @@ import SearchComponent from "../components/SearchComponent.vue";
 <template>
   <div class="theWrapper border">
     <div class="menu">
+      <SearchComponent> </SearchComponent>
       <div class="chat-history border">
-        <SearchComponent> </SearchComponent>
         <HistoryComponent> </HistoryComponent>
-        <ProfileComponent> </ProfileComponent>
       </div>
+      <ProfileComponent> </ProfileComponent>
     </div>
 
     <div class="border chat">
@@ -26,6 +26,9 @@ import SearchComponent from "../components/SearchComponent.vue";
 .theWrapper {
   display: flex;
   height: 95vh;
+  max-width: 80%;
+  margin-right: auto !important;
+  margin-left: auto !important;
 }
 
 .border {
@@ -40,14 +43,18 @@ import SearchComponent from "../components/SearchComponent.vue";
   flex-direction: column;
   flex-shrink: 0;
   /*TODO decide whether I want fixated width for menu or for chat*/
-  min-width: 30%;
-  width: fit-content;
+  width: 30%;
 }
 
 .chat-history {
-  flex-grow: 1;
   overflow-y: scroll;
-  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.chat-history::-webkit-scrollbar {
+  display: none;
 }
 
 .chat {

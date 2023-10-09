@@ -98,7 +98,8 @@ async function getMoreMessages(event) {
   <div class="wrapper">
     <ReceiverInfoComponent> </ReceiverInfoComponent>
     <div class="opened-chat" id="opened-chat" @scroll="getMoreMessages">
-      <p v-if="messagesStore.openedChatId === 0"> TODO: text from file using library, that in future I could translate
+      <p v-if="messagesStore.openedChatId === 0" class="no-messages"> TODO: text from file using library, that in future I
+        could translate
         easily
       </p>
       <div v-for="message in messagesStore.allMessages[messagesStore.openedChatId]  " :key="message.id"
@@ -123,6 +124,11 @@ async function getMoreMessages(event) {
   overflow-y: scroll;
   flex-direction: column-reverse;
   flex: 1 1 auto;
+  position: relative;
+}
+
+.opened-chat::-webkit-scrollbar {
+  display: none;
 }
 
 .sent-message {
@@ -131,5 +137,11 @@ async function getMoreMessages(event) {
 
 .received-message {
   margin-right: auto;
+}
+
+.no-messages {
+  position: absolute;
+  top: 0;
+  padding-left: 10px;
 }
 </style>

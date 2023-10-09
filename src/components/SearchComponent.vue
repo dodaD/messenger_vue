@@ -22,7 +22,7 @@ async function search() {
       "Authorization": "Bearer " + cookies.get("authToken"),
     },
     body: JSON.stringify({
-      nickname: nicknameToSearch.value,
+      nickname: '@' + nicknameToSearch.value,
     })
   });
   const responseJSON = await response.json();
@@ -78,18 +78,37 @@ async function openChat(result) {
 </script>
 
 <template>
-  <input class="search" placeholder="Search bar" v-model="nicknameToSearch" @input="search">
-  <div v-for="result in seachResults" class="results">
-    <p> {{ result.entity }}</p>
+  <input class="search border" placeholder="Search bar" v-model="nicknameToSearch" @input="search">
+  <div v-for="result in seachResults" class="result border" if="!seachResults">
     <div @click="openChat(result)">
-      <div> {{ result.name }} </div>
+      <h4> {{ result.name }} </h4>
       <div> {{ result.nickname }} </div>
     </div>
   </div>
 </template>
 
 <style scoped>
-.results {
+.result {
   z-index: 1;
+  margin: 10px;
+  display: flex;
+}
+
+h4 {
+  margin: 0;
+}
+
+.entity {
+  width: fit-content;
+  margin-bottom: 10px;
+  border-bottom: 1px solid black;
+}
+
+.search {
+  background-color: transparent;
+  border: none;
+  border-bottom: 1px solid black;
+  padding: 0;
+  margin-right: 20%;
 }
 </style>
