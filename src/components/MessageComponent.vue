@@ -2,6 +2,9 @@
 import { useMessagesStore } from "../stores/Messages.js";
 const messagesStore = useMessagesStore();
 
+import { useUserStore } from "../stores/User.js";
+const loggedInUser = useUserStore();
+
 import { ref } from 'vue';
 
 import { useCookies } from "vue3-cookies";
@@ -20,8 +23,13 @@ updatedAt.value = date.toLocaleString('en-US', options);
 
 const show = ref(true);
 const updatedMessage = ref(props.message.message);
+const allowedToClick = props.message.user_id === loggedInUser.userId;
 
 async function editMessage() {
+  if (allowedToClick === false) {
+    console.log("You are not allowed to edit others messages");
+    return;
+  }
   const response = await fetch('http://localhost/api/message/edit/' + props.message.id, {
     method: "PATCH",
     headers: {
@@ -47,6 +55,10 @@ async function editMessage() {
 }
 
 async function deleteMessage() {
+  if (allowedToClick === false) {
+    console.log("You are not allowed to delete others messages");
+    return;
+  }
   const response = await fetch('http://localhost/api/message/' + props.message.id, {
     method: "DELETE",
     headers: {
@@ -70,8 +82,8 @@ async function deleteMessage() {
     {{ props.message.message }}
     <div v-if="props.message.updated_at !== props.message.created_at">Updated: {{ updatedAt }}</div>
   </div>
-  <button v-if="show" @click="show = !show">C</button>
-  <button v-if="show" @click=deleteMessage>D</button>
+  <button v-if="show && allowedToClick" @click="show = !show">E</button>
+  <button v-if="show && allowedToClick" @click=deleteMessage>D</button>
   <div class="border" v-if="!show">
     <textarea v-model="updatedMessage" class="changing" />
     <button v-if="!show" @click=editMessage class="save-changes-button">Save</button>

@@ -35,10 +35,11 @@ async function sendMessage() {
     return;
   }
   messagesStore.allMessages[messagesStore.openedChatId].unshift(responseJSON);
-  const historyChatWithReceiverId = messagesStore.history.findIndex(obj => {
+  const historyChatId = messagesStore.history.findIndex(obj => {
     return obj.interlocutorId === receiverStore.receiverId && obj.receiver_type == responseJSON.receiver_type || obj.id === receiverStore.receiverId && obj.receiver_type === undefined;
   });
-  messagesStore.history[historyChatWithReceiverId].message = responseJSON.message;
+  console.log(messagesStore.history[historyChatId]);
+  messagesStore.history[historyChatId].message = responseJSON.message;
   newMessage.value = '';
 }
 </script>

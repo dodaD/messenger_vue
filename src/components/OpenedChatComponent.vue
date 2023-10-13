@@ -19,7 +19,7 @@ setInterval(async () => {
   if (messagesStore.openedChatId === 0) {
     return;
   };
-  const response = await fetch(receiverStore.link, {
+  const response = await fetch('http://localhost/api/message/chat-beetween-users?page=1', {
     method: "POST",
     headers: {
       "Accept": "application/json",
@@ -40,21 +40,16 @@ setInterval(async () => {
     return;
   }
   const newMessages = responseJSON.data;
-  if (OldMessages[newMessages.length - 1].id === newMessages[newMessages.length - 1].id) {
+  if (OldMessages[0].id === newMessages[0].id) {
     return;
   }
 
-  for (let i = 0; i < 20; i++) {
+  for (let i = 0; i < newMessages.length; i++) {
     if (OldMessages[i].id === newMessages[i].id) {
       continue;
     }
     messagesStore.allMessages[messagesStore.openedChatId].unshift(newMessages[i]);
   }
-
-  const historyChatWithReceiverId = messagesStore.history.findIndex(obj => {
-    return obj.interlocutorId === receiverStore.receiverId && obj.receiver_type == newMessages[0].receiver_type;
-  });
-  messagesStore.history[historyChatWithReceiverId].message = newMessages[newMessages.length - 1].message;
 }, 5000);
 
 let scrollFinished = true;
@@ -103,8 +98,7 @@ async function getMoreMessages(event) {
         easily
       </p>
       <div v-for="message in messagesStore.allMessages[messagesStore.openedChatId]  " :key="message.id"
-        :class="message.user_id === loggedInUser.userId ? 'sent-message' : 'received-message'"
-        @click="console.log(loggedInUser.userId)">
+        :class="message.user_id === loggedInUser.userId ? 'sent-message' : 'received-message'">
         <MessageComponent :message="message"> </MessageComponent>
       </div>
     </div>

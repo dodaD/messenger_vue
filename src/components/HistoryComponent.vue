@@ -37,7 +37,23 @@ setInterval(async () => {
     //TODO push to login page
     return;
   }
-  messagesStore.history = responseJSON;
+  if (messagesStore.history[0].message !== responseJSON[0].message) {
+    if (messagesStore.history.length !== responseJSON.length) {
+      for (let i = 0; i < responseJSON.length - messagesStore.history.length; i++) {
+        console.log("chemu?");
+        messagesStore.history.unshift(responseJSON[i]);
+      }
+    }
+
+    if (messagesStore.history.length === responseJSON.length) {
+      for (let i = 0; i < messagesStore.history.length; i++) {
+        if (responseJSON[i] === undefined || messagesStore.history[i].message === responseJSON[i].message) {
+          continue;
+        }
+        messagesStore.history[i] = responseJSON[i];
+      }
+    }
+  }
 }, 5000);
 
 async function openChat(message) {
