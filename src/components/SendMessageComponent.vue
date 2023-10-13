@@ -38,7 +38,6 @@ async function sendMessage() {
   const historyChatId = messagesStore.history.findIndex(obj => {
     return obj.interlocutorId === receiverStore.receiverId && obj.receiver_type == responseJSON.receiver_type || obj.id === receiverStore.receiverId && obj.receiver_type === undefined;
   });
-  console.log(messagesStore.history[historyChatId]);
   messagesStore.history[historyChatId].message = responseJSON.message;
   newMessage.value = '';
 }

@@ -40,15 +40,28 @@ setInterval(async () => {
     return;
   }
   const newMessages = responseJSON.data;
-  if (OldMessages[0].id === newMessages[0].id) {
-    return;
+
+  length = OldMessages.length;
+  if (OldMessages.length > 20) {
+    length = 20;
   }
 
+  if (newMessages.length < length) {
+    messagesStore.allMessages[messagesStore.openedChatId] = OldMessages.filter(oldMessage => {
+      return newMessages.some(newMessage => newMessage.id === oldMessage.id);
+    });
+    return;
+  } else if (newMessages.length > length) {
+    for (let i = 0; i < newMessages.length - length; i++) {
+      messagesStore.allMessages[messagesStore.openedChatId].unshift(newMessages[i]);
+    }
+  }
   for (let i = 0; i < newMessages.length; i++) {
-    if (OldMessages[i].id === newMessages[i].id) {
+    if (OldMessages[i].message === newMessages[i].message) {
       continue;
     }
-    messagesStore.allMessages[messagesStore.openedChatId].unshift(newMessages[i]);
+    messagesStore.allMessages[messagesStore.openedChatId][i].message = newMessages[i].message;
+    messagesStore.allMessages[messagesStore.openedChatId][i].updated_at = newMessages[i].updated_at;
   }
 }, 5000);
 

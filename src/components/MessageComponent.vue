@@ -17,9 +17,9 @@ const props = defineProps({
 });
 
 const updatedAt = ref('');
-let date = new Date(props.message.updated_at);
+const date = ref(new Date(props.message.updated_at));
 const options = { day: 'numeric', month: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' };
-updatedAt.value = date.toLocaleString('en-US', options);
+updatedAt.value = date.value.toLocaleString('en-US', options);
 
 const show = ref(true);
 const updatedMessage = ref(props.message.message);
@@ -50,8 +50,9 @@ async function editMessage() {
   const arr = messagesStore.allMessages[messagesStore.openedChatId];
   let messageToChangeId = arr.findIndex((message) => message.id === props.message.id);
   arr[messageToChangeId].message = updatedMessage.value; //TODO change
-  date = new Date(arr[messageToChangeId].updated_at);
-  updatedAt.value = date.toLocaleString('en-US', options);
+  date.value = new Date(responseJSON.updated_at);
+  updatedAt.value = date.value.toLocaleString('en-US', options);
+  arr[messageToChangeId].updated_at = updatedAt.value;
 }
 
 async function deleteMessage() {

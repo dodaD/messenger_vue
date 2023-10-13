@@ -40,7 +40,6 @@ setInterval(async () => {
   if (messagesStore.history[0].message !== responseJSON[0].message) {
     if (messagesStore.history.length !== responseJSON.length) {
       for (let i = 0; i < responseJSON.length - messagesStore.history.length; i++) {
-        console.log("chemu?");
         messagesStore.history.unshift(responseJSON[i]);
       }
     }
