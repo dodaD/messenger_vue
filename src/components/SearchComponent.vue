@@ -2,8 +2,14 @@
 import { useMessagesStore } from "../stores/Messages.js";
 const messagesStore = useMessagesStore();
 
+import { useRouter } from 'vue-router';
+const router = useRouter();
+
 import { useCurrentReceiverStore } from "../stores/CurrentReceiver";
 const receiverStore = useCurrentReceiverStore();
+
+import { useErrorStore } from '../stores/Error.js';
+const errorStore = useErrorStore();
 
 import { useCookies } from "vue3-cookies";
 const { cookies } = useCookies();
@@ -26,8 +32,12 @@ async function search() {
     })
   });
   const responseJSON = await response.json();
+  if (response.status === 401) {
+    cookies.remove("authToken");
+    router.push('/login');
+  }
   if (!response.ok) {
-    console.log(response);
+    errorStore.errorMessage = responseJSON.error;
     return;
   }
   seachResults.value = responseJSON;
@@ -69,7 +79,7 @@ async function openChat(result) {
   });
   const responseJSON = await response.json();
   if (!response.ok) {
-    console.log(responseJSON);
+    errorStore.errorMessage = responseJSON.error;
     return;
   }
   messagesStore.allMessages[chatId] = responseJSON.data.reverse();
@@ -79,8 +89,8 @@ async function openChat(result) {
 
 <template>
   <input class="search border" placeholder="Search bar" v-model="nicknameToSearch" @input="search">
-  <div v-for="result in seachResults" class="result border" if="!seachResults">
-    <div @click="openChat(result)">
+  <div @click="openChat(result)" v-for="result in seachResults" class="result border" if="!seachResults">
+    <div>
       <h4> {{ result.name }} </h4>
       <div> {{ result.nickname }} </div>
     </div>

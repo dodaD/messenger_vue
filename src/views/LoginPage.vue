@@ -5,8 +5,15 @@ import { useRouter } from 'vue-router'
 const { cookies } = useCookies();
 const router = useRouter();
 
+import { useErrorStore } from '../stores/Error.js';
+const errorStore = useErrorStore();
+
 const email = ref('');
 const password = ref('');
+
+if (cookies.get("authToken") !== null) {
+  router.push('/');
+}
 
 async function login() {
   const response = await fetch('http://localhost/api/user/login', {
@@ -21,7 +28,7 @@ async function login() {
   })
   const responseJSON = await response.json();
   if (!response.ok) {
-    console.log(responseJSON);
+    errorStore.errorMessage = responseJSON.message;
     return;
   }
   cookies.set("authToken", responseJSON);
@@ -34,7 +41,7 @@ async function login() {
     <h1> LOGIN </h1>
     <input v-model="email" placeholder="Email">
     <input v-model="password" type="password" placeholder="Password">
-    <a href="linkToRegister">Don't have an account?</a>
+    <a href="http://localhost:2130/register">Don't have an account?</a>
     <button @click=login>Login</button>
   </div>
 </template>

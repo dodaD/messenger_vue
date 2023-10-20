@@ -5,6 +5,12 @@ const { cookies } = useCookies();
 import { useUserStore } from "../stores/User.js";
 const loggedInUser = useUserStore();
 
+import { useErrorStore } from '../stores/Error.js';
+const errorStore = useErrorStore();
+
+import { useRouter } from 'vue-router';
+const router = useRouter();
+
 (async () => {
   const response = await fetch('http://localhost/api/user/my-user-info', {
     headers: {
@@ -14,8 +20,9 @@ const loggedInUser = useUserStore();
     }
   });
   const responseJSON = await response.json();
-  if (!response.ok) {
-    return;
+  if (response.status === 401) {
+    cookies.remove("authToken");
+    router.push('/login');
   }
   loggedInUser.userId = responseJSON.id;
   loggedInUser.userName = responseJSON.name;

@@ -5,6 +5,12 @@ const messagesStore = useMessagesStore();
 import { useCurrentReceiverStore } from "../stores/CurrentReceiver.js";
 const receiverStore = useCurrentReceiverStore();
 
+import { useErrorStore } from '../stores/Error.js';
+const errorStore = useErrorStore();
+
+import { useRouter } from 'vue-router';
+const router = useRouter();
+
 import { useCookies } from "vue3-cookies";
 const { cookies } = useCookies();
 
@@ -17,8 +23,11 @@ const { cookies } = useCookies();
     }
   });
   const responseJSON = await response.json();
+  if (response.status === 401) {
+    router.push('/login');
+  }
   if (!response.ok) {
-    //TODO push to login page
+    errorStore.errorMessage = responseJSON.error;
     return;
   }
   messagesStore.history = responseJSON;
@@ -33,10 +42,15 @@ setInterval(async () => {
     }
   });
   const responseJSON = await response.json();
-  if (!response.ok) {
-    //TODO push to login page
-    return;
+  if (response.status === 401) {
+    cookies.remove("authToken");
+    router.push('/login');
   }
+  if (!response.ok) {
+    errorStore.errorMessage = responseJSON.error;
+    router.push('/login');
+  }
+  // FIXME chitati tyt
   if (messagesStore.history[0].message !== responseJSON[0].message) {
     if (messagesStore.history.length !== responseJSON.length) {
       for (let i = 0; i < responseJSON.length - messagesStore.history.length; i++) {
@@ -46,10 +60,9 @@ setInterval(async () => {
 
     if (messagesStore.history.length === responseJSON.length) {
       for (let i = 0; i < messagesStore.history.length; i++) {
-        if (responseJSON[i] === undefined || messagesStore.history[i].message === responseJSON[i].message) {
-          continue;
+        if (responseJSON[i]?.message !== messagesStore.history[i].message) {
+          messagesStore.history[i] = responseJSON[i];
         }
-        messagesStore.history[i] = responseJSON[i];
       }
     }
   }
@@ -91,8 +104,12 @@ async function openChat(message) {
     })
   });
   const responseJSON = await response.json();
+  if (response.status === 401) {
+    cookies.remove("authToken");
+    router.push('/login');
+  }
   if (!response.ok) {
-    console.log(responseJSON);
+    errorStore.errorMessage = responseJSON.error;
     return;
   }
   messagesStore.allMessages[chatId] = responseJSON.data;

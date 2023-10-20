@@ -1,6 +1,9 @@
 <script setup>
 import { ref } from 'vue';
 
+import { useRouter } from 'vue-router';
+const router = useRouter();
+
 import { useCookies } from "vue3-cookies";
 const { cookies } = useCookies();
 
@@ -10,12 +13,16 @@ const messagesStore = useMessagesStore();
 import { useCurrentReceiverStore } from '../stores/CurrentReceiver';
 const receiverStore = useCurrentReceiverStore();
 
+import { useErrorStore } from '../stores/Error.js';
+const errorStore = useErrorStore();
+
 const newMessage = ref('');
 async function sendMessage() {
   if (newMessage.value === '') {
-    alert("You cannot send nothing :(");
+    errorStore.errorMessage = 'Nothing to send';
     return;
   }
+
   const response = await fetch('http://localhost/api/message/add', {
     method: "POST",
     headers: {
@@ -30,8 +37,12 @@ async function sendMessage() {
     })
   });
   const responseJSON = await response.json();
+  if (response.status === 401) {
+    cookies.remove("authToken");
+    router.push('/login');
+  }
   if (!response.ok) {
-    console.log(responseJSON);
+    errorStore.errorMessage = responseJSON.error;
     return;
   }
   messagesStore.allMessages[messagesStore.openedChatId].unshift(responseJSON);
@@ -45,9 +56,9 @@ async function sendMessage() {
 
 <template>
   <div class="wrapper-1">
-    <textarea v-model="newMessage" class="send-message"
+    <textarea v-model="newMessage" class="send-message" @keyup.enter="sendMessage"
       oninput='this.style.height = "";this.style.height = this.scrollHeight + "px"' />
-    <button v-on:click="sendMessage" class="send-button"> Send </button>
+    <button @click="sendMessage" class="send-button"> Send </button>
   </div>
 </template> 
 

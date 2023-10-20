@@ -4,8 +4,13 @@ const messagesStore = useMessagesStore();
 
 import { useUserStore } from "../stores/User.js";
 const loggedInUser = useUserStore();
+import { useErrorStore } from '../stores/Error.js';
 
+const errorStore = useErrorStore();
 import { ref } from 'vue';
+
+import { useRouter } from 'vue-router';
+const router = useRouter();
 
 import { useCookies } from "vue3-cookies";
 const { cookies } = useCookies();
@@ -27,7 +32,7 @@ const allowedToClick = props.message.user_id === loggedInUser.userId;
 
 async function editMessage() {
   if (allowedToClick === false) {
-    console.log("You are not allowed to edit others messages");
+    errorStore.errorMessage = 'You are not allowed to edit this message';
     return;
   }
   const response = await fetch('http://localhost/api/message/edit/' + props.message.id, {
@@ -42,8 +47,12 @@ async function editMessage() {
     })
   });
   const responseJSON = await response.json();
+  if (response.status === 401) {
+    cookies.remove("authToken");
+    router.push('/login');
+  }
   if (!response.ok) {
-    console.log(responseJSON);
+    errorStore.errorMessage = responseJSON.error;
     return;
   }
   show.value = true;
@@ -57,7 +66,7 @@ async function editMessage() {
 
 async function deleteMessage() {
   if (allowedToClick === false) {
-    console.log("You are not allowed to delete others messages");
+    errorStore.errorMessage = 'You are not allowed to delete this message';
     return;
   }
   const response = await fetch('http://localhost/api/message/' + props.message.id, {
@@ -69,8 +78,12 @@ async function deleteMessage() {
     },
   });
   const responseJSON = await response.json();
+  if (response.status === 401) {
+    cookies.remove("authToken");
+    router.push('/login');
+  }
   if (!response.ok) {
-    console.log(responseJSON);
+    errorStore.errorMessage = responseJSON.error;
     return;
   } //TODO short it
   messagesStore.allMessages[messagesStore.openedChatId] = messagesStore.allMessages[messagesStore.openedChatId].filter(message => message.id !== props.message.id);

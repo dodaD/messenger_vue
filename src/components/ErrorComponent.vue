@@ -1,14 +1,11 @@
 <script setup>
-import { defineProps } from 'vue';
-const props = defineProps({
-  errorMessage: String,
-});
-
+import { useErrorStore } from '../stores/Error.js';
+const errorStore = useErrorStore();
 </script>
 
 <template>
   <div class="wrapper-1 border">
-    {{ props.errorMessage }}
+    {{ errorStore.errorMessage }}
   </div>
 </template>
 

@@ -8,6 +8,12 @@ const loggedInUser = useUserStore();
 import { useCurrentReceiverStore } from "../stores/CurrentReceiver";
 const receiverStore = useCurrentReceiverStore();
 
+import { useRouter } from 'vue-router';
+const router = useRouter();
+
+import { useErrorStore } from '../stores/Error.js';
+const errorStore = useErrorStore();
+
 import { useCookies } from "vue3-cookies";
 const { cookies } = useCookies();
 
@@ -31,8 +37,12 @@ setInterval(async () => {
     })
   });
   const responseJSON = await response.json();
+  if (response.status === 401) {
+    cookies.remove("authToken");
+    router.push('/login');
+  }
   if (!response.ok) {
-    console.log(responseJSON);
+    errorStore.errorMessage = responseJSON.error;
     return;
   }
   const OldMessages = messagesStore.allMessages[messagesStore.openedChatId];
@@ -88,8 +98,12 @@ async function getMoreMessages(event) {
       })
     });
     const responseJSON = await response.json();
+    if (response.status === 401) {
+      cookies.remove("authToken");
+      router.push('/login');
+    }
     if (!response.ok) {
-      console.log(responseJSON);
+      errorStore.errorMessage = responseJSON.error;
       return;
     }
 

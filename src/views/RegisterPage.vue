@@ -1,9 +1,14 @@
 <script setup>
 import { ref } from 'vue';
+
 import { useCookies } from "vue3-cookies";
-import { useRouter } from 'vue-router'
 const { cookies } = useCookies();
+
+import { useRouter } from 'vue-router';
 const router = useRouter();
+
+import { useErrorStore } from '../stores/Error.js';
+const errorStore = useErrorStore();
 
 const email = ref('');
 const name = ref(null);
@@ -11,22 +16,29 @@ const nickname = ref(null);
 const password = ref('');
 const passwordRepeat = ref(null);
 
+if (cookies.get("authToken") !== null) {
+  router.push('/');
+}
+
 async function register() {
+  if (!(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email.value))) {
+    errorStore.errorMessage = "Invalid email";
+    return;
+  }
   if (password.value !== passwordRepeat.value) {
-    //show error component
-    console.log("Error!");
+    errorStore.errorMessage = "Passwords don't match";
     return;
   }
   if (!email.value || !name.value || !nickname.value || !password.value) {
-    console.log("All fields must be filled!");
+    errorStore.errorMessage = "All fields must be filled";
     return;
   }
   if (password.value.length < 8) {
-    console.log("Password must be at least 8 characthers");
+    errorStore.errorMessage = "Password must be at least 8 characthers";
     return;
   }
   if (nickname.value.length >= 255 || name.value.length >= 255 || email.value.length >= 255) {
-    console.log("Any fields shouldn't extends 255 characthers!");
+    errorStore.errorMessage = "Any fields shouldn't extends 255 characthers";
     return;
   }
   const response = await fetch('http://localhost/api/user/register', {
@@ -43,7 +55,7 @@ async function register() {
   })
   const responseJSON = await response.json();
   if (!response.ok) {
-    console.log(responseJSON);
+    errorStore.errorMessage = responseJSON.error;
     return;
   }
   cookies.set("authToken", responseJSON);
@@ -54,45 +66,55 @@ async function register() {
 <template>
   <div class="theWrapper">
     <h1> REGISTER </h1>
+    Email
     <input v-model="email" placeholder="Email">
-    <input v-model="name" placeholder="Name - how other people will know you">
+    Name <input v-model="name" placeholder="Name - how other people will know you">
+    Nickname
     <input v-model="nickname" placeholder="Nickname - how people will find you">
+    Passsword
     <input v-model="password" type="password" placeholder="Password">
-    <input v-model="passwordRepeat" type="password" placeholder="Repeat Password">
-    <a href="linkToLoginView">Already have an account?</a>
+    Repeat password<input v-model="passwordRepeat" type="password" placeholder="Repeat Password">
+    <a href="http://localhost:2130/login">Already have an account?</a>
     <button @click=register>Register</button>
   </div>
 </template>
 
-<style scoped> div {
-   border: 1px solid black;
-   margin: 10px;
-   padding: 10px;
-   background-color: #ffe;
- }
+<style scoped>
+h1,
+button {
+  margin-right: auto;
+  margin-left: auto;
+}
 
- .theWrapper {
-   display: flex;
-   height: 70vh;
-   flex-direction: column;
-   align-items: center;
-   justify-content: center;
-   width: 50%;
-   margin-left: auto;
-   margin-right: auto;
-   margin-top: 13vh;
-   padding: 0 15%;
- }
+div {
+  border: 1px solid black;
+  margin: 10px;
+  padding: 10px;
+  background-color: #ffe;
+}
 
- input {
-   width: 100%;
-   height: 23px;
-   margin: 11px 0;
- }
+.theWrapper {
+  display: flex;
+  height: 70vh;
+  flex-direction: column;
+  width: 50%;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 13vh;
+  padding: 0 15%;
+  justify-content: center;
+  align-items: flex-start;
+}
 
- a {
-   margin-bottom: 10px;
-   margin-right: auto;
- }
+input {
+  width: 100%;
+  height: 23px;
+  margin: 11px 0;
+}
+
+a {
+  margin-bottom: 10px;
+  margin-right: auto;
+}
 </style>
 
