@@ -7,9 +7,6 @@ const { cookies } = useCookies();
 import { useRouter } from 'vue-router';
 const router = useRouter();
 
-import { useErrorStore } from '../stores/Error.js';
-const errorStore = useErrorStore();
-
 const email = ref('');
 const name = ref(null);
 const nickname = ref(null);
@@ -113,10 +110,13 @@ div {
   align-items: flex-start;
 }
 
+form {
+  width: 100%;
+}
+
 input {
-  width: 250px;
-  height: 23px;
-  margin: 11px 0;
+  width: 100%;
+  margin: 5px 0;
 }
 
 a {
