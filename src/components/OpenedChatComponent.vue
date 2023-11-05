@@ -21,7 +21,7 @@ import MessageComponent from "../components/MessageComponent.vue";
 import SendMessageComponent from "../components/SendMessageComponent.vue";
 import ReceiverInfoComponent from "../components/ReceiverInfoComponent.vue";
 
-setInterval(async () => {
+messagesStore.elementIntervalId = setInterval(async () => {
   if (messagesStore.openedChatId === 0) {
     return;
   };
@@ -45,34 +45,40 @@ setInterval(async () => {
     errorStore.errorMessage = responseJSON.error;
     return;
   }
-  const OldMessages = messagesStore.allMessages[messagesStore.openedChatId];
-  if (OldMessages.length === 0) {
-    return;
-  }
+
   const newMessages = responseJSON.data;
 
-  length = OldMessages.length;
-  if (OldMessages.length > 20) {
-    length = 20;
+  messagesStore.allMessages[messagesStore.openedChatId] = newMessages;
+
+  /*
+   
+     const OldMessages = messagesStore.allMessages[messagesStore.openedChatId];
+  if (!OldMessages || OldMessages.length === 0) {
+    return;
   }
 
-  if (newMessages.length < length) {
-    messagesStore.allMessages[messagesStore.openedChatId] = OldMessages.filter(oldMessage => {
-      return newMessages.some(newMessage => newMessage.id === oldMessage.id);
-    });
-    return;
-  } else if (newMessages.length > length) {
-    for (let i = 0; i < newMessages.length - length; i++) {
-      messagesStore.allMessages[messagesStore.openedChatId].unshift(newMessages[i]);
+  length = OldMessages.length;
+    if (OldMessages.length > 20) {
+      length = 20;
     }
-  }
-  for (let i = 0; i < newMessages.length; i++) {
-    if (OldMessages[i].message === newMessages[i].message) {
-      continue;
+  
+    if (newMessages.length < length) {
+      messagesStore.allMessages[messagesStore.openedChatId] = OldMessages.filter(oldMessage => {
+        return newMessages.some(newMessage => newMessage.id === oldMessage.id);
+      });
+      return;
+    } else if (newMessages.length > length) {
+      for (let i = 0; i < newMessages.length - length; i++) {
+        messagesStore.allMessages[messagesStore.openedChatId].unshift(newMessages[i]);
+      }
     }
-    messagesStore.allMessages[messagesStore.openedChatId][i].message = newMessages[i].message;
-    messagesStore.allMessages[messagesStore.openedChatId][i].updated_at = newMessages[i].updated_at;
-  }
+    for (let i = 0; i < newMessages.length; i++) {
+      if (OldMessages[i].message === newMessages[i].message) {
+        continue;
+      }
+      messagesStore.allMessages[messagesStore.openedChatId][i].message = newMessages[i].message;
+      messagesStore.allMessages[messagesStore.openedChatId][i].updated_at = newMessages[i].updated_at;
+    }*/
 }, 5000);
 
 let scrollFinished = true;
@@ -149,7 +155,18 @@ async function getMoreMessages(event) {
 }
 
 .opened-chat::-webkit-scrollbar {
-  display: none;
+  width: 1px;
+  background-color: rgba(10, 10, 10, 0.05);
+}
+
+.opened-chat::-webkit-scrollbar-track {
+  width: 1px;
+  background-color: rgba(10, 10, 10, 0.1);
+}
+
+.opened-chat::-webkit-scrollbar-thumb {
+  width: 1px;
+  background-color: rgba(10, 10, 10, 0.5);
 }
 
 .sent-message {

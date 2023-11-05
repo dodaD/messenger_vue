@@ -22,7 +22,6 @@ async function sendMessage() {
     errorStore.errorMessage = 'Nothing to send';
     return;
   }
-
   const response = await fetch('http://localhost/api/message/add', {
     method: "POST",
     headers: {
@@ -36,6 +35,7 @@ async function sendMessage() {
       receiver: receiverStore.entity,
     })
   });
+  newMessage.value = '';
   const responseJSON = await response.json();
   if (response.status === 401) {
     cookies.remove("authToken");
@@ -50,13 +50,12 @@ async function sendMessage() {
     return obj.interlocutorId === receiverStore.receiverId && obj.receiver_type == responseJSON.receiver_type || obj.id === receiverStore.receiverId && obj.receiver_type === undefined;
   });
   messagesStore.history[historyChatId].message = responseJSON.message;
-  newMessage.value = '';
 }
 </script>
 
 <template>
   <div class="wrapper-1">
-    <textarea v-model="newMessage" class="send-message" @keyup.enter="sendMessage"
+    <textarea v-model="newMessage" id="wrapper-1" class="send-message" @keydown.enter.prevent="sendMessage"
       oninput='this.style.height = "";this.style.height = this.scrollHeight + "px"' />
     <button @click="sendMessage" class="send-button"> Send </button>
   </div>

@@ -33,40 +33,43 @@ const { cookies } = useCookies();
   messagesStore.history = responseJSON;
 })();
 
-setInterval(async () => {
-  const response = await fetch('http://localhost/api/message/history', { //TODO change to env variable 
-    headers: {
-      "Accept": "application/json",
-      "Content-type": "application/json",
-      "Authorization": "Bearer " + cookies.get("authToken"),
-    }
-  });
-  const responseJSON = await response.json();
-  if (response.status === 401) {
-    cookies.remove("authToken");
-    router.push('/login');
-  }
-  if (!response.ok) {
-    errorStore.errorMessage = responseJSON.error;
-    router.push('/login');
-  }
-  // FIXME chitati tyt
-  if (messagesStore.history[0].message !== responseJSON[0].message) {
-    if (messagesStore.history.length !== responseJSON.length) {
-      for (let i = 0; i < responseJSON.length - messagesStore.history.length; i++) {
-        messagesStore.history.unshift(responseJSON[i]);
-      }
-    }
 
-    if (messagesStore.history.length === responseJSON.length) {
+if (messagesStore.intervalId === 0) {
+  messagesStore.intervalId = setInterval(async () => {
+    const response = await fetch('http://localhost/api/message/history', { //TODO change to env variable 
+      headers: {
+        "Accept": "application/json",
+        "Content-type": "application/json",
+        "Authorization": "Bearer " + cookies.get("authToken"),
+      }
+    });
+    const responseJSON = await response.json();
+    if (response.status === 401) {
+      cookies.remove("authToken");
+      clearInterval(messagesStore.intervalId);
+      messagesStore.intervalId = 0;
+      router.push('/login');
+      return;
+    }
+    if (!response.ok) {
+      errorStore.errorMessage = responseJSON.error;
+    }
+    // FIXME chitati tyt
+    if (messagesStore.history.length !== responseJSON.length) {
+      if (messagesStore.history[0]?.message !== responseJSON[0]?.message) {
+        for (let i = 0; i < responseJSON.length - messagesStore.history.length; i++) {
+          messagesStore.history.unshift(responseJSON[i]);
+        }
+      }
+    } else {
       for (let i = 0; i < messagesStore.history.length; i++) {
         if (responseJSON[i]?.message !== messagesStore.history[i].message) {
           messagesStore.history[i] = responseJSON[i];
         }
       }
     }
-  }
-}, 5000);
+  }, 5000);
+}
 
 async function openChat(message) {
   switch (message.receiver_type) {

@@ -20,27 +20,9 @@ if (cookies.get("authToken") !== null) {
   router.push('/');
 }
 
+const validationErrors = ref({});
 async function register() {
-  if (!(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email.value))) {
-    errorStore.errorMessage = "Invalid email";
-    return;
-  }
-  if (password.value !== passwordRepeat.value) {
-    errorStore.errorMessage = "Passwords don't match";
-    return;
-  }
-  if (!email.value || !name.value || !nickname.value || !password.value) {
-    errorStore.errorMessage = "All fields must be filled";
-    return;
-  }
-  if (password.value.length < 8) {
-    errorStore.errorMessage = "Password must be at least 8 characthers";
-    return;
-  }
-  if (nickname.value.length >= 255 || name.value.length >= 255 || email.value.length >= 255) {
-    errorStore.errorMessage = "Any fields shouldn't extends 255 characthers";
-    return;
-  }
+
   const response = await fetch('http://localhost/api/user/register', {
     method: 'POST',
     headers: {
@@ -50,12 +32,13 @@ async function register() {
       email: email.value,
       name: name.value,
       nickname: '@' + nickname.value,
-      password: password.value
+      password: password.value,
+      repeat_password: passwordRepeat.value,
     })
   })
   const responseJSON = await response.json();
   if (!response.ok) {
-    errorStore.errorMessage = responseJSON.error;
+    validationErrors.value = responseJSON.error;
     return;
   }
   cookies.set("authToken", responseJSON);
@@ -66,14 +49,34 @@ async function register() {
 <template>
   <div class="theWrapper">
     <h1> REGISTER </h1>
-    Email
-    <input v-model="email" placeholder="Email">
-    Name <input v-model="name" placeholder="Name - how other people will know you">
-    Nickname
-    <input v-model="nickname" placeholder="Nickname - how people will find you">
-    Passsword
-    <input v-model="password" type="password" placeholder="Password">
-    Repeat password<input v-model="passwordRepeat" type="password" placeholder="Repeat Password">
+    <form>
+      <h4>Email</h4>
+      <input v-model="email" maxlength="255" placeholder="Email" :class="{ has_error: validationErrors.email }">
+      <!--
+        |----------------------------------------------------
+        | TODOS
+        |----------------------------------------------------
+        |
+        | TODO 1: have only one input in template 
+        | TODO 2: all errors must be rendered via loop
+        |
+      -->
+      <p>{{ validationErrors.email }} </p>
+      <h4>Name</h4>
+      <input v-model="name" maxlength="255" placeholder="Name - how other people will know you">
+      <h4>Nickname</h4>
+      <input v-model="nickname" maxlength="255" placeholder="Nickname - how people will find you"
+        :class="{ has_error: validationErrors.nickname }">
+      <p>{{ validationErrors.nickname }} </p>
+      <h4>Password</h4>
+      <input v-model="password" type="password" maxlength="255" placeholder="Password"
+        :class="{ has_error: validationErrors.password }">
+      <p>{{ validationErrors.password }} </p>
+      <h4>Repeat Password</h4>
+      <input v-model="passwordRepeat" type="password" maxlength="255" placeholder="Repeat Password"
+        :class="{ has_error: validationErrors.password }">
+      <p>{{ validationErrors.repeat_password }} </p>
+    </form>
     <a href="http://localhost:2130/login">Already have an account?</a>
     <button @click=register>Register</button>
   </div>
@@ -93,6 +96,10 @@ div {
   background-color: #ffe;
 }
 
+.has_error {
+  border: red 1px solid;
+}
+
 .theWrapper {
   display: flex;
   height: 70vh;
@@ -107,7 +114,7 @@ div {
 }
 
 input {
-  width: 100%;
+  width: 250px;
   height: 23px;
   margin: 11px 0;
 }

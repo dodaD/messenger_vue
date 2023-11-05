@@ -35,6 +35,7 @@ async function editMessage() {
     errorStore.errorMessage = 'You are not allowed to edit this message';
     return;
   }
+
   const response = await fetch('http://localhost/api/message/edit/' + props.message.id, {
     method: "PATCH",
     headers: {
@@ -58,6 +59,9 @@ async function editMessage() {
   show.value = true;
   const arr = messagesStore.allMessages[messagesStore.openedChatId];
   let messageToChangeId = arr.findIndex((message) => message.id === props.message.id);
+  if (updatedMessage.value === arr[messageToChangeId].message) {
+    return;
+  }
   arr[messageToChangeId].message = updatedMessage.value; //TODO change
   date.value = new Date(responseJSON.updated_at);
   updatedAt.value = date.value.toLocaleString('en-US', options);

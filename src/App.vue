@@ -1,6 +1,7 @@
 <script setup>
 import { RouterView } from 'vue-router';
 import ErrorComponent from './components/ErrorComponent.vue';
+
 import { useErrorStore } from './stores/Error.js';
 const errorStore = useErrorStore();
 </script>

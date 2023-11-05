@@ -1,8 +1,9 @@
 <script setup>
 import { ref } from 'vue';
 import { useCookies } from "vue3-cookies";
-import { useRouter } from 'vue-router'
 const { cookies } = useCookies();
+
+import { useRouter } from 'vue-router'
 const router = useRouter();
 
 import { useErrorStore } from '../stores/Error.js';
@@ -34,6 +35,7 @@ async function login() {
   cookies.set("authToken", responseJSON);
   router.push('/');
 }
+
 </script>
 
 <template>

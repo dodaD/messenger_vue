@@ -20,6 +20,11 @@ const nicknameToSearch = ref('');
 const seachResults = ref([]);
 
 async function search() {
+  if (nicknameToSearch.value.length <= 2) {
+    seachResults.value = [];
+    return;
+  }
+
   const response = await fetch('http://localhost/api/search', { //TODO change to env variable 
     method: "POST",
     headers: {
