@@ -26,15 +26,15 @@ function logOut() {
   <button v-if="cookies.get('authToken') !== null" class="logout-button" @click="logOut">Log Out </button>
   <div class="theWrapper border">
     <div class="menu">
-      <SearchComponent> </SearchComponent>
+      <SearchComponent />
       <div class="chat-history border">
-        <HistoryComponent> </HistoryComponent>
+        <HistoryComponent />
       </div>
-      <ProfileComponent> </ProfileComponent>
+      <ProfileComponent />
     </div>
 
     <div class="border chat">
-      <OpenedChatComponent> </OpenedChatComponent>
+      <OpenedChatComponent />
     </div>
   </div>
 </template>
@@ -64,11 +64,17 @@ function logOut() {
   width: 30%;
 }
 
+.search-component {
+  height: 30vh;
+  background-color: red;
+}
+
 .chat-history {
   overflow-y: scroll;
   display: flex;
   flex-direction: column;
   height: 100%;
+  overflow-x: hidden;
 }
 
 .chat-history::-webkit-scrollbar {

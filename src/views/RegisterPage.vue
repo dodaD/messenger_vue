@@ -73,8 +73,8 @@ async function register() {
       <input v-model="passwordRepeat" type="password" maxlength="255" placeholder="Repeat Password"
         :class="{ has_error: validationErrors.password }">
       <p>{{ validationErrors.repeat_password }} </p>
+      <a href="http://localhost:2130/login">Already have an account?</a>
     </form>
-    <a href="http://localhost:2130/login">Already have an account?</a>
     <button @click=register>Register</button>
   </div>
 </template>
@@ -111,12 +111,12 @@ div {
 }
 
 form {
-  width: 100%;
+  width: 72%;
+  margin: 0 auto;
 }
 
 input {
   width: 100%;
-  margin: 5px 0;
 }
 
 a {

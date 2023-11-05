@@ -94,10 +94,12 @@ async function openChat(result) {
 
 <template>
   <input class="search border" placeholder="Search bar" v-model="nicknameToSearch" @input="search">
-  <div @click="openChat(result)" v-for="result in seachResults" class="result border" if="!seachResults">
-    <div>
-      <h4> {{ result.name }} </h4>
-      <div> {{ result.nickname }} </div>
+  <div class="search-wrapper" if="seachResults.length !== 0">
+    <div @click="openChat(result)" v-for="result in seachResults" class="result border" if="seachResults.length !== 0">
+      <div>
+        <h4> {{ result.name }} </h4>
+        <div> {{ result.nickname }} </div>
+      </div>
     </div>
   </div>
 </template>
@@ -111,6 +113,28 @@ async function openChat(result) {
 
 h4 {
   margin: 0;
+}
+
+.search-wrapper {
+  max-height: 30vh;
+  overflow: scroll;
+  width: 100%;
+  overflow-x: hidden;
+}
+
+.search-wrapper::-webkit-scrollbar {
+  width: 1px;
+  background-color: rgba(10, 10, 10, 0.05);
+}
+
+.search-wrapper::-webkit-scrollbar-track {
+  width: 1px;
+  background-color: rgba(10, 10, 10, 0.1);
+}
+
+.search-wrapper::-webkit-scrollbar-thumb {
+  width: 1px;
+  background-color: rgba(10, 10, 10, 0.5);
 }
 
 .entity {
