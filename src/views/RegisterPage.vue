@@ -72,7 +72,7 @@ async function register() {
       <input v-model="passwordRepeat" type="password" maxlength="255" placeholder="Repeat Password"
         :class="{ has_error: validationErrors.password }">
       <p>{{ validationErrors.repeat_password }} </p>
-      <a href="{$import.meta.env.VITE_APP_API_BASE_URL}login">Already have an account?</a>
+      <a href="/login">Already have an account?</a>
     </form>
     <button @click=register>Register</button>
   </div>
