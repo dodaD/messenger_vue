@@ -43,7 +43,7 @@ async function login() {
     <h1> LOGIN </h1>
     <input v-model="email" placeholder="Email">
     <input v-model="password" type="password" placeholder="Password">
-    <a href="{$import.meta.env.VITE_APP_API_BASE_URL}/register">Don't have an account?</a>
+    <a href="/register">Don't have an account?</a>
     <button @click=login>Login</button>
   </div>
 </template>
