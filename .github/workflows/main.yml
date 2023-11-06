@@ -1,4 +1,4 @@
-name: Skills_re_mind Deploy
+name: messenger_vue Deploy
 
 on:
   push:
