@@ -22,7 +22,11 @@ async function sendMessage() {
     errorStore.errorMessage = 'Nothing to send';
     return;
   }
-  const response = await fetch('http://localhost/api/message/add', {
+  if (receiverStore.receiverId === 0) {
+    errorStore.errorMessage = 'No chat was selected';
+    return;
+  }
+  const response = await fetch(import.meta.env.VITE_APP_API_BASE_URL + '/message/add', {
     method: "POST",
     headers: {
       "Accept": "application/json",

@@ -15,7 +15,7 @@ import { useCookies } from "vue3-cookies";
 const { cookies } = useCookies();
 
 (async () => {
-  const response = await fetch('http://localhost/api/message/history', { //TODO change to env variable 
+  const response = await fetch(import.meta.env.VITE_APP_API_BASE_URL + '/message/history', { //TODO change to env variable 
     headers: {
       "Accept": "application/json",
       "Content-type": "application/json",
@@ -36,7 +36,7 @@ const { cookies } = useCookies();
 
 if (messagesStore.intervalId === 0) {
   messagesStore.intervalId = setInterval(async () => {
-    const response = await fetch('http://localhost/api/message/history', { //TODO change to env variable 
+    const response = await fetch(import.meta.env.VITE_APP_API_BASE_URL + '/message/history', { //TODO change to env variable 
       headers: {
         "Accept": "application/json",
         "Content-type": "application/json",
@@ -72,18 +72,19 @@ if (messagesStore.intervalId === 0) {
 }
 
 async function openChat(message) {
+  let link = "";
   switch (message.receiver_type) {
     case 'App\\Models\\Group':
       receiverStore.entity = 'group';
-      receiverStore.link = 'http://localhost/api/message/group-chat?page=1';
+      link = import.meta.env.VITE_APP_API_BASE_URL + '/message/group-chat?page=1';
       break;
     case 'App\\Models\\Channel':
       receiverStore.entity = 'channel';
-      receiverStore.link = 'http://localhost/api/message/channel-chat?page=1';
+      link = import.meta.env.VITE_APP_API_BASE_URL + '/message/channel-chat?page=1';
       break;
     default:
       receiverStore.entity = 'user';
-      receiverStore.link = 'http://localhost/api/message/chat-beetween-users?page=1';
+      link = import.meta.env.VITE_APP_API_BASE_URL + '/message/chat-beetween-users?page=1';
   }
   const chatId = receiverStore.entity + message.interlocutorId;
   receiverStore.receiverId = message.interlocutorId;
@@ -95,7 +96,7 @@ async function openChat(message) {
     return;
   };
 
-  const response = await fetch(receiverStore.link, {
+  const response = await fetch(link, {
     method: "POST",
     headers: {
       "Accept": "application/json",

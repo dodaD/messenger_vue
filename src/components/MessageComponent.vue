@@ -36,7 +36,7 @@ async function editMessage() {
     return;
   }
 
-  const response = await fetch('http://localhost/api/message/edit/' + props.message.id, {
+  const response = await fetch(import.meta.env.VITE_APP_API_BASE_URL + '/message/edit/' + props.message.id, {
     method: "PATCH",
     headers: {
       "Accept": "application/json",
@@ -68,12 +68,13 @@ async function editMessage() {
   arr[messageToChangeId].updated_at = updatedAt.value;
 }
 
+const showPropToDelete = ref(false);
 async function deleteMessage() {
   if (allowedToClick === false) {
     errorStore.errorMessage = 'You are not allowed to delete this message';
     return;
   }
-  const response = await fetch('http://localhost/api/message/' + props.message.id, {
+  const response = await fetch(import.meta.env.VITE_APP_API_BASE_URL + '/message/' + props.message.id, {
     method: "DELETE",
     headers: {
       "Accept": "application/json",
@@ -101,7 +102,12 @@ async function deleteMessage() {
     <div v-if="props.message.updated_at !== props.message.created_at">Updated: {{ updatedAt }}</div>
   </div>
   <button v-if="show && allowedToClick" @click="show = !show">E</button>
-  <button v-if="show && allowedToClick" @click=deleteMessage>D</button>
+  <button v-if="show && allowedToClick" @click="showPropToDelete = true">D</button>
+  <div v-if="show && showPropToDelete" class="propmpt-wrapper border">
+    <div>Are you sure you want to delete message? </div>
+    <button @click="deleteMessage"> Yes! </button>
+    <button @click="showPropToDelete = false"> No, not really </button>
+  </div>
   <div class="border" v-if="!show">
     <textarea v-model="updatedMessage" class="changing" />
     <button v-if="!show" @click=editMessage class="save-changes-button">Save</button>
@@ -138,5 +144,16 @@ button {
 
 .message {
   width: fit-content;
+}
+
+.propmpt-wrapper {
+  position: fixed;
+  top: 10px;
+  left: 50%;
+  transform: translate(-50%, 0);
+}
+
+.propmpt-wrapper button {
+  margin: 5px 10px;
 }
 </style>

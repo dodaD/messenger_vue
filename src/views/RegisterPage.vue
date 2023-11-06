@@ -19,8 +19,7 @@ if (cookies.get("authToken") !== null) {
 
 const validationErrors = ref({});
 async function register() {
-
-  const response = await fetch('http://localhost/api/user/register', {
+  const response = await fetch(import.meta.env.VITE_APP_API_BASE_URL + '/user/register', {
     method: 'POST',
     headers: {
       "Content-type": "application/json",
@@ -73,7 +72,7 @@ async function register() {
       <input v-model="passwordRepeat" type="password" maxlength="255" placeholder="Repeat Password"
         :class="{ has_error: validationErrors.password }">
       <p>{{ validationErrors.repeat_password }} </p>
-      <a href="http://localhost:2130/login">Already have an account?</a>
+      <a href="{$import.meta.env.VITE_APP_API_BASE_URL}login">Already have an account?</a>
     </form>
     <button @click=register>Register</button>
   </div>

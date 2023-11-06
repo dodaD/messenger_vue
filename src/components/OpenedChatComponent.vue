@@ -25,7 +25,7 @@ messagesStore.elementIntervalId = setInterval(async () => {
   if (messagesStore.openedChatId === 0) {
     return;
   };
-  const response = await fetch('http://localhost/api/message/chat-beetween-users?page=1', {
+  const response = await fetch(import.meta.env.VITE_APP_API_BASE_URL + '/message/chat-beetween-users?page=1', {
     method: "POST",
     headers: {
       "Accept": "application/json",
@@ -92,7 +92,7 @@ async function getMoreMessages(event) {
     }
     receiverStore.page++;
 
-    const response = await fetch('http://localhost/api/message/chat-beetween-users?page=' + receiverStore.page, {
+    const response = await fetch(import.meta.env.VITE_APP_API_BASE_URL + '/message/chat-beetween-users?page=' + receiverStore.page, {
       method: "POST",
       headers: {
         "Accept": "application/json",

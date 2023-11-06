@@ -17,7 +17,7 @@ if (cookies.get("authToken") !== null) {
 }
 
 async function login() {
-  const response = await fetch('http://localhost/api/user/login', {
+  const response = await fetch(import.meta.env.VITE_APP_API_BASE_URL + '/user/login', {
     method: 'POST',
     headers: {
       "Content-type": "application/json",
@@ -43,7 +43,7 @@ async function login() {
     <h1> LOGIN </h1>
     <input v-model="email" placeholder="Email">
     <input v-model="password" type="password" placeholder="Password">
-    <a href="http://localhost:2130/register">Don't have an account?</a>
+    <a href="{$import.meta.env.VITE_APP_API_BASE_URL}/register">Don't have an account?</a>
     <button @click=login>Login</button>
   </div>
 </template>

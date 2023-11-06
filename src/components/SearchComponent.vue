@@ -25,7 +25,7 @@ async function search() {
     return;
   }
 
-  const response = await fetch('http://localhost/api/search', { //TODO change to env variable 
+  const response = await fetch(import.meta.env.VITE_APP_API_BASE_URL + '/search', { //TODO change to env variable 
     method: "POST",
     headers: {
       "Accept": "application/json",
@@ -49,17 +49,18 @@ async function search() {
 }
 
 async function openChat(result) {
-  let link = '';
+  const link = import.meta.env.VITE_APP_API_BASE_URL;
+  let linkToChatPage = '';
   receiverStore.entity = result.entity;
   switch (result.entity) {
     case 'group':
-      link = 'http://localhost/api/message/group-chat?page=1';
+      linkToChatPage = link + '/message/group-chat?page=1';
       break;
     case 'channel':
-      link = 'http://localhost/api/message/channel-chat?page=1';
+      linkToChatPage = link + '/message/channel-chat?page=1';
       break;
     default:
-      link = 'http://localhost/api/message/chat-beetween-users?page=1';
+      linkToChatPage = link + '/chat-beetween-users?page=1';
   }
   const chatId = receiverStore.entity + result.id;
   receiverStore.receiverId = result.id;
@@ -71,7 +72,7 @@ async function openChat(result) {
     return;
   };
 
-  const response = await fetch(link, {
+  const response = await fetch(linkToChatPage, {
     method: "POST",
     headers: {
       "Accept": "application/json",

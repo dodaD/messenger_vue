@@ -12,7 +12,7 @@ import { useRouter } from 'vue-router';
 const router = useRouter();
 
 (async () => {
-  const response = await fetch('http://localhost/api/user/my-user-info', {
+  const response = await fetch(import.meta.env.VITE_APP_API_BASE_URL + '/user/my-user-info', {
     headers: {
       "Accept": "application/json",
       "Content-type": "application/json",
