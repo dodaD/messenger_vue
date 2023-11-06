@@ -5,8 +5,6 @@ const { cookies } = useCookies();
 import { useUserStore } from "../stores/User.js";
 const loggedInUser = useUserStore();
 
-import { useErrorStore } from '../stores/Error.js';
-const errorStore = useErrorStore();
 
 import { useRouter } from 'vue-router';
 const router = useRouter();
