@@ -2,7 +2,7 @@ name: messenger_vue Deploy
 
 on:
   push:
-    branches: [ "master" ]
+    branches: [ "master" ] 
 
 jobs:
   build:
