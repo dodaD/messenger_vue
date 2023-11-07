@@ -49,7 +49,10 @@ async function editMessage() {
   });
   const responseJSON = await response.json();
   if (response.status === 401) {
+    clearInterval(messagesStore.intervalId);
+    clearInterval(messagesStore.elementIntervalId);
     cookies.remove("authToken");
+    messagesStore.intervalId = 0;
     router.push('/login');
   }
   if (!response.ok) {
@@ -84,7 +87,10 @@ async function deleteMessage() {
   });
   const responseJSON = await response.json();
   if (response.status === 401) {
+    clearInterval(messagesStore.intervalId);
+    clearInterval(messagesStore.elementIntervalId);
     cookies.remove("authToken");
+    messagesStore.intervalId = 0;
     router.push('/login');
   }
   if (!response.ok) {

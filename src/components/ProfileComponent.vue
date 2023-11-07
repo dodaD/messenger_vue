@@ -19,7 +19,10 @@ const router = useRouter();
   });
   const responseJSON = await response.json();
   if (response.status === 401) {
+    clearInterval(messagesStore.intervalId);
+    clearInterval(messagesStore.elementIntervalId);
     cookies.remove("authToken");
+    messagesStore.intervalId = 0;
     router.push('/login');
   }
   loggedInUser.userId = responseJSON.id;

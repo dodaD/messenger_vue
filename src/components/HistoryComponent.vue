@@ -24,6 +24,10 @@ const { cookies } = useCookies();
   });
   const responseJSON = await response.json();
   if (response.status === 401) {
+    clearInterval(messagesStore.intervalId);
+    clearInterval(messagesStore.elementIntervalId);
+    cookies.remove("authToken");
+    messagesStore.intervalId = 0;
     router.push('/login');
   }
   if (!response.ok) {
@@ -45,8 +49,9 @@ if (messagesStore.intervalId === 0) {
     });
     const responseJSON = await response.json();
     if (response.status === 401) {
-      cookies.remove("authToken");
       clearInterval(messagesStore.intervalId);
+      clearInterval(messagesStore.elementIntervalId);
+      cookies.remove("authToken");
       messagesStore.intervalId = 0;
       router.push('/login');
       return;
@@ -109,7 +114,10 @@ async function openChat(message) {
   });
   const responseJSON = await response.json();
   if (response.status === 401) {
+    clearInterval(messagesStore.intervalId);
+    clearInterval(messagesStore.elementIntervalId);
     cookies.remove("authToken");
+    messagesStore.intervalId = 0;
     router.push('/login');
   }
   if (!response.ok) {
