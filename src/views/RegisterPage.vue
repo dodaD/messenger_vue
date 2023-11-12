@@ -12,6 +12,13 @@ const name = ref(null);
 const nickname = ref(null);
 const password = ref('');
 const passwordRepeat = ref(null);
+const fieldsToFill = [
+  { ref: email, errorProperty: 'email', fieldName: 'Email' },
+  { ref: name, errorProperty: 'name', fieldName: 'Name' },
+  { ref: nickname, errorProperty: 'nickname', fieldName: 'Nickname' },
+  { ref: password, errorProperty: 'password', fieldName: 'Password' },
+  { ref: passwordRepeat, errorProperty: 'repeat_password', fieldName: 'Repeat Password' }
+];
 
 if (cookies.get("authToken") !== null) {
   router.push('/');
@@ -34,7 +41,7 @@ async function register() {
   })
   const responseJSON = await response.json();
   if (!response.ok) {
-    validationErrors.value = responseJSON.error;
+    validationErrors.value = responseJSON.error[0];
     return;
   }
   cookies.set("authToken", responseJSON);
@@ -43,11 +50,9 @@ async function register() {
 </script>
 
 <template>
-  <div class="theWrapper">
+  <div class="theWrapper border">
     <h1> REGISTER </h1>
     <form>
-      <h4>Email</h4>
-      <input v-model="email" maxlength="255" placeholder="Email" :class="{ has_error: validationErrors.email }">
       <!--
         |----------------------------------------------------
         | TODOS
@@ -57,21 +62,16 @@ async function register() {
         | TODO 2: all errors must be rendered via loop
         |
       -->
-      <p>{{ validationErrors.email }} </p>
-      <h4>Name</h4>
-      <input v-model="name" maxlength="255" placeholder="Name - how other people will know you">
-      <h4>Nickname</h4>
-      <input v-model="nickname" maxlength="255" placeholder="Nickname - how people will find you"
-        :class="{ has_error: validationErrors.nickname }">
-      <p>{{ validationErrors.nickname }} </p>
-      <h4>Password</h4>
-      <input v-model="password" type="password" maxlength="255" placeholder="Password"
-        :class="{ has_error: validationErrors.password }">
-      <p>{{ validationErrors.password }} </p>
-      <h4>Repeat Password</h4>
-      <input v-model="passwordRepeat" type="password" maxlength="255" placeholder="Repeat Password"
-        :class="{ has_error: validationErrors.password }">
-      <p>{{ validationErrors.repeat_password }} </p>
+
+      <div v-for="field in fieldsToFill">
+        <h4>{{ field.fieldName }} </h4>
+        <input v-model="field.ref.value" maxlength="255" :class="{ has_error: validationErrors.email }" />
+        <div class="errors-wrapper">
+          <p v-for="error in validationErrors[field.errorProperty]" class="error-class">
+            {{ error }}
+          </p>
+        </div>
+      </div>
       <a href="/login">Already have an account?</a>
     </form>
     <button @click=register>Register</button>
@@ -85,20 +85,35 @@ button {
   margin-left: auto;
 }
 
-div {
-  border: 1px solid black;
-  margin: 10px;
-  padding: 10px;
-  background-color: #ffe;
+.errors-wrapper {
+  display: flex;
+  width: 100vh;
 }
 
 .has_error {
   border: red 1px solid;
 }
 
+.error-class {
+  color: red;
+}
+
+p {
+  margin: 0;
+  padding: 0 5px;
+}
+
+p:first-of-type {
+  padding-left: 0;
+}
+
+p:last-of-type {
+  padding-right: 0;
+}
+
 .theWrapper {
   display: flex;
-  height: 70vh;
+  min-height: 70vh;
   flex-direction: column;
   width: 50%;
   margin-left: auto;

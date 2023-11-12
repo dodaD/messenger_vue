@@ -45,7 +45,7 @@ messagesStore.elementIntervalId = setInterval(async () => {
     router.push('/login');
   }
   if (!response.ok) {
-    errorStore.errorMessage = responseJSON.error;
+    errorStore.errorMessage = responseJSON.error[0];
     return;
   }
 
@@ -115,7 +115,7 @@ async function getMoreMessages(event) {
       router.push('/login');
     }
     if (!response.ok) {
-      errorStore.errorMessage = responseJSON.error;
+      errorStore.errorMessage = responseJSON.error[0];
       return;
     }
 

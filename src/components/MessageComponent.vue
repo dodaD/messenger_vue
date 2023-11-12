@@ -56,7 +56,7 @@ async function editMessage() {
     router.push('/login');
   }
   if (!response.ok) {
-    errorStore.errorMessage = responseJSON.error;
+    errorStore.errorMessage = responseJSON.error[0];
     return;
   }
   show.value = true;
@@ -94,7 +94,7 @@ async function deleteMessage() {
     router.push('/login');
   }
   if (!response.ok) {
-    errorStore.errorMessage = responseJSON.error;
+    errorStore.errorMessage = responseJSON.error[0];
     return;
   } //TODO short it
   messagesStore.allMessages[messagesStore.openedChatId] = messagesStore.allMessages[messagesStore.openedChatId].filter(message => message.id !== props.message.id);

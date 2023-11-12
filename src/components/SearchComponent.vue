@@ -45,7 +45,7 @@ async function search() {
     router.push('/login');
   }
   if (!response.ok) {
-    errorStore.errorMessage = responseJSON.error;
+    errorStore.errorMessage = responseJSON.error[0];
     return;
   }
   seachResults.value = responseJSON;
@@ -88,7 +88,7 @@ async function openChat(result) {
   });
   const responseJSON = await response.json();
   if (!response.ok) {
-    errorStore.errorMessage = responseJSON.error;
+    errorStore.errorMessage = responseJSON.error[0];
     return;
   }
   messagesStore.allMessages[chatId] = responseJSON.data.reverse();

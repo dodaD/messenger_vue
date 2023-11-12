@@ -49,7 +49,7 @@ async function sendMessage() {
     router.push('/login');
   }
   if (!response.ok) {
-    errorStore.errorMessage = responseJSON.error;
+    errorStore.errorMessage = responseJSON.error[0];
     return;
   }
   messagesStore.allMessages[messagesStore.openedChatId].unshift(responseJSON);
