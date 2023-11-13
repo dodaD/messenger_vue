@@ -1,14 +1,14 @@
 <script setup>
-import { useMessagesStore } from "../stores/Messages.js";
+import { useMessagesStore } from "../../stores/Messages.js";
 const messagesStore = useMessagesStore();
 
 import { useRouter } from 'vue-router';
 const router = useRouter();
 
-import { useCurrentReceiverStore } from "../stores/CurrentReceiver";
+import { useCurrentReceiverStore } from "../../stores/CurrentReceiver";
 const receiverStore = useCurrentReceiverStore();
 
-import { useErrorStore } from '../stores/Error.js';
+import { useErrorStore } from '../../stores/Error.js';
 const errorStore = useErrorStore();
 
 import { useCookies } from "vue3-cookies";
@@ -25,7 +25,7 @@ async function search() {
     return;
   }
 
-  const response = await fetch(import.meta.env.VITE_APP_API_BASE_URL + '/search', { //TODO change to env variable 
+  const response = await fetch(import.meta.env.VITE_APP_API_BASE_URL + '/search', {
     method: "POST",
     headers: {
       "Accept": "application/json",
@@ -52,19 +52,6 @@ async function search() {
 }
 
 async function openChat(result) {
-  const link = import.meta.env.VITE_APP_API_BASE_URL;
-  let linkToChatPage = '';
-  receiverStore.entity = result.entity;
-  switch (result.entity) {
-    case 'group':
-      linkToChatPage = link + '/message/group-chat?page=1';
-      break;
-    case 'channel':
-      linkToChatPage = link + '/message/channel-chat?page=1';
-      break;
-    default:
-      linkToChatPage = link + '/chat-beetween-users?page=1';
-  }
   const chatId = receiverStore.entity + result.id;
   receiverStore.receiverId = result.id;
   receiverStore.receiverName = result.name;
@@ -75,23 +62,7 @@ async function openChat(result) {
     return;
   };
 
-  const response = await fetch(linkToChatPage, {
-    method: "POST",
-    headers: {
-      "Accept": "application/json",
-      "Content-type": "application/json",
-      "Authorization": "Bearer " + cookies.get("authToken"),
-    },
-    body: JSON.stringify({
-      receiver_id: result.id,
-    })
-  });
-  const responseJSON = await response.json();
-  if (!response.ok) {
-    errorStore.errorMessage = responseJSON.error[0];
-    return;
-  }
-  messagesStore.allMessages[chatId] = responseJSON.data.reverse();
+  messagesStore.allMessages[chatId] = await messagesStore.getMessagesFromChat(1, receiverStore.receiverId);
   messagesStore.history.unshift(result);
 }
 </script>

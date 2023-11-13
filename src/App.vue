@@ -1,13 +1,10 @@
 <script setup>
 import { RouterView } from 'vue-router';
-import ErrorComponent from './components/ErrorComponent.vue';
-
-import { useErrorStore } from './stores/Error.js';
-const errorStore = useErrorStore();
+import ErrorComponent from './components/detailsComponents/ErrorComponent.vue';
 </script>
 
 <template>
-  <ErrorComponent v-if="errorStore.errorMessage !== ''" class="error-message"> </ErrorComponent>
+  <ErrorComponent />
   <RouterView> </RouterView>
 </template>
 
@@ -33,11 +30,5 @@ html {
   justify-content: center;
   align-items: center;
   flex-shrink: 0;
-}
-
-.error-message {
-  position: absolute;
-  left: 50%;
-  transform: translate(-50%, 0);
 }
 </style>

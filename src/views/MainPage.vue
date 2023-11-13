@@ -1,8 +1,8 @@
 <script setup>
-import OpenedChatComponent from "../components/OpenedChatComponent.vue";
-import HistoryComponent from "../components/HistoryComponent.vue";
+import OpenedChatComponent from "../components/pageComponents/OpenedChatComponent.vue";
+import HistoryComponent from "../components/pageComponents/HistoryComponent.vue";
+import SearchComponent from "../components/pageComponents/SearchComponent.vue";
 import ProfileComponent from "../components/ProfileComponent.vue";
-import SearchComponent from "../components/SearchComponent.vue";
 
 import { useRouter } from 'vue-router';
 const router = useRouter();

@@ -43,7 +43,7 @@ async function login() {
     <h1> LOGIN </h1>
     <input v-model="email" placeholder="Email">
     <input v-model="password" type="password" placeholder="Password">
-    <a href="/register">Don't have an account?</a>
+    <router-link to="/register">Don't have an account?</router-link>
     <button @click=login>Login</button>
   </div>
 </template>

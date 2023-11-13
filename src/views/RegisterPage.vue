@@ -41,7 +41,7 @@ async function register() {
   })
   const responseJSON = await response.json();
   if (!response.ok) {
-    validationErrors.value = responseJSON.error[0];
+    validationErrors.value = responseJSON.error;
     return;
   }
   cookies.set("authToken", responseJSON);
@@ -72,7 +72,7 @@ async function register() {
           </p>
         </div>
       </div>
-      <a href="/login">Already have an account?</a>
+      <router-link to="/login">Already have an account?</router-link>
     </form>
     <button @click=register>Register</button>
   </div>

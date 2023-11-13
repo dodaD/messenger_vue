@@ -4,12 +4,11 @@ import { defineStore } from 'pinia'
 export const useErrorStore = defineStore('errorStore', () => {
   const errorMessage = ref('');
 
-  watch(errorMessage, reset)
-  function reset() {
+  watch(errorMessage, () => {
     setTimeout(() => {
-    errorMessage.value = '';
+      errorMessage.value = '';
     }, 5000);
-  }
+  });
 
   return { errorMessage };
 })
