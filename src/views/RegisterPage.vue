@@ -111,7 +111,7 @@ p:last-of-type {
   padding-right: 0;
 }
 
-.theWrapper {
+.the-wrapper {
   display: flex;
   min-height: 70vh;
   flex-direction: column;

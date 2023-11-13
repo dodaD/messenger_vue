@@ -5,6 +5,8 @@ const messagesStore = useMessagesStore();
 import { useCurrentReceiverStore } from "../../stores/CurrentReceiver.js";
 const receiverStore = useCurrentReceiverStore();
 
+import ProfilePicture from '../detailsComponents/ProfilePictureComponent.vue';
+
 messagesStore.getInitialHistory();
 
 async function openChat(message) {
@@ -23,10 +25,12 @@ async function openChat(message) {
 
 <template>
   <div v-for="chat in messagesStore.history" @click="openChat(chat)" class="chat border">
-    <div class="profile-picture"> Avatar </div>
     <div class="history-message">
-      <h4 class="receiver-name"> {{ chat.name }} </h4>
-      <p class="message">{{ chat.message }}</p>
+      <ProfilePicture />
+      <div class="info">
+        <h4 class="receiver-name"> {{ chat.name }} </h4>
+        <p class="message">{{ chat.message }}</p>
+      </div>
     </div>
   </div>
 </template>
@@ -47,6 +51,7 @@ async function openChat(message) {
   border: 0;
   margin: 0;
   padding: 0;
+  display: flex;
 }
 
 h4 {
@@ -54,21 +59,7 @@ h4 {
   margin-top: 5px;
 }
 
-.profile-picture {
-  border: 1px solid black;
-  border-radius: 100px;
-  width: 50px;
-  height: 50px;
-  margin: 10px;
-  padding: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-shrink: 0;
-}
-
 .message {
-  margin-left: 10px;
   margin-top: 5px;
 }
 </style>

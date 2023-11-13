@@ -1,35 +1,9 @@
 <script setup>
-import { useCookies } from "vue3-cookies";
-const { cookies } = useCookies();
-
+import ProfilePicture from '../components/detailsComponents/ProfilePictureComponent.vue';
 import { useUserStore } from "../stores/User.js";
 const loggedInUser = useUserStore();
 
-
-import { useRouter } from 'vue-router';
-const router = useRouter();
-
-(async () => {
-  const response = await fetch(import.meta.env.VITE_APP_API_BASE_URL + '/user/my-user-info', {
-    headers: {
-      "Accept": "application/json",
-      "Content-type": "application/json",
-      "Authorization": "Bearer " + cookies.get("authToken"),
-    }
-  });
-  const responseJSON = await response.json();
-  if (response.status === 401) {
-    clearInterval(messagesStore.intervalId);
-    clearInterval(messagesStore.elementIntervalId);
-    cookies.remove("authToken");
-    messagesStore.intervalId = 0;
-    router.push('/login');
-  }
-  loggedInUser.userId = responseJSON.id;
-  loggedInUser.userName = responseJSON.name;
-  loggedInUser.userNickname = responseJSON.nickname;
-  loggedInUser.userEmail = responseJSON.email;
-})();
+loggedInUser.getUserInfo();
 </script>
 
 <template>
@@ -39,7 +13,7 @@ const router = useRouter();
       <div class="nickname"> {{ loggedInUser.userNickname }} </div>
       <div class="email"> {{ loggedInUser.userEmail }} </div>
     </div>
-    <div class="profile-picture"> </div>
+    <ProfilePicture />
   </div>
 </template>
 

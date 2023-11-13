@@ -1,11 +1,12 @@
 <script setup>
+import ProfilePicture from '../components/detailsComponents/ProfilePictureComponent.vue';
 import { useCurrentReceiverStore } from "../stores/CurrentReceiver.js";
 const receiverStore = useCurrentReceiverStore();
 </script>
 
 <template>
   <div class="wrapper-1 border">
-    <div class="profile-picture" />
+    <ProfilePicture />
     <div class="info-wrapper">
       <h3 class="name"> {{ receiverStore.receiverName }} </h3>
       <div class="nickname"> {{ receiverStore.receiverNickname }} </div>

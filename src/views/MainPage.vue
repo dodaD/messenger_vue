@@ -24,7 +24,7 @@ function logOut() {
 
 <template>
   <button v-if="cookies.get('authToken') !== null" class="logout-button" @click="logOut">Log Out </button>
-  <div class="theWrapper border">
+  <div class="the-wrapper border">
     <div class="menu">
       <SearchComponent />
       <div class="chat-history border">
@@ -41,7 +41,7 @@ function logOut() {
 
 
 <style scoped>
-.theWrapper {
+.the-wrapper {
   display: flex;
   height: 95vh;
   max-width: 80%;

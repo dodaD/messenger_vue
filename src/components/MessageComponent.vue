@@ -9,12 +9,6 @@ import { useErrorStore } from '../stores/Error.js';
 const errorStore = useErrorStore();
 import { ref } from 'vue';
 
-import { useRouter } from 'vue-router';
-const router = useRouter();
-
-import { useCookies } from "vue3-cookies";
-const { cookies } = useCookies();
-
 import { defineProps } from 'vue';
 const props = defineProps({
   message: Object,
@@ -35,69 +29,18 @@ async function editMessage() {
     errorStore.errorMessage = 'You are not allowed to edit this message';
     return;
   }
-
-  const response = await fetch(import.meta.env.VITE_APP_API_BASE_URL + '/message/edit/' + props.message.id, {
-    method: "PATCH",
-    headers: {
-      "Accept": "application/json",
-      "Content-type": "application/json",
-      "Authorization": "Bearer " + cookies.get("authToken"),
-    },
-    body: JSON.stringify({
-      message: updatedMessage.value,
-    })
-  });
-  const responseJSON = await response.json();
-  if (response.status === 401) {
-    clearInterval(messagesStore.intervalId);
-    clearInterval(messagesStore.elementIntervalId);
-    cookies.remove("authToken");
-    messagesStore.intervalId = 0;
-    router.push('/login');
-  }
-  if (!response.ok) {
-    errorStore.errorMessage = responseJSON.error[0];
-    return;
-  }
+  messagesStore.updateMessage(props.message.id, updatedMessage.value);
   show.value = true;
-  const arr = messagesStore.allMessages[messagesStore.openedChatId];
-  let messageToChangeId = arr.findIndex((message) => message.id === props.message.id);
-  if (updatedMessage.value === arr[messageToChangeId].message) {
-    return;
-  }
-  arr[messageToChangeId].message = updatedMessage.value; //TODO change
-  date.value = new Date(responseJSON.updated_at);
-  updatedAt.value = date.value.toLocaleString('en-US', options);
-  arr[messageToChangeId].updated_at = updatedAt.value;
 }
 
 const showPropToDelete = ref(false);
 async function deleteMessage() {
+  showPropToDelete.value = false;
   if (allowedToClick === false) {
     errorStore.errorMessage = 'You are not allowed to delete this message';
     return;
   }
-  const response = await fetch(import.meta.env.VITE_APP_API_BASE_URL + '/message/' + props.message.id, {
-    method: "DELETE",
-    headers: {
-      "Accept": "application/json",
-      "Content-type": "application/json",
-      "Authorization": "Bearer " + cookies.get("authToken"),
-    },
-  });
-  const responseJSON = await response.json();
-  if (response.status === 401) {
-    clearInterval(messagesStore.intervalId);
-    clearInterval(messagesStore.elementIntervalId);
-    cookies.remove("authToken");
-    messagesStore.intervalId = 0;
-    router.push('/login');
-  }
-  if (!response.ok) {
-    errorStore.errorMessage = responseJSON.error[0];
-    return;
-  } //TODO short it
-  messagesStore.allMessages[messagesStore.openedChatId] = messagesStore.allMessages[messagesStore.openedChatId].filter(message => message.id !== props.message.id);
+  messagesStore.deleteMessage(props.message.id);
 }
 </script>
 

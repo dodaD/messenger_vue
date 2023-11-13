@@ -10,15 +10,5 @@ export const useCurrentReceiverStore = defineStore('receiverStore', () => {
   const link = ref('');
   const maxPage = ref(0);
 
-  function $reset() {
-    receiverId.value = 0;
-    receiverName.value = '';
-    receiverNickname.value = '';
-    entity.value = '';
-    page.value = 1;
-    link.value = '';
-    maxPage.value = 0;
-  }
-
   return { receiverId, receiverName, receiverNickname, entity, page, link, maxPage };
 })

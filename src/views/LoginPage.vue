@@ -39,7 +39,7 @@ async function login() {
 </script>
 
 <template>
-  <div class="theWrapper">
+  <div class="the-wrapper ">
     <h1> LOGIN </h1>
     <input v-model="email" placeholder="Email">
     <input v-model="password" type="password" placeholder="Password">
@@ -56,7 +56,7 @@ div {
   background-color: #ffe;
 }
 
-.theWrapper {
+.the-wrapper {
   display: flex;
   height: 70vh;
   flex-direction: column;

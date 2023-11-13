@@ -1,8 +1,8 @@
-import { ref, watch } from 'vue'
-import { defineStore } from 'pinia'
+import { ref, watch } from 'vue';
+import { defineStore } from 'pinia';
 import { useErrorStore } from '../stores/Error.js';
-import { useRouter } from 'vue-router'
-import { useCookies } from "vue3-cookies";
+import { useRouter } from 'vue-router';
+import { useCookies } from 'vue3-cookies';
 
 const { cookies } = useCookies();
 
@@ -15,15 +15,7 @@ export const useMessagesStore = defineStore('messageStore', () => {
   let historyIntervalId = 0;
   let chatBetweenUsersIntervalId = 0;
 
-  async function getHistory() {
-    const response = await fetch(import.meta.env.VITE_APP_API_BASE_URL + '/message/history', { //TODO change to env variable 
-      headers: {
-        "Accept": "application/json",
-        "Content-type": "application/json",
-        "Authorization": "Bearer " + cookies.get("authToken"),
-      }
-    });
-    const responseJSON = await response.json();
+  function checkResponse(response) {
     if (response.status === 401) {
       clearInterval(historyIntervalId);    
       clearInterval(chatBetweenUsersIntervalId);
@@ -35,6 +27,18 @@ export const useMessagesStore = defineStore('messageStore', () => {
       errorStore.errorMessage = responseJSON.error;
       return;
     }
+  }
+
+  async function getHistory() {
+    const response = await fetch(import.meta.env.VITE_APP_API_BASE_URL + '/message/history', { //TODO change to env variable 
+      headers: {
+        "Accept": "application/json",
+        "Content-type": "application/json",
+        "Authorization": "Bearer " + cookies.get("authToken"),
+      }
+    });
+    checkResponse(response);
+    const responseJSON = await response.json();
     return responseJSON;
   }
 
@@ -77,18 +81,7 @@ export const useMessagesStore = defineStore('messageStore', () => {
     });
 
     const responseJSON = await response.json();
-    if (response.status === 401) {
-      clearInterval(messagesStore.historyIntervalId);
-      clearInterval(messagesStore.chatBetweenUsersIntervalId);
-      cookies.remove("authToken");
-      messagesStore.historyIntervalId = 0;
-      router.push('/login');
-    }
-    if (!response.ok) {
-      errorStore.errorMessage = responseJSON.error[0];
-      return;
-    }
-
+    checkResponse(response);
     return responseJSON;
   }
 
@@ -104,7 +97,45 @@ export const useMessagesStore = defineStore('messageStore', () => {
       allMessages.value[openedChatId.value] = newMessages.data;
     }, 5000);
   }
+
+  async function updateMessage(messageId, updatedMessage) {
+    const response = await fetch(import.meta.env.VITE_APP_API_BASE_URL + '/message/edit/' + messageId, {
+      method: "PATCH",
+      headers: {
+        "Accept": "application/json",
+        "Content-type": "application/json",
+        "Authorization": "Bearer " + cookies.get("authToken"),
+      },
+      body: JSON.stringify({
+        message: updatedMessage,
+      })
+    });
+    const responseJSON = await response.json();
+    checkResponse(response);
+
+    let openedChatMessages = allMessages.value[openedChatId.value];
+    let changedMessageId = openedChatMessages.findIndex((message) => message.id === messageId);
+    if (updatedMessage === openedChatMessages[changedMessageId].message) {
+      return;
+    }
+    openedChatMessages[changedMessageId].message = responseJSON.message;
+    openedChatMessages[changedMessageId].updated_at = responseJSON.updated_at;
+  }
   
+  async function deleteMessage(messageId) {
+    const response = await fetch(import.meta.env.VITE_APP_API_BASE_URL + '/message/' + messageId, {
+      method: "DELETE",
+      headers: {
+        "Accept": "application/json",
+        "Content-type": "application/json",
+        "Authorization": "Bearer " + cookies.get("authToken"),
+      },
+    });
+    const responseJSON = await response.json();
+    checkResponse(response);
+    allMessages[openedChatId.value] = allMessages.value[openedChatId.value].filter(message => message.id !== messageId);
+  }
+
   watch(allMessages, (newProperty) => {
     // цей код скролить вниз коли приходить нове повідомлення
     if (openedChatId.value.includes(newProperty[openedChatId.value][0]?.receiver_id)) {
@@ -113,7 +144,7 @@ export const useMessagesStore = defineStore('messageStore', () => {
     }
   }, { deep: true });
 
-  return { allMessages, history, openedChatId, historyIntervalId, getInitialHistory, setGetChatMesssagesInterval, getMessagesFromChat };
+  return { allMessages, history, openedChatId, historyIntervalId, getInitialHistory, setGetChatMesssagesInterval, getMessagesFromChat, updateMessage, deleteMessage };
 })
 
 
