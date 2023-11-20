@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue';
+import { ref } from "vue";
 
 import { useCookies } from "vue3-cookies";
 const { cookies } = useCookies();
@@ -7,17 +7,21 @@ const { cookies } = useCookies();
 import { useRouter } from 'vue-router';
 const router = useRouter();
 
-const email = ref('');
-const name = ref(null);
-const nickname = ref(null);
-const password = ref('');
-const passwordRepeat = ref(null);
+import { useUserStore } from "@/stores/User";
+const userStore = useUserStore();
+
+const email = ref("");
+const name = ref("");
+// TODO  ??????
+const nickname = ref("");
+const password = ref("");
+const repeatPassword = ref("");
 const fieldsToFill = [
   { ref: email, errorProperty: 'email', fieldName: 'Email' },
   { ref: name, errorProperty: 'name', fieldName: 'Name' },
   { ref: nickname, errorProperty: 'nickname', fieldName: 'Nickname' },
   { ref: password, errorProperty: 'password', fieldName: 'Password' },
-  { ref: passwordRepeat, errorProperty: 'repeat_password', fieldName: 'Repeat Password' }
+  { ref: repeatPassword, errorProperty: 'repeat_password', fieldName: 'Repeat Password' }
 ];
 
 if (cookies.get("authToken") !== null) {
@@ -26,31 +30,20 @@ if (cookies.get("authToken") !== null) {
 
 const validationErrors = ref({});
 async function register() {
-  const response = await fetch(import.meta.env.VITE_APP_API_BASE_URL + '/user/register', {
-    method: 'POST',
-    headers: {
-      "Content-type": "application/json",
-    },
-    body: JSON.stringify({
-      email: email.value,
-      name: name.value,
-      nickname: '@' + nickname.value,
-      password: password.value,
-      repeat_password: passwordRepeat.value,
-    })
-  })
-  const responseJSON = await response.json();
-  if (!response.ok) {
-    validationErrors.value = responseJSON.error;
+  validationErrors.value = await userStore.register(email.value, name.value, nickname.value, password.value, repeatPassword.value);
+}
+
+function deleteError(error) {
+  const hasOwnProperty = validationErrors.value.hasOwnProperty(error);
+  if (!hasOwnProperty) {
     return;
   }
-  cookies.set("authToken", responseJSON);
-  router.push('/');
+  delete validationErrors.value[error];
 }
 </script>
 
 <template>
-  <div class="theWrapper border">
+  <div class="the-wrapper border">
     <h1> REGISTER </h1>
     <form>
       <!--
@@ -65,16 +58,17 @@ async function register() {
 
       <div v-for="field in fieldsToFill">
         <h4>{{ field.fieldName }} </h4>
-        <input v-model="field.ref.value" maxlength="255" :class="{ has_error: validationErrors.email }" />
+        <input v-model="field.ref.value" maxlength="255" :class="{ has_error: validationErrors[field.errorProperty] }"
+          @input="deleteError(field.errorProperty)" />
         <div class="errors-wrapper">
           <p v-for="error in validationErrors[field.errorProperty]" class="error-class">
             {{ error }}
           </p>
         </div>
       </div>
-      <router-link to="/login">Already have an account?</router-link>
+      <RouterLink to="/login">Already have an account?</RouterLink>
     </form>
-    <button @click=register>Register</button>
+    <button @click="register">Register</button>
   </div>
 </template>
 

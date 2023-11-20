@@ -1,18 +1,27 @@
-import { ref } from 'vue'
-import { defineStore } from 'pinia'
-import { useErrorStore } from '../stores/Error.js';
-import { useRouter } from 'vue-router'
+import { ref } from "vue";
+import { defineStore } from "pinia";
+import { useErrorStore } from "@/stores/Error.js";
+import { useRouter } from "vue-router";
 import { useCookies } from "vue3-cookies";
-
-const { cookies } = useCookies();
+import { useMessagesStore } from "@/stores/Messages.js";
 
 export const useUserStore = defineStore('userStore', () => {
   const router = useRouter();
   const errorStore = useErrorStore();
+  const { cookies } = useCookies();
+  const messagesStore = useMessagesStore();
   const userId = ref(0);
   const userName = ref('');
   const userNickname = ref('');
   const userEmail = ref('');
+
+  function logOut() {
+    clearInterval(messagesStore.intervalId);
+    clearInterval(messagesStore.elementIntervalId);
+    cookies.remove("authToken");
+    messagesStore.intervalId = 0;
+    router.push("/login");
+  }
 
   async function getUserInfo() {
     const response = await fetch(import.meta.env.VITE_APP_API_BASE_URL + '/user/my-user-info', {
@@ -24,11 +33,7 @@ export const useUserStore = defineStore('userStore', () => {
     });
     const responseJSON = await response.json();
     if (response.status === 401) {
-      clearInterval(messagesStore.intervalId);
-      clearInterval(messagesStore.elementIntervalId);
-      cookies.remove("authToken");
-      messagesStore.intervalId = 0;
-      router.push('/login');
+      logOut();
     }
     userId.value = responseJSON.id;
     userName.value = responseJSON.name;
@@ -36,5 +41,47 @@ export const useUserStore = defineStore('userStore', () => {
     userEmail.value = responseJSON.email;
   };
 
-  return { userId, userName, userNickname, userEmail, getUserInfo };
+  async function login(email, password) {
+    const response = await fetch(import.meta.env.VITE_APP_API_BASE_URL + '/user/login', {
+      method: 'POST',
+      headers: {
+        "Content-type": "application/json",
+      },
+      body: JSON.stringify({
+        email: email,
+        password: password
+      })
+    })
+    const responseJSON = await response.json();
+    if (!response.ok) {
+      errorStore.storeErrors(responseJSON);
+      return;
+    }
+    cookies.set("authToken", responseJSON);
+    router.push('/');
+  }
+
+  async function register(email, name, nickname, password, repeatPassword) {
+    const response = await fetch(import.meta.env.VITE_APP_API_BASE_URL + '/user/register', {
+      method: 'POST',
+      headers: {
+        "Content-type": "application/json",
+      },
+      body: JSON.stringify({
+        email: email,
+        name: name,
+        nickname: '@' + nickname,
+        password: password,
+        repeat_password: repeatPassword,
+      })
+    })
+    const responseJSON = await response.json();
+    if (!response.ok) {
+      return responseJSON.error;
+    }
+    cookies.set("authToken", responseJSON);
+    router.push('/');
+  }
+
+  return { userId, userName, userNickname, userEmail, getUserInfo, login, logOut, register };
 })

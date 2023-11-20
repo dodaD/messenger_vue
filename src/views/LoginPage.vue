@@ -1,38 +1,19 @@
 <script setup>
 import { ref } from 'vue';
+
+import { useUserStore } from '../stores/User.js';
+const userStore = useUserStore();
+
 import { useCookies } from "vue3-cookies";
 const { cookies } = useCookies();
 
 import { useRouter } from 'vue-router'
 const router = useRouter();
 
-import { useErrorStore } from '../stores/Error.js';
-const errorStore = useErrorStore();
-
 const email = ref('');
 const password = ref('');
 
 if (cookies.get("authToken") !== null) {
-  router.push('/');
-}
-
-async function login() {
-  const response = await fetch(import.meta.env.VITE_APP_API_BASE_URL + '/user/login', {
-    method: 'POST',
-    headers: {
-      "Content-type": "application/json",
-    },
-    body: JSON.stringify({
-      email: email.value,
-      password: password.value
-    })
-  })
-  const responseJSON = await response.json();
-  if (!response.ok) {
-    errorStore.errorMessage = responseJSON.message;
-    return;
-  }
-  cookies.set("authToken", responseJSON);
   router.push('/');
 }
 
@@ -43,8 +24,8 @@ async function login() {
     <h1> LOGIN </h1>
     <input v-model="email" placeholder="Email">
     <input v-model="password" type="password" placeholder="Password">
-    <router-link to="/register">Don't have an account?</router-link>
-    <button @click=login>Login</button>
+    <RouterLink to="/register">Don't have an account?</RouterLink>
+    <button @click="userStore.login(email, password)">Login</button>
   </div>
 </template>
 

@@ -5,7 +5,7 @@ import ErrorComponent from './components/detailsComponents/ErrorComponent.vue';
 
 <template>
   <ErrorComponent />
-  <RouterView> </RouterView>
+  <RouterView />
 </template>
 
 <style>

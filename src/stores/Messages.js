@@ -15,16 +15,19 @@ export const useMessagesStore = defineStore('messageStore', () => {
   let historyIntervalId = 0;
   let chatBetweenUsersIntervalId = 0;
 
-  function checkResponse(response) {
+  function checkResponse(response, error) {
     if (response.status === 401) {
       clearInterval(historyIntervalId);    
       clearInterval(chatBetweenUsersIntervalId);
       cookies.remove("authToken");
       historyIntervalId = 0;
       router.push('/login');
+      return;
     }
+
     if (!response.ok) {
-      errorStore.errorMessage = responseJSON.error;
+      console.log(response);
+      errorStore.errorMessage = error;
       return;
     }
   }
@@ -37,8 +40,8 @@ export const useMessagesStore = defineStore('messageStore', () => {
         "Authorization": "Bearer " + cookies.get("authToken"),
       }
     });
-    checkResponse(response);
     const responseJSON = await response.json();
+    checkResponse(response, responseJSON.error);
     return responseJSON;
   }
 
@@ -81,7 +84,7 @@ export const useMessagesStore = defineStore('messageStore', () => {
     });
 
     const responseJSON = await response.json();
-    checkResponse(response);
+    checkResponse(response, responseJSON.error);
     return responseJSON;
   }
 
@@ -111,7 +114,7 @@ export const useMessagesStore = defineStore('messageStore', () => {
       })
     });
     const responseJSON = await response.json();
-    checkResponse(response);
+    checkResponse(response, responseJSON.error);
 
     let openedChatMessages = allMessages.value[openedChatId.value];
     let changedMessageId = openedChatMessages.findIndex((message) => message.id === messageId);
@@ -132,7 +135,7 @@ export const useMessagesStore = defineStore('messageStore', () => {
       },
     });
     const responseJSON = await response.json();
-    checkResponse(response);
+    checkResponse(response, responseJSON.error);
     allMessages[openedChatId.value] = allMessages.value[openedChatId.value].filter(message => message.id !== messageId);
   }
 

@@ -1,29 +1,23 @@
 <script setup>
-import OpenedChatComponent from "../components/pageComponents/OpenedChatComponent.vue";
-import HistoryComponent from "../components/pageComponents/HistoryComponent.vue";
-import SearchComponent from "../components/pageComponents/SearchComponent.vue";
-import ProfileComponent from "../components/ProfileComponent.vue";
-
-import { useRouter } from 'vue-router';
-const router = useRouter();
+import { computed } from "vue";
+import OpenedChatComponent from "@/components/pageComponents/OpenedChatComponent.vue";
+import HistoryComponent from "@/components/pageComponents/HistoryComponent.vue";
+import SearchComponent from "@/components/pageComponents/SearchComponent.vue";
+import ProfileComponent from "@/components/ProfileComponent.vue";
 
 import { useCookies } from "vue3-cookies";
 const { cookies } = useCookies();
 
-import { useMessagesStore } from "../stores/Messages.js";
-const messagesStore = useMessagesStore();
+import { useUserStore } from "@/stores/User.js";
+const userStore = useUserStore();
 
-function logOut() {
-  clearInterval(messagesStore.intervalId);
-  clearInterval(messagesStore.elementIntervalId);
-  cookies.remove("authToken");
-  messagesStore.intervalId = 0;
-  router.push('/login');
-}
+const userHasLoggedIn = computed(() => {
+  return cookies.get('authToken') !== null;
+})
 </script>
 
 <template>
-  <button v-if="cookies.get('authToken') !== null" class="logout-button" @click="logOut">Log Out </button>
+  <button v-if="userHasLoggedIn" class="logout-button" @click="userStore.logOut">Log Out </button>
   <div class="the-wrapper border">
     <div class="menu">
       <SearchComponent />

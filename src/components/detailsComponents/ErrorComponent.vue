@@ -4,8 +4,10 @@ const errorStore = useErrorStore();
 </script>
 
 <template>
-  <div class="wrapper-1 border error-message" v-if="errorStore.errorMessage !== ''">
-    {{ errorStore.errorMessage }}
+  <div v-if="errorStore.errorMessages.length" class="wrapper-1 error-message">
+    <div v-for="e in errorStore.errorMessages" class="border">
+      {{ e }}
+    </div>
   </div>
 </template>
 

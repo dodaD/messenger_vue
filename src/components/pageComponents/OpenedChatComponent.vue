@@ -1,11 +1,11 @@
 <script setup>
-import { useMessagesStore } from "../../stores/Messages.js";
+import { useMessagesStore } from "@/stores/Messages.js";
 const messagesStore = useMessagesStore();
 
-import { useUserStore } from "../../stores/User.js";
+import { useUserStore } from "@/stores/User.js";
 const loggedInUser = useUserStore();
 
-import { useCurrentReceiverStore } from "../../stores/CurrentReceiver";
+import { useCurrentReceiverStore } from "@/stores/CurrentReceiver";
 const receiverStore = useCurrentReceiverStore();
 
 import MessageComponent from "../MessageComponent.vue";
