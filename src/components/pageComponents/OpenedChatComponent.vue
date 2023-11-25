@@ -42,7 +42,8 @@ async function getMoreMessages(event) {
         could translate
         easily
       </p>
-      <div v-for="message in messagesStore.allMessages[messagesStore.openedChatId]  " :key="message.id"
+      <div v-if="messagesStore.allMessages[messagesStore.openedChatId] !== undefined"
+        v-for="message in messagesStore.allMessages[messagesStore.openedChatId]" :key="message.id"
         :class="message.user_id === loggedInUser.userId ? 'sent-message' : 'received-message'">
         <MessageComponent :message="message"> </MessageComponent>
       </div>

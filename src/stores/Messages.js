@@ -1,14 +1,18 @@
 import { ref, watch } from 'vue';
 import { defineStore } from 'pinia';
-import { useErrorStore } from '../stores/Error.js';
+import { useErrorStore } from '@/stores/Error.js';
 import { useRouter } from 'vue-router';
 import { useCookies } from 'vue3-cookies';
+import { useUserStore } from '@/stores/User.js';
+import { useCurrentReceiverStore } from '@/stores/CurrentReceiver';
 
 const { cookies } = useCookies();
 
 export const useMessagesStore = defineStore('messageStore', () => {
   const router = useRouter();
   const errorStore = useErrorStore();
+  const userStore = useUserStore();
+  const receiverStore = useCurrentReceiverStore();
   const allMessages = ref({});
   const history = ref([]);
   const openedChatId = ref('');
@@ -17,17 +21,12 @@ export const useMessagesStore = defineStore('messageStore', () => {
 
   function checkResponse(response, error) {
     if (response.status === 401) {
-      clearInterval(historyIntervalId);    
-      clearInterval(chatBetweenUsersIntervalId);
-      cookies.remove("authToken");
-      historyIntervalId = 0;
-      router.push('/login');
+      userStore.logOut();
       return;
     }
 
     if (!response.ok) {
-      console.log(response);
-      errorStore.errorMessage = error;
+      errorStore.storeErrors(error);
       return;
     }
   }
@@ -50,6 +49,10 @@ export const useMessagesStore = defineStore('messageStore', () => {
     if (historyIntervalId === 0) {
       historyIntervalId = setInterval(updateHistory, 5000);
     }
+    history.value.forEach(chatInHistory => {
+      const chatId = chatInHistory.interlocutorId;
+      allMessages.value[chatId] = [];
+    });
   };
 
   async function updateHistory() {
@@ -91,6 +94,9 @@ export const useMessagesStore = defineStore('messageStore', () => {
   async function setGetChatMesssagesInterval(receiverId) {
     const newMessages = await getMessagesFromChat(1, receiverId);
     allMessages.value[openedChatId.value] = newMessages.data;
+    if(chatBetweenUsersIntervalId !== 0) {
+      clearInterval(chatBetweenUsersIntervalId);  
+    }
     chatBetweenUsersIntervalId = setInterval(async () => {
       if (openedChatId.value === 0) {
         return;
@@ -139,7 +145,41 @@ export const useMessagesStore = defineStore('messageStore', () => {
     allMessages[openedChatId.value] = allMessages.value[openedChatId.value].filter(message => message.id !== messageId);
   }
 
+  async function sendMessage(newMessage) {
+    if (newMessage === '') {
+      errorStore.storeErrors('Nothing to send');
+      return;
+    }
+    if (receiverStore.receiverId === 0) {
+       errorStore.storeErrors('No chat was selected');
+      return;
+    }
+    const response = await fetch(import.meta.env.VITE_APP_API_BASE_URL + '/message/add', {
+      method: "POST",
+      headers: {
+        "Accept": "application/json",
+        "Content-type": "application/json",
+        "Authorization": "Bearer " + cookies.get("authToken"),
+      },
+      body: JSON.stringify({
+        message: newMessage,
+        receiver_id: receiverStore.receiverId,
+        receiver: receiverStore.entity,
+      })
+    });
+    const responseJSON = await response.json();
+    checkResponse(response, responseJSON.error);
+    allMessages.value[openedChatId.value].unshift(responseJSON);
+    const historyChatId = history.value.findIndex(obj => {
+      return obj.interlocutorId === receiverStore.receiverId && obj.receiver_type == responseJSON.receiver_type || obj.id === receiverStore.receiverId && obj.receiver_type === undefined;
+    });
+    history.value[historyChatId].message = responseJSON.message;
+  }
+
   watch(allMessages, (newProperty) => {
+    if(openedChatId.value === "") {
+      return;
+    }
     // цей код скролить вниз коли приходить нове повідомлення
     if (openedChatId.value.includes(newProperty[openedChatId.value][0]?.receiver_id)) {
        document.querySelector('.opened-chat').scrollBy(0,document.querySelector('.opened-chat').scrollHeight);
@@ -147,7 +187,7 @@ export const useMessagesStore = defineStore('messageStore', () => {
     }
   }, { deep: true });
 
-  return { allMessages, history, openedChatId, historyIntervalId, getInitialHistory, setGetChatMesssagesInterval, getMessagesFromChat, updateMessage, deleteMessage };
+  return { allMessages, history, openedChatId, historyIntervalId, getInitialHistory, setGetChatMesssagesInterval, getMessagesFromChat, updateMessage, deleteMessage, sendMessage };
 })
 
 

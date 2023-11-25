@@ -26,7 +26,7 @@ const allowedToClick = props.message.user_id === loggedInUser.userId;
 
 async function editMessage() {
   if (allowedToClick === false) {
-    errorStore.errorMessage = 'You are not allowed to edit this message';
+    errorStore.storeErrors('You are not allowed to edit this message');
     return;
   }
   messagesStore.updateMessage(props.message.id, updatedMessage.value);
@@ -37,7 +37,7 @@ const showPropToDelete = ref(false);
 async function deleteMessage() {
   showPropToDelete.value = false;
   if (allowedToClick === false) {
-    errorStore.errorMessage = 'You are not allowed to delete this message';
+    errorStore.storeErrors('You are not allowed to delete this message');
     return;
   }
   messagesStore.deleteMessage(props.message.id);

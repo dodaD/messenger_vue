@@ -1,76 +1,23 @@
 <script setup>
-import { useMessagesStore } from "../../stores/Messages.js";
-const messagesStore = useMessagesStore();
+import { ref } from 'vue';
+import { useSearchStore } from "@/stores/Search.js";
 
-import { useRouter } from 'vue-router';
-const router = useRouter();
-
-import { useCurrentReceiverStore } from "../../stores/CurrentReceiver";
+import { useCurrentReceiverStore } from "@/stores/CurrentReceiver";
 const receiverStore = useCurrentReceiverStore();
 
-import { useErrorStore } from '../../stores/Error.js';
-const errorStore = useErrorStore();
-
-import { useCookies } from "vue3-cookies";
-const { cookies } = useCookies();
-
-import { ref } from 'vue';
-
+const searchStore = useSearchStore();
 const nicknameToSearch = ref('');
-const seachResults = ref([]);
 
-async function search() {
-  if (nicknameToSearch.value.length <= 2) {
-    seachResults.value = [];
-    return;
-  }
-
-  const response = await fetch(import.meta.env.VITE_APP_API_BASE_URL + '/search', {
-    method: "POST",
-    headers: {
-      "Accept": "application/json",
-      "Content-type": "application/json",
-      "Authorization": "Bearer " + cookies.get("authToken"),
-    },
-    body: JSON.stringify({
-      nickname: '@' + nicknameToSearch.value,
-    })
-  });
-  const responseJSON = await response.json();
-  if (response.status === 401) {
-    clearInterval(messagesStore.intervalId);
-    clearInterval(messagesStore.elementIntervalId);
-    cookies.remove("authToken");
-    messagesStore.intervalId = 0;
-    router.push('/login');
-  }
-  if (!response.ok) {
-    errorStore.errorMessage = responseJSON.error[0];
-    return;
-  }
-  seachResults.value = responseJSON;
-}
-
-async function openChat(result) {
-  const chatId = receiverStore.entity + result.id;
-  receiverStore.receiverId = result.id;
-  receiverStore.receiverName = result.name;
-  receiverStore.receiverNickname = result.nickname;
-  messagesStore.openedChatId = chatId;
-
-  if (messagesStore.allMessages[chatId] !== undefined) {
-    return;
-  };
-
-  messagesStore.allMessages[chatId] = await messagesStore.getMessagesFromChat(1, receiverStore.receiverId);
-  messagesStore.history.unshift(result);
+function openChat(result) {
+  receiverStore.openChat(result.name, result.nickname, result.id);
 }
 </script>
 
 <template>
-  <input class="search border" placeholder="Search bar" v-model="nicknameToSearch" @input="search">
-  <div class="search-wrapper" if="seachResults.length !== 0">
-    <div @click="openChat(result)" v-for="result in seachResults" class="result border" if="seachResults.length !== 0">
+  <input class="search border" placeholder="Search bar" v-model="nicknameToSearch"
+    @input="searchStore.search(nicknameToSearch)">
+  <div class="search-wrapper" if="searchStore.searchResults.length !== 0">
+    <div @click="openChat(result)" v-for="result in searchStore.searchResults" class="result border">
       <div>
         <h4> {{ result.name }} </h4>
         <div> {{ result.nickname }} </div>
