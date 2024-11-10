@@ -21,6 +21,7 @@ async function openChat(message) {
   };
   messagesStore.setGetChatMesssagesInterval(receiverStore.receiverId);
 }
+
 </script>
 
 <template>
