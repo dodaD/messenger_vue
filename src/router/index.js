@@ -8,8 +8,8 @@ const router = createRouter({
   routes: [
     {
       path: '/',
-      name: 'chat',
-      component: MainPage
+      name: 'login',
+      component: LoginPage
     },
     {
       path: '/register',
@@ -20,9 +20,9 @@ const router = createRouter({
       component: () => import('../views/RegisterPage.vue')
     },
     {
-      path: '/login',
-      name: 'login',
-      component: LoginPage
+      path: '/chat',
+      name: 'chat',
+      component: MainPage
     },
   ]
 })
