@@ -21,8 +21,9 @@ export const useMessagesStore = defineStore('messageStore', () => {
 
   function checkResponse(response, error) {
     if (response.status === 401) {
+      clearInterval(historyIntervalId);
       userStore.logOut();
-      return;
+      return "bad";
     }
 
     if (!response.ok) {
@@ -32,10 +33,6 @@ export const useMessagesStore = defineStore('messageStore', () => {
   }
 
   async function getHistory() {
-    if (historyIntervalId === 0) {
-      return;
-    }
-    console.log(historyIntervalId);
     const response = await fetch(import.meta.env.VITE_APP_API_BASE_URL + '/message/history', {
       headers: {
         "Accept": "application/json",
@@ -44,7 +41,9 @@ export const useMessagesStore = defineStore('messageStore', () => {
       }
     });
     const responseJSON = await response.json();
-    checkResponse(response, responseJSON.error);
+    if (checkResponse(response, responseJSON.error) === "bad") {
+      return null;
+    }
     return responseJSON;
   }
 
@@ -53,6 +52,9 @@ export const useMessagesStore = defineStore('messageStore', () => {
       historyIntervalId = setInterval(updateHistory, 5000);
     }
     history.value = await getHistory();
+    if (history.value === null) {
+      return;
+    }
     history.value.forEach(chatInHistory => {
       const chatId = chatInHistory.interlocutorId;
       allMessages.value[chatId] = [];
@@ -61,6 +63,9 @@ export const useMessagesStore = defineStore('messageStore', () => {
 
   async function updateHistory() {
     const newHistory = await getHistory();
+    if (newHistory === null) {
+      return;
+    }
     // FIXME chitati tyt
     if (history.value.length !== newHistory.length) {
       if (history.value[0]?.message !== newHistory[0]?.message) {
