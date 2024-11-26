@@ -16,8 +16,10 @@ export const useUserStore = defineStore('userStore', () => {
   const userEmail = ref('');
 
   function logOut() {
+    console.log("Hello");
     clearInterval(messagesStore.intervalId);
     clearInterval(messagesStore.elementIntervalId);
+    clearInterval(messagesStore.historyIntervalId);
     cookies.remove("authToken");
     messagesStore.intervalId = 0;
     router.push("/login");

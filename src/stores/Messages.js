@@ -32,7 +32,11 @@ export const useMessagesStore = defineStore('messageStore', () => {
   }
 
   async function getHistory() {
-    const response = await fetch(import.meta.env.VITE_APP_API_BASE_URL + '/message/history', { //TODO change to env variable 
+    if (historyIntervalId === 0) {
+      return;
+    }
+    console.log(historyIntervalId);
+    const response = await fetch(import.meta.env.VITE_APP_API_BASE_URL + '/message/history', {
       headers: {
         "Accept": "application/json",
         "Content-type": "application/json",
@@ -45,10 +49,10 @@ export const useMessagesStore = defineStore('messageStore', () => {
   }
 
   async function getInitialHistory() {
-    history.value = await getHistory();
     if (historyIntervalId === 0) {
       historyIntervalId = setInterval(updateHistory, 5000);
     }
+    history.value = await getHistory();
     history.value.forEach(chatInHistory => {
       const chatId = chatInHistory.interlocutorId;
       allMessages.value[chatId] = [];
@@ -56,7 +60,7 @@ export const useMessagesStore = defineStore('messageStore', () => {
   };
 
   async function updateHistory() {
-    const newHistory =  await getHistory();
+    const newHistory = await getHistory();
     // FIXME chitati tyt
     if (history.value.length !== newHistory.length) {
       if (history.value[0]?.message !== newHistory[0]?.message) {
@@ -94,8 +98,8 @@ export const useMessagesStore = defineStore('messageStore', () => {
   async function setGetChatMesssagesInterval(receiverId) {
     const newMessages = await getMessagesFromChat(1, receiverId);
     allMessages.value[openedChatId.value] = newMessages.data;
-    if(chatBetweenUsersIntervalId !== 0) {
-      clearInterval(chatBetweenUsersIntervalId);  
+    if (chatBetweenUsersIntervalId !== 0) {
+      clearInterval(chatBetweenUsersIntervalId);
     }
     chatBetweenUsersIntervalId = setInterval(async () => {
       if (openedChatId.value === 0) {
@@ -130,7 +134,7 @@ export const useMessagesStore = defineStore('messageStore', () => {
     openedChatMessages[changedMessageId].message = responseJSON.message;
     openedChatMessages[changedMessageId].updated_at = responseJSON.updated_at;
   }
-  
+
   async function deleteMessage(messageId) {
     const response = await fetch(import.meta.env.VITE_APP_API_BASE_URL + '/message/' + messageId, {
       method: "DELETE",
@@ -151,7 +155,7 @@ export const useMessagesStore = defineStore('messageStore', () => {
       return;
     }
     if (receiverStore.receiverId === 0) {
-       errorStore.storeErrors('No chat was selected');
+      errorStore.storeErrors('No chat was selected');
       return;
     }
     const response = await fetch(import.meta.env.VITE_APP_API_BASE_URL + '/message/add', {
@@ -177,13 +181,13 @@ export const useMessagesStore = defineStore('messageStore', () => {
   }
 
   watch(allMessages, (newProperty) => {
-    if(openedChatId.value === "") {
+    if (openedChatId.value === "") {
       return;
     }
     // цей код скролить вниз коли приходить нове повідомлення
     if (openedChatId.value.includes(newProperty[openedChatId.value][0]?.receiver_id)) {
-       document.querySelector('.opened-chat').scrollBy(0,document.querySelector('.opened-chat').scrollHeight);
-       return;
+      document.querySelector('.opened-chat').scrollBy(0, document.querySelector('.opened-chat').scrollHeight);
+      return;
     }
   }, { deep: true });
 
