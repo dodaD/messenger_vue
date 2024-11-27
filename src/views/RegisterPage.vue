@@ -64,7 +64,8 @@ function deleteError(error) {
       <div v-for="field in fieldsToFill">
         <h4>{{ field.fieldName }} </h4>
         <input v-model="field.value" maxlength="255" :type="field.type"
-          :class="{ has_error: validationErrors[field.errorProperty] }" @input="deleteError(field.errorProperty)" />
+          :class="{ has_error: validationErrors[field.errorProperty] }" @input="deleteError(field.errorProperty)"
+          @keyup.enter="register" />
         <div class="errors-wrapper">
           <p v-for="error in validationErrors[field.errorProperty]" class="error-class">
             {{ error }}
