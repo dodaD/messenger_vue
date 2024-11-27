@@ -22,8 +22,8 @@ if (cookies.get("authToken") !== null) {
 <template>
   <div class="the-wrapper ">
     <h1> LOGIN </h1>
-    <input v-model="email" placeholder="Email">
-    <input v-model="password" type="password" placeholder="Password">
+    <input v-model="email" placeholder="Email" @keyup.enter="userStore.login(email, password)">
+    <input v-model="password" type="password" placeholder="Password" @keyup.enter="userStore.login(email, password)">
     <RouterLink to="/register">Don't have an account?</RouterLink>
     <button @click="userStore.login(email, password)">Login</button>
   </div>
@@ -61,4 +61,3 @@ a {
   margin-right: auto;
 }
 </style>
-
