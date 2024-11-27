@@ -14,6 +14,10 @@ coverage
 *.local
 .dev-dist
 
+.env
+.env.production 
+# For local development only
+
 /cypress/videos/
 /cypress/screenshots/
 

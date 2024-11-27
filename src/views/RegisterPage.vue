@@ -10,27 +10,32 @@ const router = useRouter();
 import { useUserStore } from "@/stores/User";
 const userStore = useUserStore();
 
-const email = ref("");
-const name = ref("");
-// TODO  ??????
-const nickname = ref("");
-const password = ref("");
-const repeatPassword = ref("");
-const fieldsToFill = [
-  { ref: email, errorProperty: 'email', fieldName: 'Email' },
-  { ref: name, errorProperty: 'name', fieldName: 'Name' },
-  { ref: nickname, errorProperty: 'nickname', fieldName: 'Nickname' },
-  { ref: password, errorProperty: 'password', fieldName: 'Password' },
-  { ref: repeatPassword, errorProperty: 'repeat_password', fieldName: 'Repeat Password' }
-];
-
 if (cookies.get("authToken") !== null) {
   router.push('/');
 }
 
+const fieldsToFill = [
+  { value: "", errorProperty: 'email', fieldName: 'Email', type: 'text' },
+  { value: "", errorProperty: 'name', fieldName: 'Name', type: 'text' },
+  { value: "", errorProperty: 'nickname', fieldName: 'Nickname', type: 'text' },
+  { value: "", errorProperty: 'password', fieldName: 'Password', type: 'password' },
+  { value: "", errorProperty: 'repeat_password', fieldName: 'Repeat Password', type: 'password' }
+];
+
+function getValueOfField(field) {
+  const key = Object.keys(fieldsToFill).find(key =>
+    fieldsToFill[key].fieldName === field);
+  return fieldsToFill[key].value;
+}
+
 const validationErrors = ref({});
 async function register() {
-  validationErrors.value = await userStore.register(email.value, name.value, nickname.value, password.value, repeatPassword.value);
+  validationErrors.value = await userStore.register(getValueOfField('Email'),
+    getValueOfField('Name'),
+    getValueOfField('Nickname'),
+    getValueOfField('Password'),
+    getValueOfField('Repeat Password')
+  );
 }
 
 function deleteError(error) {
@@ -58,8 +63,8 @@ function deleteError(error) {
 
       <div v-for="field in fieldsToFill">
         <h4>{{ field.fieldName }} </h4>
-        <input v-model="field.ref.value" maxlength="255" :class="{ has_error: validationErrors[field.errorProperty] }"
-          @input="deleteError(field.errorProperty)" />
+        <input v-model="field.value" maxlength="255" :type="field.type"
+          :class="{ has_error: validationErrors[field.errorProperty] }" @input="deleteError(field.errorProperty)" />
         <div class="errors-wrapper">
           <p v-for="error in validationErrors[field.errorProperty]" class="error-class">
             {{ error }}
@@ -132,4 +137,3 @@ a {
   margin-right: auto;
 }
 </style>
-
