@@ -3,12 +3,10 @@ import { defineStore } from "pinia";
 import { useErrorStore } from "@/stores/Error.js";
 import { useRouter } from "vue-router";
 import { useCookies } from "vue3-cookies";
-import { useMessagesStore } from "@/stores/Messages.js";
 
 export const useUserStore = defineStore('userStore', () => {
   const router = useRouter();
   const errorStore = useErrorStore();
-  const messagesStore = useMessagesStore();
   const { cookies } = useCookies();
   const userId = ref(0);
   const userName = ref('');
@@ -16,6 +14,7 @@ export const useUserStore = defineStore('userStore', () => {
   const userEmail = ref('');
 
   function logOut() {
+    clearInterval(window.historyGlobalInterval);
     cookies.remove("authToken");
     router.push("/login");
   }

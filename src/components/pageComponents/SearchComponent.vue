@@ -42,6 +42,8 @@ function clearSearch() {
   display: flex;
   border: 1px solid black;
   margin-right: 2px;
+  margin-bottom: 10px;
+  padding: 5px;
 }
 
 h4 {
@@ -55,7 +57,7 @@ h4 {
   max-width: 100%;
   overflow-x: hidden;
   margin: 10px;
-  min-height: 40px;
+  min-height: 60px;
 }
 
 .results-wrapper::-webkit-scrollbar {

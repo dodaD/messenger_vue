@@ -9,19 +9,17 @@ import { useCurrentReceiverStore } from '@/stores/CurrentReceiver';
 const { cookies } = useCookies();
 
 export const useMessagesStore = defineStore('messageStore', () => {
-  const router = useRouter();
   const errorStore = useErrorStore();
   const userStore = useUserStore();
   const receiverStore = useCurrentReceiverStore();
   const allMessages = ref({});
   const history = ref([]);
   const openedChatId = ref('');
-  let historyIntervalId = 0;
+  window.window.historyGlobalInterval = 0;
   let chatBetweenUsersIntervalId = 0;
 
   function checkResponse(response, error) {
     if (response.status === 401) {
-      clearInterval(historyIntervalId);
       userStore.logOut();
       return "bad";
     }
@@ -30,6 +28,8 @@ export const useMessagesStore = defineStore('messageStore', () => {
       errorStore.storeErrors(error);
       return;
     }
+
+    return "good";
   }
 
   async function getHistory() {
@@ -48,8 +48,8 @@ export const useMessagesStore = defineStore('messageStore', () => {
   }
 
   async function getInitialHistory() {
-    if (historyIntervalId === 0) {
-      historyIntervalId = setInterval(updateHistory, 5000);
+    if (window.window.historyGlobalInterval === 0) {
+      window.window.historyGlobalInterval = setInterval(updateHistory, 5000);
     }
     history.value = await getHistory();
     if (history.value === null) {
@@ -96,7 +96,9 @@ export const useMessagesStore = defineStore('messageStore', () => {
     });
 
     const responseJSON = await response.json();
-    checkResponse(response, responseJSON.error);
+    if (checkResponse(response, responseJSON.error) === "bad") {
+      return null;
+    }
     return responseJSON;
   }
 
@@ -129,7 +131,9 @@ export const useMessagesStore = defineStore('messageStore', () => {
       })
     });
     const responseJSON = await response.json();
-    checkResponse(response, responseJSON.error);
+    if (checkResponse(response, responseJSON.error) === "bad") {
+      return null;
+    }
 
     let openedChatMessages = allMessages.value[openedChatId.value];
     let changedMessageId = openedChatMessages.findIndex((message) => message.id === messageId);
@@ -150,7 +154,9 @@ export const useMessagesStore = defineStore('messageStore', () => {
       },
     });
     const responseJSON = await response.json();
-    checkResponse(response, responseJSON.error);
+    if (checkResponse(response, responseJSON.error) === "bad") {
+      return null;
+    }
     allMessages[openedChatId.value] = allMessages.value[openedChatId.value].filter(message => message.id !== messageId);
   }
 
@@ -177,7 +183,9 @@ export const useMessagesStore = defineStore('messageStore', () => {
       })
     });
     const responseJSON = await response.json();
-    checkResponse(response, responseJSON.error);
+    if (checkResponse(response, responseJSON.error) === "bad") {
+      return null;
+    }
     allMessages.value[openedChatId.value].unshift(responseJSON);
     const historyChatId = history.value.findIndex(obj => {
       return obj.interlocutorId === receiverStore.receiverId && obj.receiver_type == responseJSON.receiver_type || obj.id === receiverStore.receiverId && obj.receiver_type === undefined;
@@ -196,7 +204,7 @@ export const useMessagesStore = defineStore('messageStore', () => {
     }
   }, { deep: true });
 
-  return { allMessages, history, openedChatId, historyIntervalId, getInitialHistory, setGetChatMesssagesInterval, getMessagesFromChat, updateMessage, deleteMessage, sendMessage };
+  return { allMessages, history, openedChatId, getInitialHistory, setGetChatMesssagesInterval, getMessagesFromChat, updateMessage, deleteMessage, sendMessage };
 })
 
 
