@@ -51,28 +51,21 @@ function deleteError(error) {
   <div class="the-wrapper border">
     <h1> REGISTER </h1>
     <form>
-      <!--
-        |----------------------------------------------------
-        | TODOS
-        |----------------------------------------------------
-        |
-        | TODO 1: have only one input in template 
-        | TODO 2: all errors must be rendered via loop
-        |
-      -->
-
-      <div v-for="field in fieldsToFill">
+      <div v-for="field in fieldsToFill" :key="field.fieldName">
         <h4>{{ field.fieldName }} </h4>
         <input v-model="field.value" maxlength="255" :type="field.type"
           :class="{ has_error: validationErrors[field.errorProperty] }" @input="deleteError(field.errorProperty)"
           @keyup.enter="register" />
         <div class="errors-wrapper">
-          <p v-for="error in validationErrors[field.errorProperty]" class="error-class">
+          <p v-for="error in validationErrors[field.errorProperty]" class="error-class" :key="error">
             {{ error }}
           </p>
         </div>
       </div>
-      <RouterLink to="/login">Already have an account?</RouterLink>
+
+      <div class="link">
+        <RouterLink to="/login">Already have an account?</RouterLink>
+      </div>
     </form>
     <button @click="register">Register</button>
   </div>
@@ -87,6 +80,7 @@ button {
 
 .errors-wrapper {
   display: flex;
+  flex-direction: column;
   width: 100vh;
 }
 
@@ -100,15 +94,6 @@ button {
 
 p {
   margin: 0;
-  padding: 0 5px;
-}
-
-p:first-of-type {
-  padding-left: 0;
-}
-
-p:last-of-type {
-  padding-right: 0;
 }
 
 .the-wrapper {
@@ -131,9 +116,11 @@ form {
 
 input {
   width: 100%;
+  border: black 1px solid;
 }
 
-a {
+.link {
+  margin-top: 10px;
   margin-bottom: 10px;
   margin-right: auto;
 }
