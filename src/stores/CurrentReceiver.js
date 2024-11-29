@@ -21,7 +21,9 @@ export const useCurrentReceiverStore = defineStore('receiverStore', () => {
     messagesStore.setGetChatMesssagesInterval(receiverId.value);
 
     if (messagesStore.allMessages[chatId] === undefined) {
-      const receiverInfo = { name: name, nickname: nickname, interlocutorId: userId };
+      //  TODO: when different entities also check for them too
+      //  Ex: ... && obj.receiver_type == receiverStore.entity
+      const receiverInfo = { name: name, nickname: nickname, interlocutorId: userId, message: "", receiver_type: "user" };
       messagesStore.history.unshift(receiverInfo);
       return;
     };

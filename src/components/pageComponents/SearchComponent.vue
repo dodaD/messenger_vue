@@ -9,7 +9,7 @@ const searchStore = useSearchStore();
 const nicknameToSearch = ref('');
 
 function openChat(result) {
-  searchStore.searchResults = [];
+  clearSearch();
   receiverStore.openChat(result.name, result.nickname, result.id);
 }
 

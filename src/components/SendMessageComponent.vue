@@ -1,11 +1,23 @@
 <script setup>
 import { ref } from 'vue';
 import { useMessagesStore } from '@/stores/Messages';
+import { useCurrentReceiverStore } from '@/stores/CurrentReceiver';
 const messagesStore = useMessagesStore();
+const receiverStore = useCurrentReceiverStore();
 const newMessage = ref('');
 
 async function sendMessage() {
   await messagesStore.sendMessage(newMessage.value);
+
+  const historyChatId = messagesStore.history.findIndex(obj => {
+    return obj.interlocutorId === receiverStore.receiverId;
+    //  TODO: when different entities also check for them too
+    //  Ex: ... && obj.receiver_type == receiverStore.entity
+  });
+  if (historyChatId !== 0) {
+    const currentChat = messagesStore.history.splice(historyChatId, 1);
+    messagesStore.history.unshift(currentChat);
+  }
   newMessage.value = "";
 }
 </script>
@@ -16,7 +28,7 @@ async function sendMessage() {
       oninput='this.style.height = "";this.style.height = this.scrollHeight + "px"' />
     <button @click="sendMessage" class="send-button"> Send </button>
   </div>
-</template> 
+</template>
 
 <style scoped>
 .wrapper-1 {
@@ -40,4 +52,3 @@ async function sendMessage() {
   margin: auto;
 }
 </style>
-

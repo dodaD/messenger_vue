@@ -13,7 +13,18 @@ async function openChat(message) {
   const chatId = receiverStore.entity + message.interlocutorId;
   receiverStore.receiverId = message.interlocutorId;
   receiverStore.receiverName = message.name;
-  receiverStore.receiverNickname = message.nickname;
+  receiverStore.receiverNickname = message.nickname
+  /*--
+     ----------------------------------------------------
+     TODOS
+     ---------------------------------------------------
+  
+     TODO 1: When there's different enities in production change the entity to dif things here, and use
+            it for searching chat in history
+            Ex: receiverStore.entity = message.nickname;
+      
+  -*/
+
   messagesStore.openedChatId = chatId;
 
   if (messagesStore.allMessages.chatId !== undefined) {

@@ -1,7 +1,6 @@
 import { ref, watch } from 'vue';
 import { defineStore } from 'pinia';
 import { useErrorStore } from '@/stores/Error.js';
-import { useRouter } from 'vue-router';
 import { useCookies } from 'vue3-cookies';
 import { useUserStore } from '@/stores/User.js';
 import { useCurrentReceiverStore } from '@/stores/CurrentReceiver';
@@ -187,8 +186,10 @@ export const useMessagesStore = defineStore('messageStore', () => {
       return null;
     }
     allMessages.value[openedChatId.value].unshift(responseJSON);
+    //  TODO: when different entities also check for them too
+    //  Ex: ... && obj.receiver_type == receiverStore.entity
     const historyChatId = history.value.findIndex(obj => {
-      return obj.interlocutorId === receiverStore.receiverId && obj.receiver_type == responseJSON.receiver_type || obj.id === receiverStore.receiverId && obj.receiver_type === undefined;
+      return obj.interlocutorId === receiverStore.receiverId || obj.id === receiverStore.receiverId && obj.receiver_type === undefined;
     });
     history.value[historyChatId].message = responseJSON.message;
   }
