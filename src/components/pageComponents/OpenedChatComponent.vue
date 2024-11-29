@@ -19,6 +19,7 @@ async function getMoreMessages(event) {
   if (-1 * event.target.scrollTop > scrollHeight && scrollFinished) {
     scrollFinished = false;
     if (receiverStore.page >= receiverStore.maxPage && receiverStore.maxPage !== 0) {
+      console.log("page ++; not sending a request here ig");
       return;
     }
     receiverStore.page++;
@@ -38,7 +39,8 @@ async function getMoreMessages(event) {
   <div class="wrapper">
     <ReceiverInfoComponent> </ReceiverInfoComponent>
     <div class="opened-chat" id="opened-chat" @scroll="getMoreMessages">
-      <p v-if="messagesStore.openedChatId === 0" class="no-messages"> TODO: text from file using library, that in future I
+      <p v-if="messagesStore.openedChatId === 0" class="no-messages"> TODO: text from file using library, that in future
+        I
         could translate
         easily
       </p>
