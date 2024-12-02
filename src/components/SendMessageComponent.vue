@@ -16,7 +16,7 @@ async function sendMessage() {
   });
   if (historyChatId !== 0) {
     const currentChat = messagesStore.history.splice(historyChatId, 1);
-    messagesStore.history.unshift(currentChat);
+    messagesStore.history.unshift(currentChat[0]);
   }
   newMessage.value = "";
 }
