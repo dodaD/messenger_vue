@@ -5,9 +5,15 @@ import { useCurrentReceiverStore } from '@/stores/CurrentReceiver';
 const messagesStore = useMessagesStore();
 const receiverStore = useCurrentReceiverStore();
 const newMessage = ref('');
+const previousMessageSent = ref(true);
 
 async function sendMessage() {
-  await messagesStore.sendMessage(newMessage.value);
+  if (previousMessageSent.value) {
+    previousMessageSent.value = false;
+    await messagesStore.sendMessage(newMessage.value);
+  }
+  newMessage.value = "";
+  previousMessageSent.value = true;
 
   const historyChatId = messagesStore.history.findIndex(obj => {
     return obj.interlocutorId === receiverStore.receiverId;
@@ -18,7 +24,6 @@ async function sendMessage() {
     const currentChat = messagesStore.history.splice(historyChatId, 1);
     messagesStore.history.unshift(currentChat[0]);
   }
-  newMessage.value = "";
 }
 </script>
 

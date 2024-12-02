@@ -25,7 +25,7 @@ export const useMessagesStore = defineStore('messageStore', () => {
 
     if (!response.ok) {
       errorStore.storeErrors(error);
-      return;
+      return "bad";
     }
 
     return "good";
@@ -113,7 +113,7 @@ export const useMessagesStore = defineStore('messageStore', () => {
       };
 
       const newMessages = await getMessagesFromChat(1, receiverId);
-      //  BUG: when scrolling and getting more messages this update rewrites the ability to see more messages 
+      //  BUG: find what's wrong when opening a chat for first time :/ 
       if (allMessages.value[openedChatId.value][0].id === newMessages.data[0].id) {
         return;
       } else {
@@ -150,6 +150,10 @@ export const useMessagesStore = defineStore('messageStore', () => {
   }
 
   async function deleteMessage(messageId) {
+    const indexOfDeletedMessage = allMessages.value[openedChatId.value].findIndex((message) => message.id === messageId);
+    const deletedMessage = allMessages.value[openedChatId.value][indexOfDeletedMessage];
+    allMessages.value[openedChatId.value].splice(indexOfDeletedMessage, 1);
+
     const response = await fetch(import.meta.env.VITE_APP_API_BASE_URL + '/message/' + messageId, {
       method: "DELETE",
       headers: {
@@ -160,9 +164,9 @@ export const useMessagesStore = defineStore('messageStore', () => {
     });
     const responseJSON = await response.json();
     if (checkResponse(response, responseJSON.error) === "bad") {
+      allMessages.value[openedChatId.value].splice(indexOfDeletedMessage, 0, deletedMessage);
       return null;
     }
-    allMessages[openedChatId.value] = allMessages.value[openedChatId.value].filter(message => message.id !== messageId);
   }
 
   async function sendMessage(newMessage) {
