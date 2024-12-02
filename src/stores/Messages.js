@@ -113,7 +113,13 @@ export const useMessagesStore = defineStore('messageStore', () => {
       };
 
       const newMessages = await getMessagesFromChat(1, receiverId);
-      allMessages.value[openedChatId.value] = newMessages.data;
+      //  BUG: when scrolling and getting more messages this update rewrites the ability to see more messages 
+      if (allMessages.value[openedChatId.value][0].id === newMessages.data[0].id) {
+        return;
+      } else {
+        allMessages.value[openedChatId.value] = newMessages.data;
+        receiverStore.page = 1;
+      }
     }, 5000);
   }
 

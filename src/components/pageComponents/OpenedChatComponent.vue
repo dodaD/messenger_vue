@@ -12,6 +12,7 @@ import MessageComponent from "../MessageComponent.vue";
 import SendMessageComponent from "../SendMessageComponent.vue";
 import ReceiverInfoComponent from "../ReceiverInfoComponent.vue";
 
+//  BUG: After replacing old messages with new, the scroll finished is always false
 let scrollFinished = true;
 
 async function getMoreMessages(event) {
@@ -19,7 +20,6 @@ async function getMoreMessages(event) {
   if (-1 * event.target.scrollTop > scrollHeight && scrollFinished) {
     scrollFinished = false;
     if (receiverStore.page >= receiverStore.maxPage && receiverStore.maxPage !== 0) {
-      console.log("page ++; not sending a request here ig");
       return;
     }
     receiverStore.page++;
@@ -27,7 +27,7 @@ async function getMoreMessages(event) {
     const newMessages = await messagesStore.getMessagesFromChat(receiverStore.page, receiverStore.receiverId);
     receiverStore.maxPage = newMessages.last_page;
 
-    for (let i = 0; i < newMessages.data.length - 1; i++) {
+    for (let i = 0; i < newMessages.data.length; i++) {
       messagesStore.allMessages[messagesStore.openedChatId].push(newMessages.data[i]);
     }
     scrollFinished = true;
