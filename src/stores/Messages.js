@@ -17,30 +17,32 @@ export const useMessagesStore = defineStore('messageStore', () => {
   window.window.historyGlobalInterval = 0;
   let chatBetweenUsersIntervalId = 0;
 
+  function checkResponse(response, error) {
+    if (response.status === 401) {
+      userStore.logOut();
+      return "bad";
+    }
+
+    if (!response.ok) {
+      errorStore.storeErrors(error);
+      return "bad";
+    }
+
+    return "good";
+  }
+
   async function getHistory() {
-    let responseJSON = null;
-    await fetch(import.meta.env.VITE_APP_API_BASE_URL + '/message/history', {
+    const response = await fetch(import.meta.env.VITE_APP_API_BASE_URL + '/message/history', {
       headers: {
         "Accept": "application/json",
         "Content-type": "application/json",
         "Authorization": "Bearer " + cookies.get("authToken"),
       }
-    }).then(function (response) {
-      if (!response.ok) {
-        const responseObject = {
-          [response.status]: response.statusText
-        };
-        errorStore.storeErrors(responseObject);
-        return;
-      } else if (response.status === 401) {
-        userStore.logOut();
-      }
-      responseJSON = response.json();
-    }).catch(function (error) {
-      errorStore.storeErrors({ 500: "Server error - request failed. Please try reloading page" });
-      return;
     });
-
+    const responseJSON = await response.json();
+    if (checkResponse(response, responseJSON.error) === "bad") {
+      return null;
+    }
     return responseJSON;
   }
 
@@ -80,8 +82,7 @@ export const useMessagesStore = defineStore('messageStore', () => {
   }
 
   async function getMessagesFromChat(page, receiverId) {
-    let responseJSON = null;
-    await fetch(import.meta.env.VITE_APP_API_BASE_URL + '/message/chat-beetween-users?page=' + page, {
+    const response = await fetch(import.meta.env.VITE_APP_API_BASE_URL + '/message/chat-beetween-users?page=' + page, {
       method: "POST",
       headers: {
         "Accept": "application/json",
@@ -91,20 +92,12 @@ export const useMessagesStore = defineStore('messageStore', () => {
       body: JSON.stringify({
         receiver_id: receiverId,
       })
-    }).then(function (response) {
-      if (!response.ok) {
-        const responseObject = {
-          [response.status]: response.statusText
-        };
-        errorStore.storeErrors(responseObject);
-      } else if (response.status === 401) {
-        userStore.logOut();
-      }
-      responseJSON = response.json();
-    }).catch(function (error) {
-      errorStore.storeErrors({ 500: "Server error - request failed. Please try reloading page" });
     });
 
+    const responseJSON = await response.json();
+    if (checkResponse(response, responseJSON.error) === "bad") {
+      return null;
+    }
     return responseJSON;
   }
 
@@ -131,8 +124,7 @@ export const useMessagesStore = defineStore('messageStore', () => {
   }
 
   async function updateMessage(messageId, updatedMessage) {
-    let responseJSON = null;
-    await fetch(import.meta.env.VITE_APP_API_BASE_URL + '/message/edit/' + messageId, {
+    const response = await fetch(import.meta.env.VITE_APP_API_BASE_URL + '/message/edit/' + messageId, {
       method: "PATCH",
       headers: {
         "Accept": "application/json",
@@ -142,21 +134,11 @@ export const useMessagesStore = defineStore('messageStore', () => {
       body: JSON.stringify({
         message: updatedMessage,
       })
-    }).then(function (response) {
-      if (!response.ok) {
-        const responseObject = {
-          [response.status]: response.statusText
-        };
-        errorStore.storeErrors(responseObject);
-        return;
-      } else if (response.status === 401) {
-        userStore.logOut();
-      }
-      responseJSON = response.json();
-    }).catch(function (error) {
-      errorStore.storeErrors({ 500: "Server error - request failed. Please try reloading page" });
-      return;
     });
+    const responseJSON = await response.json();
+    if (checkResponse(response, responseJSON.error) === "bad") {
+      return null;
+    }
 
     let openedChatMessages = allMessages.value[openedChatId.value];
     let changedMessageId = openedChatMessages.findIndex((message) => message.id === messageId);
@@ -172,29 +154,19 @@ export const useMessagesStore = defineStore('messageStore', () => {
     const deletedMessage = allMessages.value[openedChatId.value][indexOfDeletedMessage];
     allMessages.value[openedChatId.value].splice(indexOfDeletedMessage, 1);
 
-    await fetch(import.meta.env.VITE_APP_API_BASE_URL + '/message/' + messageId, {
+    const response = await fetch(import.meta.env.VITE_APP_API_BASE_URL + '/message/' + messageId, {
       method: "DELETE",
       headers: {
         "Accept": "application/json",
         "Content-type": "application/json",
         "Authorization": "Bearer " + cookies.get("authToken"),
       },
-    }).then(function (response) {
-      if (!response.ok) {
-        const responseObject = {
-          [response.status]: response.statusText
-        };
-        errorStore.storeErrors(responseObject);
-        allMessages.value[openedChatId.value].splice(indexOfDeletedMessage, 0, deletedMessage);
-        return;
-      } else if (response.status === 401) {
-        userStore.logOut();
-      }
-    }).catch(function (error) {
-      errorStore.storeErrors({ 500: "Server error - request failed. Please try reloading page" });
-      allMessages.value[openedChatId.value].splice(indexOfDeletedMessage, 0, deletedMessage);
-      return;
     });
+    const responseJSON = await response.json();
+    if (checkResponse(response, responseJSON.error) === "bad") {
+      allMessages.value[openedChatId.value].splice(indexOfDeletedMessage, 0, deletedMessage);
+      return null;
+    }
   }
 
   async function sendMessage(newMessage) {
@@ -206,8 +178,7 @@ export const useMessagesStore = defineStore('messageStore', () => {
       errorStore.storeErrors('No chat was selected');
       return;
     }
-    let responseJSON = null;
-    await fetch(import.meta.env.VITE_APP_API_BASE_URL + '/message/add', {
+    const response = await fetch(import.meta.env.VITE_APP_API_BASE_URL + '/message/add', {
       method: "POST",
       headers: {
         "Accept": "application/json",
@@ -219,22 +190,11 @@ export const useMessagesStore = defineStore('messageStore', () => {
         receiver_id: receiverStore.receiverId,
         receiver: receiverStore.entity,
       })
-    }).then(function (response) {
-      if (!response.ok) {
-        const responseObject = {
-          [response.status]: response.statusText
-        };
-        errorStore.storeErrors(responseObject);
-        return;
-      } else if (response.status === 401) {
-        userStore.logOut();
-      }
-      responseJSON = response.json();
-    }).catch(function (error) {
-      errorStore.storeErrors({ 500: "Server error - request failed. Please try reloading page" });
-      return;
     });
-
+    const responseJSON = await response.json();
+    if (checkResponse(response, responseJSON.error) === "bad") {
+      return null;
+    }
     allMessages.value[openedChatId.value].unshift(responseJSON);
     //  TODO: when different entities also check for them too
     //  Ex: ... && obj.receiver_type == receiverStore.entity
@@ -248,7 +208,6 @@ export const useMessagesStore = defineStore('messageStore', () => {
     if (openedChatId.value === "") {
       return;
     }
-    //  BUG: actually ne zruchno
     // цей код скролить вниз коли приходить нове повідомлення
     if (openedChatId.value.includes(newProperty[openedChatId.value][0]?.receiver_id)) {
       document.querySelector('.opened-chat').scrollBy(0, document.querySelector('.opened-chat').scrollHeight);
