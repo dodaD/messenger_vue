@@ -15,8 +15,8 @@ export const useSearchStore = defineStore('searchStore', () => {
       searchResults.value = [];
       return;
     }
-    let responseJSON = null;
-    await fetch(import.meta.env.VITE_APP_API_BASE_URL + '/search', {
+
+    const response = await fetch(import.meta.env.VITE_APP_API_BASE_URL + '/search', {
       method: "POST",
       headers: {
         "Accept": "application/json",
@@ -26,22 +26,15 @@ export const useSearchStore = defineStore('searchStore', () => {
       body: JSON.stringify({
         nickname: '@' + nicknameToSearch,
       })
-    }).then(function (response) {
-      if (!response.ok) {
-        const responseObject = {
-          [response.status]: response.statusText
-        };
-        errorStore.storeErrors(responseObject);
-        return;
-      } else if (response.status === 401) {
-        userStore.logOut();
-      }
-      responseJSON = response.json();
-    }).catch(function (error) {
-      errorStore.storeErrors({ 500: "Server error - request failed. Please try reloading page" });
-      return;
     });
-
+    const responseJSON = await response.json();
+    if (response.status === 401) {
+      userStore.logOut();
+    }
+    if (!response.ok) {
+      errorStore.storeErrors(responseJSON.error);
+      return;
+    }
     searchResults.value = responseJSON;
   }
 

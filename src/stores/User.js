@@ -20,29 +20,17 @@ export const useUserStore = defineStore('userStore', () => {
   }
 
   async function getUserInfo() {
-    let responseJSON = null;
-    await fetch(import.meta.env.VITE_APP_API_BASE_URL + '/user/my-user-info', {
+    const response = await fetch(import.meta.env.VITE_APP_API_BASE_URL + '/user/my-user-info', {
       headers: {
         "Accept": "application/json",
         "Content-type": "application/json",
         "Authorization": "Bearer " + cookies.get("authToken"),
       }
-    }).then(function (response) {
-      if (!response.ok) {
-        const responseObject = {
-          [response.status]: response.statusText
-        };
-        errorStore.storeErrors(responseObject);
-        return;
-      } else if (response.status === 401) {
-        logOut();
-      }
-      responseJSON = response.json();
-    }).catch(function (error) {
-      errorStore.storeErrors({ 500: "Server error - request failed. Please try reloading page" });
-      return;
     });
-
+    const responseJSON = await response.json();
+    if (response.status === 401) {
+      logOut();
+    }
     userId.value = responseJSON.id;
     userName.value = responseJSON.name;
     userNickname.value = responseJSON.nickname;
