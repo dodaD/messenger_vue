@@ -18,13 +18,14 @@ export const useMessagesStore = defineStore('messageStore', () => {
   let chatBetweenUsersIntervalId = 0;
 
   function checkResponse(response, error) {
-    if (response.status === 401) {
-      userStore.logOut();
-      return "bad";
-    }
-
     if (!response.ok) {
-      errorStore.storeErrors(error);
+      if (response.status === 401) {
+        userStore.logOut();
+      }
+      const responseObject = {
+        [response.status]: response.statusText
+      };
+      errorStore.storeErrors(responseObject);
       return "bad";
     }
 
