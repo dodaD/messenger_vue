@@ -61,7 +61,7 @@ async function deleteMessage() {
     <textarea v-model="updatedMessage" class="changing" />
     <button v-if="!show" @click=editMessage class="save-changes-button">Save</button>
   </div>
-</template> 
+</template>
 
 <style scoped>
 button {

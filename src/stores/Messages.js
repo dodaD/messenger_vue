@@ -120,6 +120,11 @@ export const useMessagesStore = defineStore('messageStore', () => {
       } else {
         allMessages.value[openedChatId.value] = newMessages.data;
         receiverStore.page = 1;
+        //here goes scroll down - if there's any new messages scroll down
+        //
+        //  BUG: Scrolls down, but only till one before new message
+        console.log("whyu");
+        document.querySelector('.opened-chat').scrollBy(0, document.querySelector('.opened-chat').scrollHeight);
       }
     }, 5000);
   }
@@ -204,17 +209,6 @@ export const useMessagesStore = defineStore('messageStore', () => {
     });
     history.value[historyChatId].message = responseJSON.message;
   }
-
-  watch(allMessages, (newProperty) => {
-    if (openedChatId.value === "") {
-      return;
-    }
-    // цей код скролить вниз коли приходить нове повідомлення
-    if (openedChatId.value.includes(newProperty[openedChatId.value][0]?.receiver_id)) {
-      document.querySelector('.opened-chat').scrollBy(0, document.querySelector('.opened-chat').scrollHeight);
-      return;
-    }
-  }, { deep: true });
 
   return { allMessages, history, openedChatId, getInitialHistory, setGetChatMesssagesInterval, getMessagesFromChat, updateMessage, deleteMessage, sendMessage };
 })
