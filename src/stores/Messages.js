@@ -16,6 +16,8 @@ export const useMessagesStore = defineStore('messageStore', () => {
   const openedChatId = ref('');
   window.window.historyGlobalInterval = 0;
   let chatBetweenUsersIntervalId = 0;
+  const isNewMessage = ref(false);
+  const howManyNewMessages = ref(0);
 
   function checkResponse(response, error) {
     if (!response.ok) {
@@ -118,15 +120,25 @@ export const useMessagesStore = defineStore('messageStore', () => {
       if (allMessages.value[openedChatId.value][0].id === newMessages.data[0].id) {
         return;
       } else {
+        findHowManyNewMessages(newMessages.data);
         allMessages.value[openedChatId.value] = newMessages.data;
         receiverStore.page = 1;
-        //here goes scroll down - if there's any new messages scroll down
-        //
-        //  BUG: Scrolls down, but only till one before new message
-        console.log("whyu");
-        document.querySelector('.opened-chat').scrollBy(0, document.querySelector('.opened-chat').scrollHeight);
+        //here goes logic of showing little arrow of new message 
       }
     }, 5000);
+  }
+
+  function findHowManyNewMessages(newMessages) {
+    for (let i = 0; i < newMessages.length; i++) {
+      let currentMessageAtThatId = allMessages.value[openedChatId.value][i];
+      let newMessageAtThatId = newMessages[i];
+
+      //If new id is less than currentMessageAtThatId, that means message was deleted; if it equal old id, no changes
+      if (newMessageAtThatId.id <= currentMessageAtThatId.id + howManyNewMessages.value) {
+        continue;
+      }
+      howManyNewMessages.value += 1;
+    }
   }
 
   async function updateMessage(messageId, updatedMessage) {

@@ -93,6 +93,7 @@ button {
 
 .message {
   width: fit-content;
+  white-space: pre-wrap;
 }
 
 .propmpt-wrapper {

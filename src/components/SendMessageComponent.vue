@@ -29,7 +29,7 @@ async function sendMessage() {
 
 <template>
   <div class="wrapper-1">
-    <textarea v-model="newMessage" id="wrapper-1" class="send-message" @keydown.enter.prevent="sendMessage"
+    <textarea v-model="newMessage" id="wrapper-1" class="send-message" @keyup.enter.exact="sendMessage"
       oninput='this.style.height = "";this.style.height = this.scrollHeight + "px"' />
     <button @click="sendMessage" class="send-button"> Send </button>
   </div>
