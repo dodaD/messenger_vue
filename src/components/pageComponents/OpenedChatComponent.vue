@@ -13,12 +13,20 @@ import SendMessageComponent from "../SendMessageComponent.vue";
 import ReceiverInfoComponent from "../ReceiverInfoComponent.vue";
 import { ref } from "vue";
 const scrollFinished = ref(true);
+const showScrollDownButton = ref(false);
 
 async function getMoreMessages(event) {
   let scrollHeight = (event.target.scrollTop - event.target.clientHeight) * 0.95;
 
   if (event.target.scrollTop === 0) {
     scrollFinished.value = true;
+    showScrollDownButton.value = false;
+  }
+
+  if ((-1 * event.target.scrollTop) <= ((document.querySelector('.opened-chat').scrollHeight) * 0.05)) {
+    showScrollDownButton.value = false;
+  } else {
+    showScrollDownButton.value = true;
   }
 
   if (-1 * event.target.scrollTop > scrollHeight && scrollFinished) {
@@ -37,12 +45,19 @@ async function getMoreMessages(event) {
     scrollFinished.value = true;
   }
 }
+
+function scrollDown() {
+  console.log("Hey");
+}
 </script>
 
 <template>
   <div class="wrapper">
     <ReceiverInfoComponent> </ReceiverInfoComponent>
     <div class="opened-chat" id="opened-chat" @scroll="getMoreMessages">
+      <div class="round-button-to-scroll-down" v-if="showScrollDownButton" @click="scrollDown">
+        <font-awesome-icon :icon="['fas', 'angle-down']" />
+      </div>
       <p v-if="messagesStore.openedChatId === 0" class="no-messages"> TODO: text from file using library, that in future
         I
         could translate
@@ -59,6 +74,25 @@ async function getMoreMessages(event) {
 </template>
 
 <style scoped>
+.round-button-to-scroll-down {
+  position: fixed;
+  top: calc(0.9 * 90vh);
+  right: 10%;
+  transform: translateX(-85%);
+  /* This is just looks good
+  * but logic should be like something beneath it
+ */
+  /*calc(-100% + 10px)*/
+  width: 40px;
+  height: 40px;
+  background-color: #ddddce;
+  border-radius: 100%;
+  border: 1px black solid;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .wrapper {
   display: flex;
   height: 100%;
