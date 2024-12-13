@@ -47,7 +47,8 @@ async function getMoreMessages(event) {
 }
 
 function scrollDown() {
-  console.log("Hey");
+  document.querySelector('.opened-chat').scrollBy(0, document.querySelector('.opened-chat').scrollHeight + 20);
+  messagesStore.howManyNewMessages = 0;
 }
 </script>
 
@@ -56,6 +57,8 @@ function scrollDown() {
     <ReceiverInfoComponent> </ReceiverInfoComponent>
     <div class="opened-chat" id="opened-chat" @scroll="getMoreMessages">
       <div class="round-button-to-scroll-down" v-if="showScrollDownButton" @click="scrollDown">
+        <div v-if="messagesStore.howManyNewMessages !== 0" class="circle-with-number-of-new-messages"> {{
+          messagesStore.howManyNewMessages }} </div>
         <font-awesome-icon :icon="['fas', 'angle-down']" />
       </div>
       <p v-if="messagesStore.openedChatId === 0" class="no-messages"> TODO: text from file using library, that in future
@@ -91,6 +94,21 @@ function scrollDown() {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.circle-with-number-of-new-messages {
+  border: 1px black solid;
+  background-color: #ddddce;
+  position: absolute;
+  top: 0;
+  right: 0;
+  transform: translateY(-25%) translateX(25%);
+  width: 20px;
+  height: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 100%;
 }
 
 .wrapper {

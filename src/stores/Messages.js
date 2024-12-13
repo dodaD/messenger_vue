@@ -16,7 +16,6 @@ export const useMessagesStore = defineStore('messageStore', () => {
   const openedChatId = ref('');
   window.window.historyGlobalInterval = 0;
   let chatBetweenUsersIntervalId = 0;
-  const isNewMessage = ref(false);
   const howManyNewMessages = ref(0);
 
   function checkResponse(response, error) {
@@ -129,12 +128,20 @@ export const useMessagesStore = defineStore('messageStore', () => {
   }
 
   function findHowManyNewMessages(newMessages) {
+    if (newMessages.length > allMessages.value[openedChatId.value].length) {
+      howManyNewMessages.value = newMessages.length - allMessages.value[openedChatId.value].length;
+      return;
+    }
+
     for (let i = 0; i < newMessages.length; i++) {
+      if (i + howManyNewMessages.value >= newMessages.length) {
+        return;
+      }
       let currentMessageAtThatId = allMessages.value[openedChatId.value][i];
-      let newMessageAtThatId = newMessages[i];
+      let newMessageAtThatId = newMessages[i + howManyNewMessages.value];
 
       //If new id is less than currentMessageAtThatId, that means message was deleted; if it equal old id, no changes
-      if (newMessageAtThatId.id <= currentMessageAtThatId.id + howManyNewMessages.value) {
+      if (newMessageAtThatId.id <= currentMessageAtThatId.id) {
         continue;
       }
       howManyNewMessages.value += 1;
@@ -222,7 +229,7 @@ export const useMessagesStore = defineStore('messageStore', () => {
     history.value[historyChatId].message = responseJSON.message;
   }
 
-  return { allMessages, history, openedChatId, getInitialHistory, setGetChatMesssagesInterval, getMessagesFromChat, updateMessage, deleteMessage, sendMessage };
+  return { allMessages, history, openedChatId, getInitialHistory, setGetChatMesssagesInterval, getMessagesFromChat, updateMessage, deleteMessage, sendMessage, howManyNewMessages };
 })
 
 
