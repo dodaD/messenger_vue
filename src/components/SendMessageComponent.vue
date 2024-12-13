@@ -24,6 +24,7 @@ async function sendMessage() {
     const currentChat = messagesStore.history.splice(historyChatId, 1);
     messagesStore.history.unshift(currentChat[0]);
   }
+  document.querySelector('.opened-chat').scrollBy(0, document.querySelector('.opened-chat').scrollHeight + 20);
 }
 </script>
 
