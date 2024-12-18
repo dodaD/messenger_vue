@@ -33,6 +33,7 @@ async function editMessage() {
   show.value = true;
 }
 
+const showMenu = ref(false);
 const showPropToDelete = ref(false);
 async function deleteMessage() {
   showPropToDelete.value = false;
@@ -45,22 +46,27 @@ async function deleteMessage() {
 </script>
 
 <template>
-  <div v-if="show" class="border message">
+  <div v-if="show" class="border message" @click.right="showMenu = true">
     <div> {{ props.message.reference_message }} </div>
     {{ props.message.message }}
     <div v-if="props.message.updated_at !== props.message.created_at">Updated: {{ updatedAt }}</div>
+
+    <div class="hidden-menu" @click="showMenu = false" v-if="showMenu">
+      <div @click=" $emit('editing')"> Edit </div>
+      <div @click="showPropToDelete = true"> Delete </div>
+    </div>
   </div>
-  <button v-if="show && allowedToClick" @click="show = !show">E</button>
-  <button v-if="show && allowedToClick" @click="showPropToDelete = true">D</button>
-  <div v-if="show && showPropToDelete" class="propmpt-wrapper border">
+  <div v-if="showPropToDelete" class="propmpt-wrapper border">
     <div>Are you sure you want to delete message? </div>
     <button @click="deleteMessage"> Yes! </button>
     <button @click="showPropToDelete = false"> No, not really </button>
   </div>
-  <div class="border" v-if="!show">
+
+
+  <!-- <div class="border" v-if="!show">
     <textarea v-model="updatedMessage" class="changing" />
     <button v-if="!show" @click=editMessage class="save-changes-button">Save</button>
-  </div>
+  </div> -->
 </template>
 
 <style scoped>
@@ -94,6 +100,7 @@ button {
 .message {
   width: fit-content;
   white-space: pre-wrap;
+  position: relative;
 }
 
 .propmpt-wrapper {

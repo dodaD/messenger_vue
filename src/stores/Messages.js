@@ -1,4 +1,4 @@
-import { ref, watch } from 'vue';
+import { ref } from 'vue';
 import { defineStore } from 'pinia';
 import { useErrorStore } from '@/stores/Error.js';
 import { useCookies } from 'vue3-cookies';
@@ -18,7 +18,7 @@ export const useMessagesStore = defineStore('messageStore', () => {
   let chatBetweenUsersIntervalId = 0;
   const howManyNewMessages = ref(0);
 
-  function checkResponse(response, error) {
+  function checkResponse(response) {
     if (!response.ok) {
       if (response.status === 401) {
         userStore.logOut();
@@ -115,7 +115,10 @@ export const useMessagesStore = defineStore('messageStore', () => {
       };
 
       const newMessages = await getMessagesFromChat(1, receiverId);
-      //  BUG: find what's wrong when opening a chat for first time :/ 
+      if (newMessages === null) {
+        clearInterval(chatBetweenUsersIntervalId);
+        return;
+      }
       if (allMessages.value[openedChatId.value][0].id === newMessages.data[0].id) {
         return;
       } else {

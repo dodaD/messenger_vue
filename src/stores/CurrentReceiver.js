@@ -13,6 +13,8 @@ export const useCurrentReceiverStore = defineStore('receiverStore', () => {
   const maxPage = ref(0);
 
   function openChat(name, nickname, userId) {
+    //  BUG: check if this function is being used at all;
+
     const chatId = entity.value + userId;
     receiverId.value = userId;
     receiverName.value = name;
