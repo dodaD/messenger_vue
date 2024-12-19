@@ -50,6 +50,15 @@ function scrollDown() {
   document.querySelector('.opened-chat').scrollBy(0, document.querySelector('.opened-chat').scrollHeight + 20);
   messagesStore.howManyNewMessages = 0;
 }
+
+const editingMessageId = ref(null);
+const isEditing = ref(false);
+const allowedToEdit = ref(false);
+function openEdit(id, allowedToClick) {
+  console.log(allowedToClick);
+  editingMessageId.value = id;
+  isEditing.value = true;
+}
 </script>
 
 <template>
@@ -69,10 +78,10 @@ function scrollDown() {
       <div v-if="messagesStore.allMessages[messagesStore.openedChatId] !== undefined"
         v-for="message in messagesStore.allMessages[messagesStore.openedChatId]" :key="message.id"
         :class="message.user_id === loggedInUser.userId ? 'sent-message' : 'received-message'">
-        <MessageComponent :message="message"> </MessageComponent>
+        <MessageComponent :message="message" @editing="openEdit" />
       </div>
     </div>
-    <SendMessageComponent> </SendMessageComponent>
+    <SendMessageComponent :isEditing="isEditing" :message="editingMessageId" :isAllowedToEdit="allowedToEdit" />
   </div>
 </template>
 

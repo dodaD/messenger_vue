@@ -2,10 +2,17 @@
 import { ref } from 'vue';
 import { useMessagesStore } from '@/stores/Messages';
 import { useCurrentReceiverStore } from '@/stores/CurrentReceiver';
+import { defineProps } from 'vue';
+
 const messagesStore = useMessagesStore();
 const receiverStore = useCurrentReceiverStore();
 const newMessage = ref('');
 const previousMessageSent = ref(true);
+const props = defineProps({
+  message: Object,
+  chatId: String,
+  isAllowedToEdit: Boolean,
+});
 
 async function sendMessage() {
   if (previousMessageSent.value) {

@@ -21,20 +21,12 @@ const options = { day: 'numeric', month: 'numeric', year: 'numeric', hour: '2-di
 updatedAt.value = date.value.toLocaleString('en-US', options);
 
 const show = ref(true);
-const updatedMessage = ref(props.message.message);
 const allowedToClick = props.message.user_id === loggedInUser.userId;
 
-async function editMessage() {
-  if (allowedToClick === false) {
-    errorStore.storeErrors('You are not allowed to edit this message');
-    return;
-  }
-  messagesStore.updateMessage(props.message.id, updatedMessage.value);
-  show.value = true;
-}
-
 const showMenu = ref(false);
+const actionClicked = ref(false);
 const showPropToDelete = ref(false);
+
 async function deleteMessage() {
   showPropToDelete.value = false;
   if (allowedToClick === false) {
@@ -46,13 +38,13 @@ async function deleteMessage() {
 </script>
 
 <template>
-  <div v-if="show" class="border message" @click.right="showMenu = true">
+  <div v-if="show" class="border message" @mouseover="showMenu = true" @mouseleave="showMenu = false">
     <div> {{ props.message.reference_message }} </div>
     {{ props.message.message }}
     <div v-if="props.message.updated_at !== props.message.created_at">Updated: {{ updatedAt }}</div>
 
-    <div class="hidden-menu" @click="showMenu = false" v-if="showMenu">
-      <div @click=" $emit('editing')"> Edit </div>
+    <div class="hidden-menu" @click="actionClicked = true" v-if="showMenu && !actionClicked">
+      <div @click=" $emit('editing', props.message.id, allowedToClick)"> Edit </div>
       <div @click="showPropToDelete = true"> Delete </div>
     </div>
   </div>
@@ -61,12 +53,6 @@ async function deleteMessage() {
     <button @click="deleteMessage"> Yes! </button>
     <button @click="showPropToDelete = false"> No, not really </button>
   </div>
-
-
-  <!-- <div class="border" v-if="!show">
-    <textarea v-model="updatedMessage" class="changing" />
-    <button v-if="!show" @click=editMessage class="save-changes-button">Save</button>
-  </div> -->
 </template>
 
 <style scoped>
