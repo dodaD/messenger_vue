@@ -1,20 +1,33 @@
 <script setup>
-import { ref } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { useMessagesStore } from '@/stores/Messages';
 import { useCurrentReceiverStore } from '@/stores/CurrentReceiver';
+import { useErrorStore } from '../stores/Error.js';
 import { defineProps } from 'vue';
 
 const messagesStore = useMessagesStore();
 const receiverStore = useCurrentReceiverStore();
+const errorStore = useErrorStore();
 const newMessage = ref('');
 const previousMessageSent = ref(true);
 const props = defineProps({
-  message: Object,
-  chatId: String,
+  editingMessageId: Number,
   isAllowedToEdit: Boolean,
+  originalMessage: String,
+});
+
+const isEditing = computed(() => { return props.editingMessageId !== null && props.isAllowedToEdit });
+watch(isEditing, () => {
+  if (isEditing.value) {
+    newMessage.value = props.originalMessage;
+  }
 });
 
 async function sendMessage() {
+  if (isEditing.value) {
+    editMessage();
+    return;
+  }
   if (previousMessageSent.value) {
     previousMessageSent.value = false;
     await messagesStore.sendMessage(newMessage.value);
@@ -32,6 +45,15 @@ async function sendMessage() {
     messagesStore.history.unshift(currentChat[0]);
   }
   document.querySelector('.opened-chat').scrollBy(0, document.querySelector('.opened-chat').scrollHeight + 20);
+}
+
+function editMessage() {
+  if (props.isAllowedToEdit === false) {
+    errorStore.storeErrors('You are not allowed to edit this message');
+    return;
+  }
+  messagesStore.updateMessage(props.editingMessageId, newMessage.value);
+  newMessage.value = "";
 }
 </script>
 

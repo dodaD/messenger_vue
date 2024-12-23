@@ -52,12 +52,12 @@ function scrollDown() {
 }
 
 const editingMessageId = ref(null);
-const isEditing = ref(false);
-const allowedToEdit = ref(false);
-function openEdit(id, allowedToClick) {
-  console.log(allowedToClick);
+const isAllowedToEdit = ref(false);
+const originalMessage = ref('');
+function openEdit(allowedToEdit, id, message) {
+  isAllowedToEdit.value = allowedToEdit;
   editingMessageId.value = id;
-  isEditing.value = true;
+  originalMessage.value = message;
 }
 </script>
 
@@ -81,7 +81,8 @@ function openEdit(id, allowedToClick) {
         <MessageComponent :message="message" @editing="openEdit" />
       </div>
     </div>
-    <SendMessageComponent :isEditing="isEditing" :message="editingMessageId" :isAllowedToEdit="allowedToEdit" />
+    <SendMessageComponent :editingMessageId="editingMessageId" :originalMessage="originalMessage"
+      :isAllowedToEdit="isAllowedToEdit" />
   </div>
 </template>
 

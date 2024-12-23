@@ -12,8 +12,8 @@ import { ref } from 'vue';
 import { defineProps } from 'vue';
 const props = defineProps({
   message: Object,
-  chatId: String,
 });
+const emits = defineEmits(['editing']);
 
 const updatedAt = ref('');
 const date = ref(new Date(props.message.updated_at));
@@ -44,11 +44,11 @@ async function deleteMessage() {
     <div v-if="props.message.updated_at !== props.message.created_at">Updated: {{ updatedAt }}</div>
 
     <div class="hidden-menu" @click="actionClicked = true" v-if="showMenu && !actionClicked">
-      <div @click=" $emit('editing', props.message.id, allowedToClick)"> Edit </div>
+      <div @click="$emit('editing', allowedToClick, props.message.id, props.message.message)"> Edit </div>
       <div @click="showPropToDelete = true"> Delete </div>
     </div>
   </div>
-  <div v-if="showPropToDelete" class="propmpt-wrapper border">
+  <div v-if="showPropToDelete" class="propmpt-wrapper border">class="propmpt-wrapper border">
     <div>Are you sure you want to delete message? </div>
     <button @click="deleteMessage"> Yes! </button>
     <button @click="showPropToDelete = false"> No, not really </button>
