@@ -1,19 +1,16 @@
 <script setup>
+import { defineProps, ref } from 'vue';
 import { useMessagesStore } from "../stores/Messages.js";
-const messagesStore = useMessagesStore();
-
 import { useUserStore } from "../stores/User.js";
-const loggedInUser = useUserStore();
 import { useErrorStore } from '../stores/Error.js';
 
-const errorStore = useErrorStore();
-import { ref } from 'vue';
-
-import { defineProps } from 'vue';
 const props = defineProps({
   message: Object,
 });
 const emits = defineEmits(['editing']);
+const errorStore = useErrorStore();
+const loggedInUser = useUserStore();
+const messagesStore = useMessagesStore();
 
 const updatedAt = ref('');
 const date = ref(new Date(props.message.updated_at));
@@ -48,14 +45,16 @@ async function deleteMessage() {
       <div @click="showPropToDelete = true"> Delete </div>
     </div>
   </div>
-  <div v-if="showPropToDelete" class="propmpt-wrapper border">class="propmpt-wrapper border">
+  <div v-if="showPropToDelete" class="propmpt-wrapper border">
     <div>Are you sure you want to delete message? </div>
     <button @click="deleteMessage"> Yes! </button>
     <button @click="showPropToDelete = false"> No, not really </button>
   </div>
 </template>
 
-<style scoped>
+<style scoped lang="scss">
+@import "@/styles/colours.scss";
+
 button {
   height: 20px;
   min-width: 20px;

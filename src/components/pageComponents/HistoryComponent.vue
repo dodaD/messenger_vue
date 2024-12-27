@@ -47,13 +47,8 @@ async function openChat(message) {
   </div>
 </template>
 
-<style>
-.border {
-  border: 1px solid black;
-  margin: 10px;
-  padding: 10px;
-  background-color: #ffe;
-}
+<style scoped lang="scss">
+@import "@/styles/colours.scss";
 
 .chat {
   display: flex;

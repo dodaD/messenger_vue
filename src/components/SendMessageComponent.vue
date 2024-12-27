@@ -15,9 +15,10 @@ const props = defineProps({
   isAllowedToEdit: Boolean,
   originalMessage: String,
 });
+const emit = defineEmits(['finishedEditing']);
 
 const isEditing = computed(() => { return props.editingMessageId !== null && props.isAllowedToEdit });
-watch(isEditing, () => {
+watch(props, () => {
   if (isEditing.value) {
     newMessage.value = props.originalMessage;
   }
@@ -54,23 +55,37 @@ function editMessage() {
   }
   messagesStore.updateMessage(props.editingMessageId, newMessage.value);
   newMessage.value = "";
+  emit('finishedEditing');
 }
 </script>
 
 <template>
-  <div class="wrapper-1">
-    <textarea v-model="newMessage" id="wrapper-1" class="send-message" @keyup.enter.exact="sendMessage"
-      oninput='this.style.height = "";this.style.height = this.scrollHeight + "px"' />
-    <button @click="sendMessage" class="send-button"> Send </button>
+  <div>
+    <div v-if="isEditing" class="original-editing-message">
+      {{ props.originalMessage }}
+    </div>
+
+    <div class="input-wrapper">
+      <textarea v-model="newMessage" id="wrapper-1" class="send-message" @keyup.enter.exact="sendMessage"
+        oninput='this.style.height = "";this.style.height = this.scrollHeight + "px"' />
+      <button @click="sendMessage" class="send-button"> Send </button>
+    </div>
   </div>
 </template>
 
-<style scoped>
-.wrapper-1 {
+<style scoped lang="scss">
+@import "@/styles/colours.scss";
+
+.input-wrapper {
   margin-top: 5px;
   height: fit-content;
   display: flex;
   width: 100%;
+}
+
+.original-editing-message {
+  width: 100%;
+  height: 30px;
 }
 
 .send-message {

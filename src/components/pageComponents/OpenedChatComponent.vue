@@ -59,6 +59,12 @@ function openEdit(allowedToEdit, id, message) {
   editingMessageId.value = id;
   originalMessage.value = message;
 }
+
+function clearEditProps() {
+  isAllowedToEdit.value = false;
+  editingMessageId.value = null;
+  originalMessage.value = '';
+}
 </script>
 
 <template>
@@ -82,11 +88,13 @@ function openEdit(allowedToEdit, id, message) {
       </div>
     </div>
     <SendMessageComponent :editingMessageId="editingMessageId" :originalMessage="originalMessage"
-      :isAllowedToEdit="isAllowedToEdit" />
+      :isAllowedToEdit="isAllowedToEdit" @finishedEditing="clearEditProps" />
   </div>
 </template>
 
-<style scoped>
+<style scoped lang="scss">
+@import "@/styles/colours.scss";
+
 .round-button-to-scroll-down {
   position: fixed;
   top: calc(0.9 * 90vh);

@@ -8,7 +8,8 @@ import ErrorComponent from './components/detailsComponents/ErrorComponent.vue';
   <RouterView />
 </template>
 
-<style>
+<style lang="scss">
+@import "@/styles/colours.scss";
 body {
   margin: 0;
   padding: 0;
@@ -17,5 +18,12 @@ body {
 
 html {
   height: 100%;
+}
+
+.border {
+  border: 1px solid black;
+  margin: 10px;
+  padding: 10px;
+  background-color: var(--background-colour);
 }
 </style>

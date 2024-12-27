@@ -71,7 +71,9 @@ function deleteError(error) {
   </div>
 </template>
 
-<style scoped>
+<style lang="scss">
+@import "@/styles/colours.scss";
+
 h1,
 button {
   margin-right: auto;
@@ -85,11 +87,11 @@ button {
 }
 
 .has_error {
-  border: red 1px solid;
+  border: var(--error-colour) 1px solid;
 }
 
 .error-class {
-  color: red;
+  color: var(--error-colour);
 }
 
 p {
@@ -116,7 +118,7 @@ form {
 
 input {
   width: 100%;
-  border: black 1px solid;
+  border: var(border-colour) 1px solid;
 }
 
 .link {

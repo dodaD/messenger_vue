@@ -34,7 +34,7 @@ const userHasLoggedIn = computed(() => {
 </template>
 
 
-<style scoped>
+<style scoped lang="scss">
 .the-wrapper {
   display: flex;
   height: 95vh;
@@ -44,10 +44,10 @@ const userHasLoggedIn = computed(() => {
 }
 
 .border {
-  border: 1px solid black;
+  border: 1px solid var(--border-colour);
   margin: 10px;
   padding: 10px;
-  background-color: #ffe;
+  background-color: var(--background-colour);
 }
 
 .menu {
