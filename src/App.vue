@@ -9,7 +9,8 @@ import ErrorComponent from './components/detailsComponents/ErrorComponent.vue';
 </template>
 
 <style lang="scss">
-@import "@/styles/colours.scss";
+@import 'styles/colours.scss';
+
 body {
   margin: 0;
   padding: 0;

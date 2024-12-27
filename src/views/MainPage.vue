@@ -35,6 +35,8 @@ const userHasLoggedIn = computed(() => {
 
 
 <style scoped lang="scss">
+@import '../styles/colours.scss';
+
 .the-wrapper {
   display: flex;
   height: 95vh;

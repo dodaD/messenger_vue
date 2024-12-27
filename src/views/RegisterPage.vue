@@ -71,7 +71,7 @@ function deleteError(error) {
   </div>
 </template>
 
-<style lang="scss">
+<style scoped lang="scss">
 @import "@/styles/colours.scss";
 
 h1,
