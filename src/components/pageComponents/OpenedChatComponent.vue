@@ -106,17 +106,18 @@ function clearEditProps() {
   /*calc(-100% + 10px)*/
   width: 40px;
   height: 40px;
-  background-color: #ddddce;
+  background-color: var(--semi-accent-colour);
   border-radius: 100%;
-  border: 1px black solid;
+  border: 1px var(--border-colour) solid;
   display: flex;
   justify-content: center;
   align-items: center;
+  z-index: 1;
 }
 
 .circle-with-number-of-new-messages {
-  border: 1px black solid;
-  background-color: #ddddce;
+  border: 1px var(--border-colour) solid;
+  background-color: var(--semi-accent-colour);
   position: absolute;
   top: 0;
   right: 0;

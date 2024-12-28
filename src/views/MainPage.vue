@@ -60,11 +60,6 @@ const userHasLoggedIn = computed(() => {
   width: 30%;
 }
 
-.search-component {
-  height: 30vh;
-  background-color: red;
-}
-
 .chat-history {
   overflow-y: scroll;
   display: flex;

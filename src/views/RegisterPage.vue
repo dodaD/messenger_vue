@@ -118,7 +118,7 @@ form {
 
 input {
   width: 100%;
-  border: var(border-colour) 1px solid;
+  border: var(--border-colour) 1px solid;
 }
 
 .link {

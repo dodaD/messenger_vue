@@ -35,16 +35,20 @@ async function deleteMessage() {
 </script>
 
 <template>
-  <div v-if="show" class="border message" @mouseover="showMenu = true" @mouseleave="showMenu = false">
-    <div> {{ props.message.reference_message }} </div>
-    {{ props.message.message }}
-    <div v-if="props.message.updated_at !== props.message.created_at">Updated: {{ updatedAt }}</div>
+  <div class="hover-check" @mouseleave="showMenu = false">
+    <div v-if="show" class="border message" @mouseover="showMenu = true">
+      <div> {{ props.message.reference_message }} </div>
+      {{ props.message.message }}
+      <div v-if="props.message.updated_at !== props.message.created_at">Updated: {{ updatedAt }}</div>
 
-    <div class="hidden-menu" @click="actionClicked = true" v-if="showMenu && !actionClicked">
-      <div @click="$emit('editing', allowedToClick, props.message.id, props.message.message)"> Edit </div>
-      <div @click="showPropToDelete = true"> Delete </div>
+      <div class="hidden-menu" @click="actionClicked = true" v-if="showMenu && !actionClicked">
+        <div @click="$emit('editing', allowedToClick, props.message.id, props.message.message)"> Edit </div>
+        <div @click="showPropToDelete = true"> Delete </div>
+      </div>
     </div>
   </div>
+
+
   <div v-if="showPropToDelete" class="propmpt-wrapper border">
     <div>Are you sure you want to delete message? </div>
     <button @click="deleteMessage"> Yes! </button>
@@ -67,14 +71,9 @@ button {
   padding: 10px;
 }
 
-.changing {
-  border: none;
-  background-color: transparent;
-  border-bottom: 1px solid purple;
-  margin: 0;
-  width: fit-content;
-  height: 20px;
-  resize: none;
+.hover-check {
+  width: 100%;
+  height: 100%;
 }
 
 .save-changes-button {
@@ -97,5 +96,29 @@ button {
 
 .propmpt-wrapper button {
   margin: 5px 10px;
+}
+
+.hidden-menu {
+  position: absolute;
+  height: 50px;
+  background-color: var(--background-colour);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  top: 50%;
+  left: 0;
+  transform: translate(calc(-100% - 10px), -50%);
+  width: 80px;
+  padding-left: 5px;
+  border: 1px solid  var(--border-colour);
+
+  div {
+    border-bottom: 1px solid var(--border-colour);
+  }
+
+  div:last-of-type {
+    border-bottom: none;
+  }
 }
 </style>

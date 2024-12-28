@@ -37,10 +37,12 @@ function clearSearch() {
   </div>
 </template>
 
-<style scoped>
+<style scoped lang="scss">
+@import "@/styles/colours.scss";
+
 .result {
   display: flex;
-  border: 1px solid black;
+  border: 1px solid var(--border-colour);
   margin-right: 2px;
   margin-bottom: 10px;
   padding: 5px;
@@ -78,7 +80,7 @@ h4 {
 .entity {
   width: fit-content;
   margin-bottom: 10px;
-  border-bottom: 1px solid black;
+  border-bottom: 1px solid var(--border-colour);
 }
 
 .search {
@@ -94,7 +96,7 @@ h4 {
   position: relative;
   height: 30px;
   margin: 10px;
-  border-bottom: 1px solid black;
+  border-bottom: 1px solid var(--border-colour);
 }
 
 .clearSearchButton {

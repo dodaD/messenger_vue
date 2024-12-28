@@ -14,7 +14,9 @@ const receiverStore = useCurrentReceiverStore();
   </div>
 </template>
 
-<style scoped>
+<style scoped lang="scss">
+@import "@/styles/colours.scss";
+
 .wrapper-1 {
   display: flex;
   height: fit-content;

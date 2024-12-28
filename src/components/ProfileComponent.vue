@@ -17,7 +17,9 @@ loggedInUser.getUserInfo();
   </div>
 </template>
 
-<style scoped>
+<style scoped lang="scss">
+@import "@/styles/colours.scss";
+
 .wrapper {
   display: flex;
   height: fit-content;
