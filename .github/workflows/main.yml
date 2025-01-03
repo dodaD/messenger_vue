@@ -34,7 +34,10 @@ jobs:
           mkdir -p ~/.ssh
           echo "${{ secrets.SSH_SECRET_KEY_2025 }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
+
+    - name: Try to connect in general
+      run: ssh -o StrictHostKeyChecking=no root@164.92.95.190    
         
-    - name: Connect to remote server and switch dist directory
-      run: scp -o StrictHostKeyChecking=no -r ./dist root@164.92.95.190:/root/messenger_vue/dist
+    # - name: Connect to remote server and switch dist directory
+    #   run: scp -o StrictHostKeyChecking=no -r ./dist root@164.92.95.190:/root/messenger_vue/dist
 
