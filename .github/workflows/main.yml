@@ -36,4 +36,4 @@ jobs:
           chmod 600 ~/.ssh/id_rsa
           
     - name: Connect to remote server and switch dist directory
-      run: rsync -o StrictHostKeyChecking=no -r ./dist root@164.92.95.190:/root/messenger_vue
+      run: rsync -r ./dist root@164.92.95.190:/root/messenger_vue
