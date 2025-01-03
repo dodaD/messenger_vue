@@ -3,7 +3,7 @@ name: messenger_vue Deploy
 on:
   push:
     tags:
-      - v.*
+      - v*
 
 jobs:
   build:
