@@ -11,6 +11,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      with:
+          persist-credentials: false
+    
     - name: Install Node (v21.1.0 - tested locally; not sure about > 21.1.0 supportion)
       uses: actions/setup-node@v4.1.0
       with:
