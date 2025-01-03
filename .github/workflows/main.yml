@@ -1,17 +1,34 @@
-# name: messenger_vue Deploy
+name: messenger_vue Deploy
 
-# on:
-#   push:
-#     branches: [ "master" ] 
+on:
+  push:
+    branches: [ "master" ] 
+    tags:
+      - v.*
 
-# jobs:
-#   build:
-#     runs-on: ubuntu-latest
+jobs:
+  build:
+    runs-on: ubuntu-latest
 
-#     steps:
-#     - name: Add private ssh key
-#       run: |
-#         install -m 600 -D /dev/null ~/.ssh/id_rsa
-#         echo "${{ secrets.SSH_SECRET_KEY }}" > ~/.ssh/id_rsa
-#     - name: Execute `npm install && npm run build` on remote host
-#       run: ssh -o StrictHostKeyChecking=no root@142.93.112.104 'export PATH="/root/.nvm/versions/node/v16.20.2/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin" && cd code/messenger_vue && git pull && npm install && npm run build'
+    steps:
+    - name: Install Node (v21.1.0 - tested locally; not sure about > 21.1.0 supportion)
+      uses: actions/setup-node@v4.1.0
+      with:
+          node-version: 21.1.0
+      
+    - name: Install 
+      run: npm install
+      
+    - name: Build 
+      run: npm run build
+      env:
+          NODE_ENV: production
+
+    - name: Add private ssh key
+      run: |
+        install -m 600 -D /dev/null ~/.ssh/id_rsa
+        echo "${{ secrets.SSH_SECRET_KEY_2025 }}" > ~/.ssh/id_rsa
+
+  - name: Connect to remote server and switch dist directory
+    run: scp -o StrictHostKeyChecking=no -r ./dist root@164.92.95.190:/root/messenger_vue/dist
+
