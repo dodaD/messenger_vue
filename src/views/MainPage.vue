@@ -36,6 +36,7 @@ const userHasLoggedIn = computed(() => {
 
 <style scoped lang="scss">
 @import '../styles/colours.scss';
+@import '../styles/MobileVersion.scss';
 
 .the-wrapper {
   display: flex;
