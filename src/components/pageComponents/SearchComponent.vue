@@ -24,7 +24,7 @@ function clearSearch() {
     <input class="search" placeholder="Search bar" v-model="nicknameToSearch"
       @input="searchStore.search(nicknameToSearch)">
 
-    <font-awesome-icon :icon="['fas', 'circle-xmark']" @click="clearSearch" class="clearSearchButton" />
+    <font-awesome-icon :icon="['fas', 'circle-xmark']" @click="clearSearch" class="clear-search-button" />
   </div>
 
   <div class="results-wrapper" v-if="searchStore.searchResults.length !== 0">
@@ -99,7 +99,7 @@ h4 {
   border-bottom: 1px solid var(--border-colour);
 }
 
-.clearSearchButton {
+.clear-search-button {
   position: absolute;
   right: 0;
   bottom: 50%;

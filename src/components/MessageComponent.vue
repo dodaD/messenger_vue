@@ -21,7 +21,6 @@ const show = ref(true);
 const allowedToClick = props.message.user_id === loggedInUser.userId;
 
 const showMenu = ref(false);
-const actionClicked = ref(false);
 const showPropToDelete = ref(false);
 
 async function deleteMessage() {
@@ -41,7 +40,7 @@ async function deleteMessage() {
       {{ props.message.message }}
       <div v-if="props.message.updated_at !== props.message.created_at">Updated: {{ updatedAt }}</div>
 
-      <div class="hidden-menu" @click="actionClicked = true" v-if="showMenu && !actionClicked">
+      <div class="hidden-menu" @click="showMenu = false" v-if="showMenu">
         <div @click="$emit('editing', allowedToClick, props.message.id, props.message.message)"> Edit </div>
         <div @click="showPropToDelete = true"> Delete </div>
       </div>
@@ -111,7 +110,7 @@ button {
   transform: translate(calc(-100% - 10px), -50%);
   width: 80px;
   padding-left: 5px;
-  border: 1px solid  var(--border-colour);
+  border: 1px solid var(--border-colour);
 
   div {
     border-bottom: 1px solid var(--border-colour);

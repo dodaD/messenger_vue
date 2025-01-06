@@ -57,17 +57,22 @@ function editMessage() {
   newMessage.value = "";
   emit('finishedEditing');
 }
+
+function closeEditing() {
+  newMessage.value = "";
+  emit('finishedEditing');
+}
 </script>
 
 <template>
   <div>
     <div v-if="isEditing" class="original-editing-message">
       {{ props.originalMessage }}
+      <font-awesome-icon :icon="['fas', 'xmark']" @click="closeEditing" class="close-editing-button" />
     </div>
 
     <div class="input-wrapper">
-      <textarea v-model="newMessage" id="wrapper-1" class="send-message" @keyup.enter.exact="sendMessage"
-        oninput='this.style.height = "";this.style.height = this.scrollHeight + "px"' />
+      <textarea v-model="newMessage" id="wrapper-1" class="send-message" @keyup.enter.exact="sendMessage" />
       <button @click="sendMessage" class="send-button"> Send </button>
     </div>
   </div>
@@ -86,9 +91,10 @@ function editMessage() {
 .original-editing-message {
   width: 100%;
   height: 30px;
-  background-color: var(--accent-colour);
+  background-color: var(--semi-accent-colour);
   white-space: pre-wrap;
   overflow: hidden;
+  position: relative;
 }
 
 .send-message {
@@ -103,5 +109,13 @@ function editMessage() {
   width: 10%;
   height: fit-content;
   margin: auto;
+}
+
+.close-editing-button {
+  height: 16px;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  right: 20px;
 }
 </style>
