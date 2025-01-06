@@ -1,9 +1,19 @@
 @media (prefers-color-scheme: dark) {
   :root {
-    --background-colour: green;
+    --background-colour: #ffe;
     --border-colour: black;
     --error-colour: red; 
-    --accent-colour: red; 
-    --semi-accent-colour: green;
+    --accent-colour: #ccccc5; 
+    --semi-accent-colour: #ddddce;
+  }
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    --background-colour: #ffe;
+    --border-colour: black;
+    --error-colour: red; 
+    --accent-colour: #ccccc5; 
+    --semi-accent-colour: #ddddce;
   }
 }
