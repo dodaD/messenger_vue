@@ -38,61 +38,69 @@ const userHasLoggedIn = computed(() => {
 @import '../styles/colours.scss';
 @import '../styles/MobileVersion.scss';
 
-.the-wrapper {
-  display: flex;
-  height: 95vh;
-  max-width: 80%;
-  margin-right: auto !important;
-  margin-left: auto !important;
+@media (min-width:600px) {
+  .the-wrapper {
+    display: flex;
+    height: 95vh;
+    max-width: 80%;
+    margin-right: auto !important;
+    margin-left: auto !important;
+  }
+
+  .border {
+    border: 1px solid var(--border-colour);
+    margin: 10px;
+    padding: 10px;
+    background-color: var(--background-colour);
+  }
+
+  .menu {
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    /*TODO decide whether I want fixated width for menu or for chat*/
+    width: 30%;
+  }
+
+  .chat-history {
+    overflow-y: scroll;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow-x: hidden;
+  }
+
+  .chat-history::-webkit-scrollbar {
+    width: 1px;
+    background-color: rgba(10, 10, 10, 0.05);
+  }
+
+  .chat-history::-webkit-scrollbar-track {
+    width: 1px;
+    background-color: rgba(10, 10, 10, 0.1);
+  }
+
+  .chat-history::-webkit-scrollbar-thumb {
+    width: 1px;
+    background-color: rgba(10, 10, 10, 0.5);
+  }
+
+
+  .chat {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .logout-button {
+    right: 10px;
+    position: absolute;
+  }
 }
 
-.border {
-  border: 1px solid var(--border-colour);
-  margin: 10px;
-  padding: 10px;
-  background-color: var(--background-colour);
-}
-
-.menu {
-  display: flex;
-  flex-direction: column;
-  flex-shrink: 0;
-  /*TODO decide whether I want fixated width for menu or for chat*/
-  width: 30%;
-}
-
-.chat-history {
-  overflow-y: scroll;
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  overflow-x: hidden;
-}
-
-.chat-history::-webkit-scrollbar {
-  width: 1px;
-  background-color: rgba(10, 10, 10, 0.05);
-}
-
-.chat-history::-webkit-scrollbar-track {
-  width: 1px;
-  background-color: rgba(10, 10, 10, 0.1);
-}
-
-.chat-history::-webkit-scrollbar-thumb {
-  width: 1px;
-  background-color: rgba(10, 10, 10, 0.5);
-}
-
-
-.chat {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-}
-
-.logout-button {
-  right: 10px;
-  position: absolute;
+@media (max-width:600px) {
+  .menu {
+    width: 100vh;
+  }
 }
 </style>
