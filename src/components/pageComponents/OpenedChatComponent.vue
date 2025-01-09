@@ -71,22 +71,26 @@ function clearEditProps() {
   <div class="wrapper">
     <ReceiverInfoComponent> </ReceiverInfoComponent>
     <div class="opened-chat" id="opened-chat" @scroll="getMoreMessages">
+
       <div class="round-button-to-scroll-down" v-if="showScrollDownButton" @click="scrollDown">
         <div v-if="messagesStore.howManyNewMessages !== 0" class="circle-with-number-of-new-messages"> {{
           messagesStore.howManyNewMessages }} </div>
         <font-awesome-icon :icon="['fas', 'angle-down']" />
       </div>
+
       <p v-if="messagesStore.openedChatId === 0" class="no-messages"> TODO: text from file using library, that in future
         I
         could translate
         easily
       </p>
+
       <div v-if="messagesStore.allMessages[messagesStore.openedChatId] !== undefined"
         v-for="message in messagesStore.allMessages[messagesStore.openedChatId]" :key="message.id"
         :class="message.user_id === loggedInUser.userId ? 'sent-message' : 'received-message'">
         <MessageComponent :message="message" @editing="openEdit" />
       </div>
     </div>
+
     <SendMessageComponent :editingMessageId="editingMessageId" :originalMessage="originalMessage"
       :isAllowedToEdit="isAllowedToEdit" @finishedEditing="clearEditProps" />
   </div>
@@ -106,7 +110,7 @@ function clearEditProps() {
   /*calc(-100% + 10px)*/
   width: 40px;
   height: 40px;
-  background-color: var(--semi-accent-colour);
+  background-color: var(--accent-colour);
   border-radius: 100%;
   border: 1px var(--border-colour) solid;
   display: flex;
@@ -142,6 +146,12 @@ function clearEditProps() {
   flex-direction: column-reverse;
   flex: 1 1 auto;
   position: relative;
+  margin-bottom: 20px;
+
+  .sent-message,
+  .received-message {
+    margin-top: 10px;
+  }
 }
 
 .opened-chat::-webkit-scrollbar {

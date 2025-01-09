@@ -35,7 +35,8 @@ async function deleteMessage() {
 
 <template>
   <div class="hover-check" @mouseleave="showMenu = false">
-    <div v-if="show" class="border message" @mouseover="showMenu = true">
+    <div v-if="show" class="message" @mouseover="showMenu = true"
+      :class="allowedToClick ? 'sent-message' : 'received-message'">
       <div> {{ props.message.reference_message }} </div>
       {{ props.message.message }}
       <div v-if="props.message.updated_at !== props.message.created_at">Updated: {{ updatedAt }}</div>
@@ -64,12 +65,6 @@ button {
   width: fit-content;
 }
 
-.border {
-  border: 1px solid black;
-  margin: 10px;
-  padding: 10px;
-}
-
 .hover-check {
   width: 100%;
   height: 100%;
@@ -84,6 +79,16 @@ button {
   width: fit-content;
   white-space: pre-wrap;
   position: relative;
+  padding: 10px;
+  margin-left: 10px;
+}
+
+.sent-message {
+  background-color: var(--accent-colour);
+}
+
+.received-message {
+  background-color: var(--border-colour);
 }
 
 .propmpt-wrapper {
@@ -91,6 +96,7 @@ button {
   top: 10px;
   left: 50%;
   transform: translate(-50%, 0);
+  background-color: var(--background-colour);
 }
 
 .propmpt-wrapper button {
@@ -107,7 +113,7 @@ button {
   align-items: flex-start;
   top: 50%;
   left: 0;
-  transform: translate(calc(-100% - 10px), -50%);
+  transform: translate(calc(-100% - 9px), -50%);
   width: 80px;
   padding-left: 5px;
   border: 1px solid var(--border-colour);

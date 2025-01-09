@@ -82,19 +82,24 @@ function closeEditing() {
 @import "@/styles/colours.scss";
 
 .input-wrapper {
-  margin-top: 5px;
   height: fit-content;
   display: flex;
   width: 100%;
 }
 
 .original-editing-message {
-  width: 100%;
+  display: flex;
+  width: calc(85% + 3px);
   height: 30px;
   background-color: var(--semi-accent-colour);
   white-space: pre-wrap;
   overflow: hidden;
   position: relative;
+  border-top: 2px solid var(--border-colour);
+  border-left: 3px solid var(--accent-colour);
+  background: linear-gradient(to right, red, purple);
+  align-items: center;
+  padding-left: 5px;
 }
 
 .send-message {
@@ -103,6 +108,10 @@ function closeEditing() {
   height: 100%;
   resize: none;
   width: 85%;
+  padding: 0;
+  border: 3px solid var(--accent-colour);
+  align-items: center;
+  padding-left: 5px;
 }
 
 .send-button {

@@ -15,6 +15,8 @@ body {
   margin: 0;
   padding: 0;
   position: relative;
+  background: var(--background-colour);
+  color: var(--font-colour);
 }
 
 html {
@@ -22,9 +24,8 @@ html {
 }
 
 .border {
-  border: 1px solid black;
+  border: 1px solid var(--border-colour);
   margin: 10px;
   padding: 10px;
-  background-color: var(--background-colour);
 }
 </style>

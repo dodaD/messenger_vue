@@ -47,13 +47,6 @@ const userHasLoggedIn = computed(() => {
     margin-left: auto !important;
   }
 
-  .border {
-    border: 1px solid var(--border-colour);
-    margin: 10px;
-    padding: 10px;
-    background-color: var(--background-colour);
-  }
-
   .menu {
     display: flex;
     flex-direction: column;
