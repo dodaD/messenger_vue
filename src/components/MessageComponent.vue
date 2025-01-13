@@ -80,11 +80,11 @@ button {
   white-space: pre-wrap;
   position: relative;
   padding: 10px;
-  margin-left: 10px;
 }
 
 .sent-message {
   background-color: var(--accent-colour);
+  margin-left: 10px;
 }
 
 .received-message {

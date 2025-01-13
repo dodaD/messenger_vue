@@ -53,7 +53,7 @@ function deleteError(error) {
     <form>
       <div v-for="field in fieldsToFill" :key="field.fieldName">
         <h4>{{ field.fieldName }} </h4>
-        <input v-model="field.value" maxlength="255" :type="field.type"
+        <input v-model="field.value" maxlength="255" :type="field.type" class="input-style"
           :class="{ has_error: validationErrors[field.errorProperty] }" @input="deleteError(field.errorProperty)"
           @keyup.enter="register" />
         <div class="errors-wrapper">
@@ -116,14 +116,13 @@ form {
   margin: 0 auto;
 }
 
-input {
-  width: 100%;
-  border: var(--border-colour) 1px solid;
-}
-
 .link {
   margin-top: 10px;
   margin-bottom: 10px;
   margin-right: auto;
+}
+
+h4 {
+  margin-bottom: 0;
 }
 </style>

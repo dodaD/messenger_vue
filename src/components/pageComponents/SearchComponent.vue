@@ -21,7 +21,7 @@ function clearSearch() {
 
 <template>
   <div class="search-input-wrapper">
-    <input class="search" placeholder="Search bar" v-model="nicknameToSearch"
+    <input class="input-style" placeholder="Search bar" v-model="nicknameToSearch"
       @input="searchStore.search(nicknameToSearch)">
 
     <font-awesome-icon :icon="['fas', 'circle-xmark']" @click="clearSearch" class="clear-search-button" />
@@ -83,20 +83,11 @@ h4 {
   border-bottom: 1px solid var(--border-colour);
 }
 
-.search {
-  background-color: transparent;
-  border: none;
-  padding: 0;
-  width: 100%;
-  height: 20px;
-}
-
 .search-input-wrapper {
   overflow-x: hidden;
   position: relative;
-  height: 30px;
+  height: 35px;
   margin: 10px;
-  border-bottom: 1px solid var(--border-colour);
 }
 
 .clear-search-button {

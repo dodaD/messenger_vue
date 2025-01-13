@@ -22,8 +22,9 @@ if (cookies.get("authToken") !== null) {
 <template>
   <div class="the-wrapper ">
     <h1> LOGIN </h1>
-    <input v-model="email" placeholder="Email" @keyup.enter="userStore.login(email, password)">
-    <input v-model="password" type="password" placeholder="Password" @keyup.enter="userStore.login(email, password)">
+    <input v-model="email" placeholder="Email" @keyup.enter="userStore.login(email, password)" class="input-style">
+    <input v-model="password" type="password" placeholder="Password" @keyup.enter="userStore.login(email, password)"
+      class="input-style">
     <RouterLink to="/register">Don't have an account?</RouterLink>
     <button @click="userStore.login(email, password)">Login</button>
   </div>
@@ -31,7 +32,7 @@ if (cookies.get("authToken") !== null) {
 
 <style scoped>
 div {
-  border: 1px solid black;
+  border: 1px solid var(--border-colour);
   margin: 10px;
   padding: 10px;
   background-color: var(--background-colour);

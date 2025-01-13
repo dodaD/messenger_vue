@@ -147,6 +147,8 @@ function clearEditProps() {
   flex: 1 1 auto;
   position: relative;
   margin-bottom: 20px;
+  margin-right: 10px;
+  margin-left: 10px;
 
   .sent-message,
   .received-message {

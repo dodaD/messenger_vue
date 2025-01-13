@@ -65,7 +65,7 @@ function closeEditing() {
 </script>
 
 <template>
-  <div>
+  <div class="sending-message-component-wrapper">
     <div v-if="isEditing" class="original-editing-message">
       {{ props.originalMessage }}
       <font-awesome-icon :icon="['fas', 'xmark']" @click="closeEditing" class="close-editing-button" />
@@ -81,6 +81,10 @@ function closeEditing() {
 <style scoped lang="scss">
 @import "@/styles/colours.scss";
 
+.sending-message-component-wrapper {
+  margin: 0 10px;
+}
+
 .input-wrapper {
   height: fit-content;
   display: flex;
@@ -89,17 +93,18 @@ function closeEditing() {
 
 .original-editing-message {
   display: flex;
-  width: calc(85% + 3px);
+  width: 85%;
   height: 30px;
   background-color: var(--semi-accent-colour);
   white-space: pre-wrap;
   overflow: hidden;
   position: relative;
-  border-top: 2px solid var(--border-colour);
-  border-left: 3px solid var(--accent-colour);
-  background: linear-gradient(to right, red, purple);
+  border: 3px solid var(--accent-colour);
+  border-image-slice: 1;
+  border-image-source: linear-gradient(to left, var(--border-colour), var(--accent-colour));
   align-items: center;
   padding-left: 5px;
+  border-bottom: 0;
 }
 
 .send-message {
@@ -110,14 +115,21 @@ function closeEditing() {
   width: 85%;
   padding: 0;
   border: 3px solid var(--accent-colour);
-  align-items: center;
   padding-left: 5px;
+  background: var(--background-colour);
+  border-image-slice: 1;
+  border-image-source: linear-gradient(to left, var(--border-colour), var(--accent-colour));
+  color: var(--font-colour);
 }
 
 .send-button {
-  width: 10%;
-  height: fit-content;
+  width: 67px;
   margin: auto;
+  border-radius: 15px;
+  height: 30px;
+  background-color: var(--accent-colour);
+  border: none;
+  color: var(--font-colour);
 }
 
 .close-editing-button {
@@ -125,6 +137,6 @@ function closeEditing() {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  right: 20px;
+  right: 8px;
 }
 </style>

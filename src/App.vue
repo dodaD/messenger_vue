@@ -28,4 +28,14 @@ html {
   margin: 10px;
   padding: 10px;
 }
+
+.input-style {
+  background-color: transparent;
+  border: none;
+  padding: 0;
+  width: 100%;
+  height: 25px;
+  border-bottom: 1px solid var(--border-colour);
+  color: var(--font-colour);
+}
 </style>
