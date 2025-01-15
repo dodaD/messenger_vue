@@ -73,7 +73,7 @@ function closeEditing() {
 
     <div class="input-wrapper">
       <textarea v-model="newMessage" id="wrapper-1" class="send-message" @keyup.enter.exact="sendMessage" />
-      <button @click="sendMessage" class="send-button"> Send </button>
+      <button @click="sendMessage" class="send-button button"> Send </button>
     </div>
   </div>
 </template>
@@ -125,11 +125,6 @@ function closeEditing() {
 .send-button {
   width: 67px;
   margin: auto;
-  border-radius: 15px;
-  height: 30px;
-  background-color: var(--accent-colour);
-  border: none;
-  color: var(--font-colour);
 }
 
 .close-editing-button {

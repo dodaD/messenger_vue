@@ -17,7 +17,7 @@ const userHasLoggedIn = computed(() => {
 </script>
 
 <template>
-  <button v-if="userHasLoggedIn" class="logout-button" @click="userStore.logOut">Log Out </button>
+  <button v-if="userHasLoggedIn" class="logout-button button" @click="userStore.logOut">Log Out </button>
   <div class="the-wrapper border">
     <div class="menu">
       <SearchComponent />
@@ -88,12 +88,20 @@ const userHasLoggedIn = computed(() => {
   .logout-button {
     right: 10px;
     position: absolute;
+    width: 70px;
   }
 }
 
 @media (max-width:600px) {
   .menu {
-    width: 100vh;
+    width: 100%;
+    display: none;
+  }
+
+  .logout-button {
+    right: 10px;
+    position: absolute;
+    width: 70px;
   }
 }
 </style>

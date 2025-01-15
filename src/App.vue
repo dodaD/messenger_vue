@@ -38,4 +38,13 @@ html {
   border-bottom: 1px solid var(--border-colour);
   color: var(--font-colour);
 }
+
+button {
+  border-radius: 15px;
+  height: 30px;
+  background-color: var(--accent-colour);
+  border: none;
+  color: var(--font-colour);
+  padding: 0px 10px
+}
 </style>

@@ -43,7 +43,6 @@ function clearSearch() {
 .result {
   display: flex;
   border: 1px solid var(--border-colour);
-  margin-right: 2px;
   margin-bottom: 10px;
   padding: 5px;
 }
@@ -77,24 +76,14 @@ h4 {
   background-color: rgba(10, 10, 10, 0.5);
 }
 
-.entity {
-  width: fit-content;
-  margin-bottom: 10px;
-  border-bottom: 1px solid var(--border-colour);
-}
-
 .search-input-wrapper {
   overflow-x: hidden;
-  position: relative;
-  height: 35px;
+  display: flex;
+  min-height: 35px;
   margin: 10px;
 }
 
 .clear-search-button {
-  position: absolute;
-  right: 0;
-  bottom: 50%;
-  transform: translateX(100%);
   transform: translateY(50%);
   height: 15px;
 }

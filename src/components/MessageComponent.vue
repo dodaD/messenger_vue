@@ -50,9 +50,11 @@ async function deleteMessage() {
 
 
   <div v-if="showPropToDelete" class="propmpt-wrapper border">
-    <div>Are you sure you want to delete message? </div>
-    <button @click="deleteMessage"> Yes! </button>
-    <button @click="showPropToDelete = false"> No, not really </button>
+    <div class="promt-text">Are you sure you want to delete message? </div>
+    <div>
+      <button @click="deleteMessage" class="yes-button"> Yes! </button>
+      <button @click="showPropToDelete = false"> No, not really </button>
+    </div>
   </div>
 </template>
 
@@ -97,10 +99,18 @@ button {
   left: 50%;
   transform: translate(-50%, 0);
   background-color: var(--background-colour);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
-.propmpt-wrapper button {
-  margin: 5px 10px;
+.promt-text {
+  margin-bottom: 10px;
+}
+
+.yes-button {
+  margin-right: 10px;
 }
 
 .hidden-menu {

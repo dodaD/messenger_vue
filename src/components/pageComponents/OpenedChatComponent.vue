@@ -99,89 +99,98 @@ function clearEditProps() {
 <style scoped lang="scss">
 @import "@/styles/colours.scss";
 
-.round-button-to-scroll-down {
-  position: fixed;
-  top: calc(0.9 * 90vh);
-  right: 10%;
-  transform: translateX(-85%);
-  /* This is just looks good
+@media (min-width:600px) {
+  .round-button-to-scroll-down {
+    position: fixed;
+    top: calc(0.9 * 90vh);
+    right: 10%;
+    transform: translateX(-85%);
+    /* This is just looks good
   * but logic should be like something beneath it
  */
-  /*calc(-100% + 10px)*/
-  width: 40px;
-  height: 40px;
-  background-color: var(--accent-colour);
-  border-radius: 100%;
-  border: 1px var(--border-colour) solid;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1;
-}
+    /*calc(-100% + 10px)*/
+    width: 40px;
+    height: 40px;
+    background-color: var(--accent-colour);
+    border-radius: 100%;
+    border: 1px var(--border-colour) solid;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1;
+  }
 
-.circle-with-number-of-new-messages {
-  border: 1px var(--border-colour) solid;
-  background-color: var(--semi-accent-colour);
-  position: absolute;
-  top: 0;
-  right: 0;
-  transform: translateY(-25%) translateX(25%);
-  width: 20px;
-  height: 20px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: 100%;
-}
+  .circle-with-number-of-new-messages {
+    border: 1px var(--border-colour) solid;
+    background-color: var(--semi-accent-colour);
+    position: absolute;
+    top: 0;
+    right: 0;
+    transform: translateY(-25%) translateX(25%);
+    width: 20px;
+    height: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 100%;
+  }
 
-.wrapper {
-  display: flex;
-  height: 100%;
-  flex-direction: column;
-}
+  .wrapper {
+    display: flex;
+    height: 100%;
+    flex-direction: column;
+  }
 
-.opened-chat {
-  display: flex;
-  overflow-y: scroll;
-  flex-direction: column-reverse;
-  flex: 1 1 auto;
-  position: relative;
-  margin-bottom: 20px;
-  margin-right: 10px;
-  margin-left: 10px;
+  .opened-chat {
+    display: flex;
+    overflow-y: scroll;
+    flex-direction: column-reverse;
+    flex: 1 1 auto;
+    position: relative;
+    padding-bottom: 20px;
+    margin-right: 10px;
+    margin-left: 10px;
 
-  .sent-message,
+    .sent-message,
+    .received-message {
+      margin-top: 10px;
+    }
+  }
+
+  .opened-chat::-webkit-scrollbar {
+    width: 1px;
+    background-color: rgba(10, 10, 10, 0.05);
+  }
+
+  .opened-chat::-webkit-scrollbar-track {
+    width: 1px;
+    background-color: rgba(10, 10, 10, 0.1);
+  }
+
+  .opened-chat::-webkit-scrollbar-thumb {
+    width: 1px;
+    background-color: rgba(10, 10, 10, 0.5);
+  }
+
+  .sent-message {
+    margin-left: auto;
+  }
+
   .received-message {
-    margin-top: 10px;
+    margin-right: auto;
+  }
+
+  .no-messages {
+    position: absolute;
+    top: 0;
+    padding-left: 10px;
   }
 }
 
-.opened-chat::-webkit-scrollbar {
-  width: 1px;
-  background-color: rgba(10, 10, 10, 0.05);
-}
+@media (max-width:600px) {
+  .opened-chat {
+    height: 100%;
+  }
 
-.opened-chat::-webkit-scrollbar-track {
-  width: 1px;
-  background-color: rgba(10, 10, 10, 0.1);
-}
-
-.opened-chat::-webkit-scrollbar-thumb {
-  width: 1px;
-  background-color: rgba(10, 10, 10, 0.5);
-}
-
-.sent-message {
-  margin-left: auto;
-}
-
-.received-message {
-  margin-right: auto;
-}
-
-.no-messages {
-  position: absolute;
-  top: 0;
-  padding-left: 10px;
 }
 </style>
