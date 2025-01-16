@@ -188,9 +188,29 @@ function clearEditProps() {
 }
 
 @media (max-width:600px) {
-  .opened-chat {
+  .wrapper {
     height: 100%;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
   }
 
+  .opened-chat {
+    flex-grow: 1;
+    overflow: auto;
+
+    .sent-message,
+    .received-message {
+      margin-top: 10px;
+    }
+  }
+
+  .sent-message {
+    margin-left: auto;
+  }
+
+  .received-message {
+    margin-right: auto;
+  }
 }
 </style>

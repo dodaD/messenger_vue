@@ -103,5 +103,9 @@ const userHasLoggedIn = computed(() => {
     position: absolute;
     width: 70px;
   }
+
+  .chat {
+    height: calc(100% - 21px);
+  }
 }
 </style>

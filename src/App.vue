@@ -47,4 +47,26 @@ button {
   color: var(--font-colour);
   padding: 0px 10px
 }
+
+@media (max-width:600px) {
+  body {
+    height: 100%;
+    overflow-x: hidden;
+  }
+
+  .border {
+    margin-top: 0;
+  }
+
+  #app {
+    height: calc(100% - 20px);
+    padding-top: 20px;
+    box-sizing: border-box;
+  }
+
+  .the-wrapper {
+    height: 100%;
+    box-sizing: border-box;
+  }
+}
 </style>
