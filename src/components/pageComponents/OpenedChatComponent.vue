@@ -198,6 +198,7 @@ function clearEditProps() {
   .opened-chat {
     flex-grow: 1;
     overflow: auto;
+    position: relative;
 
     .sent-message,
     .received-message {

@@ -31,4 +31,10 @@ h3 {
   margin: 0;
   margin-bottom: 5px;
 }
+
+@media (max-width:600px) {
+  .wrapper-1 {
+    margin: 0;
+  }
+}
 </style>

@@ -136,4 +136,14 @@ button {
     border-bottom: none;
   }
 }
+
+@media (max-width:600px) {
+  .sent-message {
+    margin-left: auto;
+  }
+
+  .received-message {
+    margin-right: auto;
+  }
+}
 </style>

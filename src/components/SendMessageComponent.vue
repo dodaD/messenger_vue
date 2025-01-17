@@ -73,7 +73,13 @@ function closeEditing() {
 
     <div class="input-wrapper">
       <textarea v-model="newMessage" id="wrapper-1" class="send-message" @keyup.enter.exact="sendMessage" />
-      <button @click="sendMessage" class="send-button button"> Send </button>
+
+      <div class="top-button-line-wrapper-on-mobile">
+        <button @click="sendMessage" class="send-button button"> Send </button>
+        <button @click="sendMessage" class="mobile-send-button button">
+          <font-awesome-icon :icon="['fas', 'paper-plane']" class="paper-plane" />
+        </button>
+      </div>
     </div>
   </div>
 </template>
@@ -133,5 +139,56 @@ function closeEditing() {
   top: 50%;
   transform: translateY(-50%);
   right: 8px;
+}
+
+.mobile-send-button {
+  display: none;
+}
+
+@media (max-width:600px) {
+  .send-message {
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .input-wrapper {
+    flex-direction: column-reverse;
+  }
+
+  .top-button-line-wrapper-on-mobile {
+    margin-left: auto;
+    width: 50%;
+    background-color: var(--semi-accent-colour);
+    height: 35px;
+    display: flex;
+    align-items: center;
+    border: 3px solid var(--accent-colour);
+    border-image-slice: 1;
+    border-image-source: linear-gradient(to left, var(--border-colour), var(--accent-colour));
+    color: var(--font-colour);
+    border-bottom: 0;
+    border-left: 0;
+  }
+
+  .sending-message-component-wrapper {
+    margin: 0;
+  }
+
+  .send-button {
+    display: none;
+  }
+
+  .mobile-send-button {
+    width: 40px;
+    height: 25px;
+    font-size: 16px;
+    display: block;
+    margin-right: 5px;
+    margin-left: auto;
+  }
+
+  .paper-plane {
+    transform: translateX(-2px);
+  }
 }
 </style>
