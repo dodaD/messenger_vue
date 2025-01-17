@@ -199,6 +199,8 @@ function clearEditProps() {
     flex-grow: 1;
     overflow: auto;
     position: relative;
+    display: flex;
+    flex-direction: column-reverse;
 
     .sent-message,
     .received-message {

@@ -66,26 +66,28 @@ function closeEditing() {
 
 <template>
   <div class="sending-message-component-wrapper">
-    <div v-if="isEditing" class="original-editing-message">
+    <div class="original-editing-message" v-if="isEditing">
       {{ props.originalMessage }}
       <font-awesome-icon :icon="['fas', 'xmark']" @click="closeEditing" class="close-editing-button" />
     </div>
 
     <div class="input-wrapper">
       <textarea v-model="newMessage" id="wrapper-1" class="send-message" @keyup.enter.exact="sendMessage" />
+      <button @click="sendMessage" class="send-button button"> Send </button>
 
-      <div class="top-button-line-wrapper-on-mobile">
-        <button @click="sendMessage" class="send-button button"> Send </button>
-        <button @click="sendMessage" class="mobile-send-button button">
-          <font-awesome-icon :icon="['fas', 'paper-plane']" class="paper-plane" />
-        </button>
-      </div>
+      <button @click="sendMessage" class="mobile-send-button button">
+        <font-awesome-icon :icon="['fas', 'paper-plane']" class="paper-plane" />
+      </button>
     </div>
   </div>
 </template>
 
 <style scoped lang="scss">
 @import "@/styles/colours.scss";
+
+.hide-original-message-line {
+  display: none !important;
+}
 
 .sending-message-component-wrapper {
   margin: 0 10px;
@@ -149,10 +151,11 @@ function closeEditing() {
   .send-message {
     width: 100%;
     box-sizing: border-box;
+    margin-right: 10px;
   }
 
   .input-wrapper {
-    flex-direction: column-reverse;
+    align-items: center;
   }
 
   .top-button-line-wrapper-on-mobile {
@@ -189,6 +192,28 @@ function closeEditing() {
 
   .paper-plane {
     transform: translateX(-2px);
+  }
+
+  .hide-original-message-line {
+    display: flex !important;
+    width: 50%;
+    padding: 0;
+    margin-left: auto;
+  }
+
+  .original-editing-message {
+    width: 100%;
+    padding: 0;
+    border-right: 0;
+    background-image: linear-gradient(to right, var(--semi-accent-colour), var(--background-colour));
+  }
+
+  .close-editing-button {
+    height: 16px;
+    margin-left: auto;
+    position: unset;
+    transform: translateY(0);
+    margin-right: 12px;
   }
 }
 </style>
