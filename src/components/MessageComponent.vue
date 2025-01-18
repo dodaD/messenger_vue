@@ -34,7 +34,10 @@ async function deleteMessage() {
 </script>
 
 <template>
-  <div class="hover-check" @mouseleave="showMenu = false">
+  <div class="mob-background-blur" v-if="showMenu" />
+  <!-- For background blur for mob version when opening interaction options -->
+
+  <div class="hover-check" @mouseleave="showMenu = false" :class="{ 'visible-selected-message': showMenu }">
     <div v-if="show" class="message" @mouseover="showMenu = true"
       :class="allowedToClick ? 'sent-message' : 'received-message'">
       <div> {{ props.message.reference_message }} </div>
@@ -60,6 +63,10 @@ async function deleteMessage() {
 
 <style scoped lang="scss">
 @import "@/styles/colours.scss";
+
+.mob-background-blur {
+  display: none;
+}
 
 button {
   height: 20px;
@@ -144,6 +151,46 @@ button {
 
   .received-message {
     margin-right: auto;
+  }
+
+  .message {
+    max-width: 90%;
+  }
+
+  .hidden-menu {
+    width: 65px;
+    bottom: 0;
+    left: 0;
+    top: unset;
+    transform: translate(0, calc(100% + 5px));
+    border: 2px solid var(--accent-colour);
+    padding: 0;
+
+    div {
+      width: 100%;
+      border-bottom: 1px solid var(--accent-colour);
+    }
+
+    div:last-of-type {
+      border-bottom: none;
+    }
+  }
+
+  .mob-background-blur {
+    display: block;
+    position: fixed;
+    background-color: var(--background-colour);
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 3;
+    opacity: 0.7;
+  }
+
+  .visible-selected-message {
+    z-index: 4;
+    position: relative;
   }
 }
 </style>

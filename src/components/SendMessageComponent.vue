@@ -186,7 +186,6 @@ function closeEditing() {
     height: 25px;
     font-size: 16px;
     display: block;
-    margin-right: 5px;
     margin-left: auto;
   }
 

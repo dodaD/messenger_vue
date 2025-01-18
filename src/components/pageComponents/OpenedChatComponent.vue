@@ -201,6 +201,7 @@ function clearEditProps() {
     position: relative;
     display: flex;
     flex-direction: column-reverse;
+    margin: 15px 0;
 
     .sent-message,
     .received-message {

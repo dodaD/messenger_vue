@@ -60,13 +60,16 @@ button {
 
   #app {
     height: calc(100% - 20px);
-    padding-top: 20px;
+    padding-top: 10px;
     box-sizing: border-box;
   }
 
   .the-wrapper {
     height: 100%;
     box-sizing: border-box;
+    margin: 0;
+    border: 0;
+    padding: 0;
   }
 }
 </style>

@@ -106,6 +106,7 @@ const userHasLoggedIn = computed(() => {
 
   .chat {
     height: calc(100% - 21px);
+    border: 5px solid var(--border-colour);
   }
 }
 </style>

@@ -35,6 +35,7 @@ h3 {
 @media (max-width:600px) {
   .wrapper-1 {
     margin: 0;
+    border: 2px solid var(--border-colour);
   }
 }
 </style>
