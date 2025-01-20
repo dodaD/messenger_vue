@@ -6,11 +6,20 @@ const receiverStore = useCurrentReceiverStore();
 
 <template>
   <div class="wrapper-1 border">
-    <ProfilePicture />
-    <div class="info-wrapper">
-      <h3 class="name"> {{ receiverStore.receiverName }} </h3>
-      <div class="nickname"> {{ receiverStore.receiverNickname }} </div>
+    <div class="history-button-for-mobile">
     </div>
+
+    <div class="receiver-full-info-wrapper">
+      <ProfilePicture />
+      <div class="info-wrapper">
+        <h3 class="name"> {{ receiverStore.receiverName }} </h3>
+        <div class="nickname"> {{ receiverStore.receiverNickname }} </div>
+      </div>
+    </div>
+
+    <div class="logout-button-for-mobile">
+    </div>
+
   </div>
 </template>
 
