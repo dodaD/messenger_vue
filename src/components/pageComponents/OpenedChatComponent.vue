@@ -85,8 +85,11 @@ function clearEditProps() {
       </p>
 
       <div v-if="messagesStore.allMessages[messagesStore.openedChatId] !== undefined"
-        v-for="message in messagesStore.allMessages[messagesStore.openedChatId]" :key="message.id"
-        :class="message.user_id === loggedInUser.userId ? 'sent-message' : 'received-message'">
+        v-for="(message, index) in messagesStore.allMessages[messagesStore.openedChatId]" :key="message.id" :class="{
+          'sent-message': message.user_id === loggedInUser.userId,
+          'received-message': message.user_id !== loggedInUser.userId,
+          'first-message': index === 0
+        }">
         <MessageComponent :message="message" @editing="openEdit" />
       </div>
     </div>

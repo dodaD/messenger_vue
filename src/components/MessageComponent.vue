@@ -38,7 +38,7 @@ async function deleteMessage() {
   <!-- For background blur for mob version when opening interaction options -->
 
   <div class="hover-check" @mouseleave="showMenu = false" :class="{ 'visible-selected-message': showMenu }">
-    <div v-if="show" class="message" @mouseover="showMenu = true"
+    <div v-if="show" class="message" @mouseover="showMenu = allowedToClick"
       :class="allowedToClick ? 'sent-message' : 'received-message'">
       <div> {{ props.message.reference_message }} </div>
       {{ props.message.message }}
@@ -155,6 +155,11 @@ button {
 
   .message {
     max-width: 90%;
+    min-width: 50px;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
   }
 
   .hidden-menu {
@@ -162,7 +167,7 @@ button {
     bottom: 0;
     left: 0;
     top: unset;
-    transform: translate(0, calc(100% + 5px));
+    transform: translate(0px, calc(100% + 5px));
     border: 2px solid var(--accent-colour);
     padding: 0;
 

@@ -71,5 +71,16 @@ button {
     border: 0;
     padding: 0;
   }
+
+  .first-message {
+    .hover-check {
+      .message {
+        .hidden-menu {
+          transform: translate(calc(-100% - 10px));
+        }
+      }
+    }
+  }
+
 }
 </style>
