@@ -1,9 +1,8 @@
 <script setup>
-import { computed, ref, watch } from 'vue';
+import { computed, ref, watch, defineProps } from 'vue';
 import { useMessagesStore } from '@/stores/Messages';
 import { useCurrentReceiverStore } from '@/stores/CurrentReceiver';
 import { useErrorStore } from '../stores/Error.js';
-import { defineProps } from 'vue';
 
 const messagesStore = useMessagesStore();
 const receiverStore = useCurrentReceiverStore();

@@ -1,25 +1,34 @@
 <script setup>
-import { computed } from "vue";
+import { computed, ref } from "vue";
 import OpenedChatComponent from "@/components/pageComponents/OpenedChatComponent.vue";
 import HistoryComponent from "@/components/pageComponents/HistoryComponent.vue";
 import SearchComponent from "@/components/pageComponents/SearchComponent.vue";
 import ProfileComponent from "@/components/ProfileComponent.vue";
-
+import { useUserStore } from "@/stores/User.js";
 import { useCookies } from "vue3-cookies";
 const { cookies } = useCookies();
-
-import { useUserStore } from "@/stores/User.js";
 const userStore = useUserStore();
 
+window.addEventListener("resize", () => { isItMobile.value = checkIfItsMobile() });
 const userHasLoggedIn = computed(() => {
   return cookies.get('authToken') !== null;
-})
+});
+const isItMobile = ref(checkIfItsMobile);
+
+function checkIfItsMobile() {
+  return window.screen.width <= 600;
+};
+
+const isChatOpenedOnMobile = ref(true);
+function openHistorOnMobile() {
+  isChatOpenedOnMobile.value = false;
+}
 </script>
 
 <template>
   <button v-if="userHasLoggedIn" class="logout-button button" @click="userStore.logOut">Log Out </button>
   <div class="the-wrapper border">
-    <div class="menu">
+    <div class="menu" v-if="!isChatOpenedOnMobile || !isItMobile">
       <SearchComponent />
       <div class="chat-history border">
         <HistoryComponent />
@@ -27,8 +36,8 @@ const userHasLoggedIn = computed(() => {
       <ProfileComponent />
     </div>
 
-    <div class="border chat">
-      <OpenedChatComponent />
+    <div class="border chat" v-if="isChatOpenedOnMobile || !isItMobile">
+      <OpenedChatComponent @openHistorOnMobile="openHistorOnMobile" />
     </div>
   </div>
 </template>
@@ -95,7 +104,6 @@ const userHasLoggedIn = computed(() => {
 @media (max-width:600px) {
   .menu {
     width: 100%;
-    display: none;
   }
 
   .logout-button {

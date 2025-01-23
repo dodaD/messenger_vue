@@ -1,19 +1,18 @@
 <script setup>
 import { useMessagesStore } from "@/stores/Messages.js";
-const messagesStore = useMessagesStore();
-
 import { useUserStore } from "@/stores/User.js";
-const loggedInUser = useUserStore();
-
 import { useCurrentReceiverStore } from "@/stores/CurrentReceiver";
-const receiverStore = useCurrentReceiverStore();
-
 import MessageComponent from "../MessageComponent.vue";
 import SendMessageComponent from "../SendMessageComponent.vue";
 import ReceiverInfoComponent from "../ReceiverInfoComponent.vue";
 import { ref } from "vue";
+
 const scrollFinished = ref(true);
 const showScrollDownButton = ref(false);
+const receiverStore = useCurrentReceiverStore();
+const loggedInUser = useUserStore();
+const messagesStore = useMessagesStore();
+const emit = defineEmits(['openHistorOnMobile']);
 
 async function getMoreMessages(event) {
   let scrollHeight = (event.target.scrollTop - event.target.clientHeight) * 0.95;
@@ -69,7 +68,7 @@ function clearEditProps() {
 
 <template>
   <div class="wrapper">
-    <ReceiverInfoComponent> </ReceiverInfoComponent>
+    <ReceiverInfoComponent @showHistory="$emit('openHistorOnMobile')" />
     <div class="opened-chat" id="opened-chat" @scroll="getMoreMessages">
 
       <div class="round-button-to-scroll-down" v-if="showScrollDownButton" @click="scrollDown">

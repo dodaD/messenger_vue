@@ -1,12 +1,19 @@
 <script setup>
 import ProfilePicture from '../components/detailsComponents/ProfilePictureComponent.vue';
 import { useCurrentReceiverStore } from "../stores/CurrentReceiver.js";
+import { useUserStore } from "@/stores/User.js";
+const userStore = useUserStore();
 const receiverStore = useCurrentReceiverStore();
+
+const emit = defineEmits(['showHistory']);
+function showMoreChats() {
+  emit('showHistory');
+}
 </script>
 
 <template>
   <div class="wrapper-1 border">
-    <div class="history-button-for-mobile">
+    <div class="history-button-for-mobile" @click="showMoreChats">
       <font-awesome-icon :icon="['fas', 'bars']" />
     </div>
 
@@ -18,7 +25,7 @@ const receiverStore = useCurrentReceiverStore();
       </div>
     </div>
 
-    <div class="logout-button-for-mobile">
+    <div class="logout-button-for-mobile" @click="userStore.logOut">
       <font-awesome-icon :icon="['fas', 'person-running']" />
       <font-awesome-icon :icon="['fas', 'door-open']" class="door-open" />
     </div>
@@ -46,6 +53,11 @@ h3 {
 
 .receiver-full-info-wrapper {
   display: flex;
+}
+
+.history-button-for-mobile,
+.logout-button-for-mobile {
+  display: none;
 }
 
 @media (max-width:600px) {
