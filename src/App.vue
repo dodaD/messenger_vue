@@ -11,6 +11,11 @@ import ErrorComponent from './components/detailsComponents/ErrorComponent.vue';
 <style lang="scss">
 @import 'styles/colours.scss';
 
+input:-webkit-autofill,
+input:-webkit-autofill:focus {
+  transition: background-color 0s 600000s, color 0s 600000s !important;
+}
+
 body {
   margin: 0;
   padding: 0;

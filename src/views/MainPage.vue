@@ -13,7 +13,7 @@ window.addEventListener("resize", () => { isItMobile.value = checkIfItsMobile() 
 const userHasLoggedIn = computed(() => {
   return cookies.get('authToken') !== null;
 });
-const isItMobile = ref(checkIfItsMobile);
+const isItMobile = ref(checkIfItsMobile());
 
 function checkIfItsMobile() {
   return window.screen.width <= 600;
