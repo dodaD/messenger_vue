@@ -104,6 +104,9 @@ function openHistorOnMobile() {
 @media (max-width:600px) {
   .menu {
     width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
   }
 
   .logout-button {
@@ -119,6 +122,10 @@ function openHistorOnMobile() {
 
   .logout-button {
     display: none;
+  }
+
+  .chat-history {
+    flex: auto;
   }
 }
 </style>
