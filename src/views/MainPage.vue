@@ -23,6 +23,10 @@ const isChatOpenedOnMobile = ref(true);
 function openHistorOnMobile() {
   isChatOpenedOnMobile.value = false;
 }
+
+function closeHistoryOnMobile() {
+  isChatOpenedOnMobile.value = true;
+}
 </script>
 
 <template>
@@ -31,7 +35,7 @@ function openHistorOnMobile() {
     <div class="menu" v-if="!isChatOpenedOnMobile || !isItMobile">
       <SearchComponent />
       <div class="chat-history border">
-        <HistoryComponent />
+        <HistoryComponent @closeHistoryOnMobile="closeHistoryOnMobile" />
       </div>
       <ProfileComponent />
     </div>

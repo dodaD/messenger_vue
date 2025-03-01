@@ -101,7 +101,7 @@ function closeEditing() {
 .original-editing-message {
   display: flex;
   width: 85%;
-  height: 30px;
+  min-height: 30px;
   background-color: var(--semi-accent-colour);
   white-space: pre-wrap;
   overflow: hidden;
@@ -201,7 +201,6 @@ function closeEditing() {
 
   .original-editing-message {
     width: 100%;
-    padding: 0;
     border-right: 0;
     background-image: linear-gradient(to right, var(--semi-accent-colour), var(--background-colour));
   }

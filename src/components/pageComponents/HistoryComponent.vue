@@ -7,9 +7,11 @@ const receiverStore = useCurrentReceiverStore();
 
 import ProfilePicture from '../detailsComponents/ProfilePictureComponent.vue';
 
+const emit = defineEmits(['closeHistoryOnMobile']);
 messagesStore.getInitialHistory();
 
 async function openChat(message) {
+  emit('closeHistoryOnMobile');
   const chatId = receiverStore.entity + message.interlocutorId;
   receiverStore.receiverId = message.interlocutorId;
   receiverStore.receiverName = message.name;
@@ -36,7 +38,7 @@ async function openChat(message) {
 </script>
 
 <template>
-  <div v-for="chat in messagesStore.history" @click="openChat(chat)" class="chat border">
+  <div v-for="chat in messagesStore.history" @click="openChat(chat)" class="chat border" :key="chat">
     <div class="history-message">
       <ProfilePicture />
       <div class="info">

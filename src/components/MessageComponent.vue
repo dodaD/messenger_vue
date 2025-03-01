@@ -86,7 +86,7 @@ button {
 
 .message {
   width: fit-content;
-  white-space: pre-wrap;
+  white-space: pre-line;
   position: relative;
   padding: 10px;
 }
@@ -159,7 +159,6 @@ button {
     display: flex;
     justify-content: center;
     flex-direction: column;
-    align-items: center;
   }
 
   .hidden-menu {
@@ -167,9 +166,8 @@ button {
     bottom: 0;
     left: 0;
     top: unset;
-    transform: translate(0px, calc(100% + 5px));
+    transform: translateX(-1px) translateY(calc(100% + 5px));
     border: 2px solid var(--accent-colour);
-    padding: 0;
 
     div {
       width: 100%;

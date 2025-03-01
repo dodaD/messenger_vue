@@ -81,7 +81,7 @@ button {
     .hover-check {
       .message {
         .hidden-menu {
-          transform: translate(calc(-100% - 10px));
+          transform: translate(0, calc(-100% - 5px));
         }
       }
     }
