@@ -77,6 +77,7 @@ function clearEditProps() {
         <font-awesome-icon :icon="['fas', 'angle-down']" />
       </div>
 
+      <!--I dont think this texxt work, so check it -->
       <p v-if="messagesStore.openedChatId === 0" class="no-messages"> TODO: text from file using library, that in future
         I
         could translate

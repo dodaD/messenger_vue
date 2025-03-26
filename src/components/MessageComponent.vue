@@ -37,7 +37,8 @@ async function deleteMessage() {
   <div class="mob-background-blur" v-if="showMenu" />
   <!-- For background blur for mob version when opening interaction options -->
 
-  <div class="hover-check" @mouseleave="showMenu = false" :class="{ 'visible-selected-message': showMenu }">
+  <div class="hover-check prevent-select" @mouseleave="showMenu = false"
+    :class="{ 'visible-selected-message': showMenu }">
     <div v-if="show" class="message" @mouseover="showMenu = allowedToClick"
       :class="allowedToClick ? 'sent-message' : 'received-message'">
       <div> {{ props.message.reference_message }} </div>
@@ -63,6 +64,16 @@ async function deleteMessage() {
 
 <style scoped lang="scss">
 @import "@/styles/colours.scss";
+
+.prevent-select {
+  -webkit-user-select: none;
+  /* Safari */
+  -ms-user-select: none;
+  /* IE 10 and IE 11 */
+  user-select: none;
+  /* Standard syntax */
+}
+
 
 .mob-background-blur {
   display: none;
