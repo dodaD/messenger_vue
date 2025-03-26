@@ -38,7 +38,7 @@ async function deleteMessage() {
   <div class="mob-background-blur" v-if="showMenu" />
   <!-- For background blur for mob version when opening interaction options -->
 
-  <div class="hover-check" @mouseleave="showMenu = false" @touchmove="showMenu = false"
+  <div class="hover-check" @mouseleave="showMenu = false" @touchend="showMenu = false"
     :class="{ 'visible-selected-message': showMenu }">
 
     <div v-if="show" class="message" @mouseover="showMenu = allowedToClick"
