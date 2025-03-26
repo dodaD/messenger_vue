@@ -31,14 +31,16 @@ async function deleteMessage() {
   }
   messagesStore.deleteMessage(props.message.id);
 }
+
 </script>
 
 <template>
   <div class="mob-background-blur" v-if="showMenu" />
   <!-- For background blur for mob version when opening interaction options -->
 
-  <div class="hover-check prevent-select" @mouseleave="showMenu = false"
+  <div class="hover-check" @mouseleave="showMenu = false" @touchmove="showMenu = false"
     :class="{ 'visible-selected-message': showMenu }">
+
     <div v-if="show" class="message" @mouseover="showMenu = allowedToClick"
       :class="allowedToClick ? 'sent-message' : 'received-message'">
       <div> {{ props.message.reference_message }} </div>
