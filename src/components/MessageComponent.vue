@@ -35,11 +35,11 @@ async function deleteMessage() {
 </script>
 
 <template>
-  <div class="mob-background-blur" v-if="showMenu" />
+  <div class="mob-background-blur" v-if="showMenu" @click="showMenu = false" />
   <!-- For background blur for mob version when opening interaction options -->
 
-  <div class="hover-check" @mouseleave="showMenu = false" @touchend="showMenu = false"
-    :class="{ 'visible-selected-message': showMenu }">
+  <div class="hover-check" @mouseleave="showMenu = false" :class="{ 'visible-selected-message': showMenu }"
+    @pointerdown="showMenu = true">
 
     <div v-if="show" class="message" @mouseover="showMenu = allowedToClick"
       :class="allowedToClick ? 'sent-message' : 'received-message'">
@@ -102,6 +102,7 @@ button {
   white-space: pre-line;
   position: relative;
   padding: 10px;
+  max-width: 70%;
 }
 
 .sent-message {
