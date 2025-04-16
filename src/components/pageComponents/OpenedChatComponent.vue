@@ -200,7 +200,7 @@ function clearEditProps() {
 
   .opened-chat {
     flex-grow: 1;
-    overflow: auto;
+    overflow: hidden;
     position: relative;
     display: flex;
     flex-direction: column-reverse;

@@ -90,6 +90,7 @@ button {
 .hover-check {
   width: 100%;
   height: 100%;
+  margin-right: 10px;
 }
 
 .save-changes-button {
@@ -107,7 +108,7 @@ button {
 
 .sent-message {
   background-color: var(--accent-colour);
-  margin-left: 10px;
+  margin-left: auto;
 }
 
 .received-message {
