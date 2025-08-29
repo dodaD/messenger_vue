@@ -31,7 +31,7 @@ jobs:
     - name: Add private ssh key
       run: |
           mkdir -p ~/.ssh
-          echo "${{ secrets.SSH_SECRET_KEY_2025 }}" > ~/.ssh/id_rsa
+          echo "${{ secrets.SSH_SECRET_KEY_2025_UPDATED_DOMIN }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
           
     - name: Connect to remote server and switch dist directory
