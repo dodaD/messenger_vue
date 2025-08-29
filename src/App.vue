@@ -53,6 +53,7 @@ button {
   padding: 0px 10px
 }
 
+//test for smth
 @media (max-width:600px) {
   body {
     height: 100%;
